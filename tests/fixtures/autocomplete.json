@@ -1,0 +1,93 @@
+{
+ "status": 200,
+ "data": {
+  "categories": [
+   {
+    "keyword": "samsung s24",
+    "category": {
+     "id": 11,
+     "title_fa": "گوشی موبایل",
+     "title_en": "گوشی موبایل",
+     "code": "mobile-phone"
+    }
+   },
+   {
+    "keyword": "samsung s",
+    "category": {
+     "id": 11,
+     "title_fa": "گوشی موبایل",
+     "title_en": "گوشی موبایل",
+     "code": "mobile-phone"
+    }
+   }
+  ],
+  "auto_complete": [
+   {
+    "keyword": "samsung a17"
+   },
+   {
+    "keyword": "samsung a07"
+   },
+   {
+    "keyword": "samsung s25 fe"
+   },
+   {
+    "keyword": "samsung s25"
+   },
+   {
+    "keyword": "samsung a55"
+   },
+   {
+    "keyword": "samsung a56"
+   }
+  ],
+  "advance_links": [
+   {
+    "keyword": "سامسونگ",
+    "brand": {
+     "id": 18,
+     "title_fa": "سامسونگ",
+     "title_en": "Samsung"
+    }
+   }
+  ],
+  "trends": [
+   {
+    "keyword": "ساعت مچی",
+    "url": {
+     "base": null,
+     "uri": "/search/?q=%D8%B3%D8%A7%D8%B9%D8%AA+%D9%85%DA%86%DB%8C"
+    }
+   },
+   {
+    "keyword": "ساعت هوشمند",
+    "url": {
+     "base": null,
+     "uri": "/search/?q=%D8%B3%D8%A7%D8%B9%D8%AA+%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF"
+    }
+   },
+   {
+    "keyword": "پی اس فایو",
+    "url": {
+     "base": null,
+     "uri": "/search/?q=%D9%BE%DB%8C+%D8%A7%D8%B3+%D9%81%D8%A7%DB%8C%D9%88"
+    }
+   },
+   {
+    "keyword": "سکه پارسیان",
+    "url": {
+     "base": null,
+     "uri": "/search/?q=%D8%B3%DA%A9%D9%87+%D9%BE%D8%A7%D8%B1%D8%B3%DB%8C%D8%A7%D9%86"
+    }
+   },
+   {
+    "keyword": "ساعت مردانه",
+    "url": {
+     "base": null,
+     "uri": "/search/?q=%D8%B3%D8%A7%D8%B9%D8%AA+%D9%85%D8%B1%D8%AF%D8%A7%D9%86%D9%87"
+    }
+   }
+  ],
+  "promotion_banner": []
+ }
+}

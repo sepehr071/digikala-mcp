@@ -1,0 +1,160 @@
+{
+ "status": 200,
+ "data": {
+  "comments": [
+   {
+    "order_item_id": 1147190582,
+    "product_id": 20109389,
+    "rate": 4,
+    "review_user_type": "buyer",
+    "is_anonymous": false,
+    "user_id": 9653363,
+    "id": 89495305,
+    "body": "خود گوشی با توجه به اینکه گوشی اقتصادی هست امکاناتش خوب و قابل قبوله ولی از نظر قیمت واقعا اجحاف میشه به مردم چون پارسال که قیمت دلار ۱۱۴هزاربودهمین گوشی فقط رنگ مشکی رو برا یکی از دوستان خریدم نه ملیونو هشتصد الان دلار دو برابر هم نشده ولی این گوشی چهار برابر شده ",
+    "status": "approved",
+    "reactions": {
+     "likes": 120,
+     "dislikes": 1
+    },
+    "advantages": [],
+    "disadvantages": [],
+    "is_buyer": 1,
+    "user_name": "مهدی عرفانی نکو",
+    "created_at": "8 شهریور 1405",
+    "repeat_purchase_badge": {
+     "text": "خریدار",
+     "text_color": "#424242",
+     "bg_color": "#FFF",
+     "tooltip_text": ""
+    },
+    "purchased_item": {
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "company_name": "نوآوران فن‌آوازه (دیجی‌کالا)",
+      "url": "https://www.digikala.com/seller/5a52n/",
+      "code": "5A52N",
+      "rate": 84.4,
+      "active": true
+     },
+     "color": {
+      "id": 6,
+      "title": "سبز",
+      "hex_code": "#008000"
+     }
+    },
+    "relative_date": "8 شهریور 1405"
+   },
+   {
+    "order_item_id": 1113387719,
+    "product_id": 20109389,
+    "rate": 4,
+    "review_user_type": "buyer",
+    "is_anonymous": false,
+    "user_id": 20702988,
+    "id": 88985180,
+    "body": "با سلام به دوستان، من بعداز حدودا ۲ ماه استفاده نظراتم رو میگم شاید مفید واقع بشه\nاول اینکه گوشی دارای صفحه نمایش بزرگ و خوبی هست، برای تماشای فیلم و خصوصا تاکسی های اینترنتی، زیر نور آفتاب کاملا خوانا هست، صدای خوبی داره ، رابط کاربری قابل قبول ، هرچند گاهی یه باگ خیلی ریز داره، دوربین در نور کافی بسیار خوبه ، در نور کم از کار انداز بالاتره ،باطری یه روز کامل رو جوابه ، اما کسی که باهاش تاکسی اینترنتی کار کنه میشه گفت کمی از نصف روز بیشتر تقریبا سه چهارم روز، خوش دست و حس خوبی به آدم میده، گوشی نسل جدیده،  آنتن دهی بسیار خوبی داره، چون اهل بازی کردن نیستم در باره اصلا تستش نکردم ولی یکی از دوستانم که داره گفت قابل قبوله، با شارژر ۲۵ واتی سامسونگ حدودا زیر یه ساعت شارژ میشه، سلفی کار راه انداز خوبی داره، امیدوارم نظراتم مفید باشه",
+    "status": "approved",
+    "reactions": {
+     "likes": 82,
+     "dislikes": 3
+    },
+    "advantages": [],
+    "disadvantages": [],
+    "is_buyer": 1,
+    "user_name": "ابوالفضل کلی وند",
+    "created_at": "14 مرداد 1405",
+    "repeat_purchase_badge": {
+     "text": "خریدار",
+     "text_color": "#424242",
+     "bg_color": "#FFF",
+     "tooltip_text": ""
+    },
+    "purchased_item": {
+     "seller": {
+      "id": 1734501,
+      "title": "بهار کیهان ارتباطات",
+      "company_name": "بهارکیهان ارتباطات",
+      "url": "https://www.digikala.com/seller/h4shm/",
+      "code": "H4SHM",
+      "rate": 86.8,
+      "active": true
+     },
+     "color": {
+      "id": 1,
+      "title": "مشکی",
+      "hex_code": "#000000"
+     }
+    },
+    "relative_date": "14 مرداد 1405"
+   },
+   {
+    "order_item_id": 1156787054,
+    "product_id": 20109389,
+    "rate": 3,
+    "review_user_type": "buyer",
+    "is_anonymous": false,
+    "user_id": 1043892,
+    "id": 89874006,
+    "body": "ولله ما که گیج شدیم با اینهمه تغییرات قیمت این گوشی قیمت یک روز با قیمت فرداش ممکنه تا ده تومان هم تفاوت داشته باشه و عجیبتر هم اینکه جدیدا این نوسانات دقیقه ای شده و حتی تفاوت رنگ تو این قضیه موثره بدون اینکه تو کیفیت گوشی تغییر ایجاد بشه!!!\n",
+    "status": "approved",
+    "reactions": {
+     "likes": 11,
+     "dislikes": 1
+    },
+    "advantages": [],
+    "disadvantages": [],
+    "is_buyer": 1,
+    "user_name": "اصغر باقری کوچکسرائی",
+    "created_at": "24 شهریور 1405",
+    "repeat_purchase_badge": {
+     "text": "خریدار",
+     "text_color": "#424242",
+     "bg_color": "#FFF",
+     "tooltip_text": ""
+    },
+    "purchased_item": {
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "company_name": "نوآوران فن‌آوازه (دیجی‌کالا)",
+      "url": "https://www.digikala.com/seller/5a52n/",
+      "code": "5A52N",
+      "rate": 84.4,
+      "active": true
+     },
+     "color": {
+      "id": 1,
+      "title": "مشکی",
+      "hex_code": "#000000"
+     }
+    },
+    "relative_date": "24 شهریور 1405"
+   }
+  ],
+  "intent_data": [],
+  "media_comments": [],
+  "sort": {
+   "default": "default"
+  },
+  "sort_options": [
+   {
+    "id": "newest",
+    "title": "جدیدترین"
+   },
+   {
+    "id": "buyers",
+    "title": "دیدگاه خریداران"
+   },
+   {
+    "id": "default",
+    "title": "مفیدترین"
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 63,
+   "total_items": 1251
+  }
+ }
+}

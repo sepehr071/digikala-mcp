@@ -1,0 +1,199 @@
+{
+ "status": 200,
+ "data": {
+  "filters": {
+   "brands": {
+    "type": "checkbox",
+    "title": "برند",
+    "options": [
+     {
+      "id": 10103,
+      "code": "parmida",
+      "title_fa": "پارمیدا",
+      "title_en": "Parmida",
+      "url": {
+       "base": null,
+       "uri": "/brand/parmida/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 10433,
+      "code": "mazmaz",
+      "title_fa": "مزمز",
+      "title_en": "Maz Maz",
+      "url": {
+       "base": null,
+       "uri": "/brand/mazmaz/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 10527,
+      "code": "attack",
+      "title_fa": "اتک",
+      "title_en": "Attack",
+      "url": {
+       "base": null,
+       "uri": "/brand/attack/"
+      },
+      "visibility": true,
+      "is_premium": false
+     }
+    ]
+   }
+  },
+  "products": [
+   {
+    "id": 12707263,
+    "title_fa": "کیسه فریزر پترو کلین مدل یادداشتی بسته 250 عددی",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 86.31,
+     "count": 2545
+    },
+    "data_layer": {
+     "brand": "پترو کلین"
+    },
+    "default_variant": {
+     "id": 44068247,
+     "price": {
+      "selling_price": 3465000,
+      "rrp_price": 9900000,
+      "order_limit": 5,
+      "is_incredible": true,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 65,
+      "time": "2026-10-05 23:59:59",
+      "timer": 222976,
+      "badge": {
+       "title": "پیشنهاد شگفت انگیز",
+       "color": "#E6123D"
+      },
+      "is_digiplus_promotion": false,
+      "is_digiplus_early_access": false,
+      "is_application_incredible": false,
+      "is_lightening_deal": false,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   },
+   {
+    "id": 12646840,
+    "title_fa": "کیسه زباله کوالا مدل سه رول 42 عددی",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 89.79,
+     "count": 856
+    },
+    "data_layer": {
+     "brand": "کوالا"
+    },
+    "default_variant": {
+     "id": 44851885,
+     "price": {
+      "selling_price": 3074500,
+      "rrp_price": 5590000,
+      "order_limit": 5,
+      "is_incredible": true,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 45,
+      "time": "2026-10-05 23:59:59",
+      "timer": 222976,
+      "badge": {
+       "title": "پیشنهاد شگفت انگیز",
+       "color": "#E6123D"
+      },
+      "is_digiplus_promotion": false,
+      "is_digiplus_early_access": false,
+      "is_application_incredible": false,
+      "is_lightening_deal": false,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   },
+   {
+    "id": 12645886,
+    "title_fa": "سلفون کوالا مدل 003 رول 50 متری ",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 85.78,
+     "count": 353
+    },
+    "data_layer": {
+     "brand": "کوالا"
+    },
+    "default_variant": {
+     "id": 44852090,
+     "price": {
+      "selling_price": 2689500,
+      "rrp_price": 4890000,
+      "order_limit": 5,
+      "is_incredible": true,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 45,
+      "time": "2026-10-06 00:00:00",
+      "timer": 222976,
+      "badge": {
+       "title": "پیشنهاد شگفت انگیز",
+       "color": "#E6123D"
+      },
+      "is_digiplus_promotion": false,
+      "is_digiplus_early_access": false,
+      "is_application_incredible": false,
+      "is_lightening_deal": false,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   }
+  ],
+  "sort_options": [
+   {
+    "id": 26,
+    "title_fa": "بیشترین تخفیف"
+   },
+   {
+    "id": 4,
+    "title_fa": "پربازدیدترین"
+   },
+   {
+    "id": 1,
+    "title_fa": "جدیدترین"
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 7,
+   "total_items": 128
+  }
+ }
+}

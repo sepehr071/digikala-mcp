@@ -1,0 +1,199 @@
+{
+ "status": 200,
+ "data": {
+  "filters": {
+   "brands": {
+    "type": "checkbox",
+    "title": "برند",
+    "options": [
+     {
+      "id": 186,
+      "code": "abacus",
+      "title_fa": "آبکاس",
+      "title_en": "Abacus",
+      "url": {
+       "base": null,
+       "uri": "/brand/abacus/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 62,
+      "code": "archos",
+      "title_fa": "آرکاس",
+      "title_en": "Archos",
+      "url": {
+       "base": null,
+       "uri": "/brand/archos/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 156,
+      "code": "acme-made",
+      "title_fa": "آکمی مید",
+      "title_en": "Acme Made",
+      "url": {
+       "base": null,
+       "uri": "/brand/acme-made/"
+      },
+      "visibility": true,
+      "is_premium": false
+     }
+    ]
+   }
+  },
+  "products": [
+   {
+    "id": 22783516,
+    "title_fa": "محافظ ولتاژ آی تی لینک مدل PS",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 97.14,
+     "count": 7
+    },
+    "data_layer": {
+     "brand": "آی تی لینک"
+    },
+    "default_variant": {
+     "id": 84186250,
+     "price": {
+      "selling_price": 9999900,
+      "rrp_price": 100000000,
+      "order_limit": 10,
+      "is_incredible": true,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 90,
+      "time": "2026-10-03 12:00:00",
+      "timer": 6978,
+      "badge": {
+       "title": "شگفت‌انگیز سفارشی",
+       "color": "#E6123D"
+      },
+      "is_digiplus_promotion": false,
+      "is_digiplus_early_access": false,
+      "is_application_incredible": false,
+      "is_lightening_deal": true,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 208965,
+      "title": "اهورایی",
+      "code": "ASRDJ"
+     }
+    }
+   },
+   {
+    "id": 22563640,
+    "title_fa": "هدفون بلوتوثی دبلیو کی دیزاین مدل WS22COZY",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 92.86,
+     "count": 14
+    },
+    "data_layer": {
+     "brand": "دبلیو کی دیزاین"
+    },
+    "default_variant": {
+     "id": 83523840,
+     "price": {
+      "selling_price": 23999900,
+      "rrp_price": 240000000,
+      "order_limit": 5,
+      "is_incredible": true,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 90,
+      "time": "2026-10-03 12:00:00",
+      "timer": 6978,
+      "badge": {
+       "title": "شگفت‌انگیز سفارشی",
+       "color": "#E6123D"
+      },
+      "is_digiplus_promotion": false,
+      "is_digiplus_early_access": false,
+      "is_application_incredible": false,
+      "is_lightening_deal": true,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 289366,
+      "title": "برزان",
+      "code": "C2NNT"
+     }
+    }
+   },
+   {
+    "id": 22544803,
+    "title_fa": "هدفون ریولینک مدل KOPW Pro2",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 92.73,
+     "count": 11
+    },
+    "data_layer": {
+     "brand": "ریولینک"
+    },
+    "default_variant": {
+     "id": 84214001,
+     "price": {
+      "selling_price": 18999900,
+      "rrp_price": 190000000,
+      "order_limit": 5,
+      "is_incredible": true,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 90,
+      "time": "2026-10-03 12:00:00",
+      "timer": 6978,
+      "badge": {
+       "title": "شگفت‌انگیز سفارشی",
+       "color": "#E6123D"
+      },
+      "is_digiplus_promotion": false,
+      "is_digiplus_early_access": false,
+      "is_application_incredible": false,
+      "is_lightening_deal": true,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1546,
+      "title": " پارس هدفون",
+      "code": "5A6ZU"
+     }
+    }
+   }
+  ],
+  "sort_options": [
+   {
+    "id": 26,
+    "title_fa": "بیشترین تخفیف"
+   },
+   {
+    "id": 4,
+    "title_fa": "پربازدیدترین"
+   },
+   {
+    "id": 1,
+    "title_fa": "جدیدترین"
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 73,
+   "total_items": 1447
+  }
+ }
+}

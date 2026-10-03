@@ -1,0 +1,170 @@
+{
+ "status": 200,
+ "data": {
+  "filters": {
+   "brands": {
+    "type": "checkbox",
+    "title": "برند",
+    "options": [
+     {
+      "id": 62,
+      "code": "archos",
+      "title_fa": "آرکاس",
+      "title_en": "Archos",
+      "url": {
+       "base": null,
+       "uri": "/brand/archos/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 80,
+      "code": "alcatel",
+      "title_fa": "آلکاتل",
+      "title_en": "Alcatel",
+      "url": {
+       "base": null,
+       "uri": "/brand/alcatel/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 8,
+      "code": "ibm",
+      "title_fa": "آی بی ام",
+      "title_en": "IBM",
+      "url": {
+       "base": null,
+       "uri": "/brand/ibm/"
+      },
+      "visibility": true,
+      "is_premium": false
+     }
+    ]
+   }
+  },
+  "products": [
+   {
+    "id": 21050747,
+    "title_fa": "گوشی موبایل هانوفر مدل 335 دو سیم کارت ظرفیت 32 مگابایت و رم 32 مگابایت",
+    "title_en": "Hanofer 335 Dual SIM Storage 32MB and RAM 32MB Mobile Phone",
+    "status": "marketable",
+    "rating": {
+     "rate": 61.8,
+     "count": 222
+    },
+    "data_layer": {
+     "brand": "هانوفر"
+    },
+    "default_variant": {
+     "id": 79425179,
+     "price": {
+      "selling_price": 15700000,
+      "rrp_price": 15700000,
+      "order_limit": 10,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1690462,
+      "title": "ستیاکو",
+      "code": "GXPCF"
+     }
+    }
+   },
+   {
+    "id": 22396154,
+    "title_fa": "گوشی موبایل نمو مدل E140 دو سیم کارت ظرفیت 32 مگابایت و رم ۶۴ مگابایت",
+    "title_en": "Nemo E140 Dual SIM Storage 32MB and RAM 64MB Mobile Phone",
+    "status": "marketable",
+    "rating": {
+     "rate": 20,
+     "count": 1
+    },
+    "data_layer": {
+     "brand": "نمو"
+    },
+    "default_variant": {
+     "id": 82934282,
+     "price": {
+      "selling_price": 16330000,
+      "rrp_price": 16330000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "marketable_stock": 1,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 389375,
+      "title": "اسمارت تکنولوژی قشم",
+      "code": "CGDG9"
+     }
+    }
+   },
+   {
+    "id": 21050952,
+    "title_fa": "گوشی موبایل هانوفر مدل 330 دو سیم کارت ظرفیت 32 مگابایت و رم 32 مگابایت",
+    "title_en": "Hanoofer 330 Dual SIM Storage 32MB and RAM 32MB Mobile Phone",
+    "status": "marketable",
+    "rating": {
+     "rate": 62.5,
+     "count": 224
+    },
+    "data_layer": {
+     "brand": "هانوفر"
+    },
+    "default_variant": {
+     "id": 79602937,
+     "price": {
+      "selling_price": 16350000,
+      "rrp_price": 16350000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 840322,
+      "title": "پایاگستر شهر",
+      "code": "DVEFT"
+     }
+    }
+   }
+  ],
+  "sort_options": [
+   {
+    "id": 22,
+    "title_fa": "مرتبط‌ترین"
+   },
+   {
+    "id": 4,
+    "title_fa": "پربازدیدترین"
+   },
+   {
+    "id": 1,
+    "title_fa": "جدیدترین"
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 14,
+   "total_items": 263
+  }
+ }
+}

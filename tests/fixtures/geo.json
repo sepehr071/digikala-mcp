@@ -1,0 +1,28 @@
+{
+ "status": 200,
+ "data": {
+  "addresses": [
+   {
+    "title": "م. ونک",
+    "address": "تهران،م. ونک",
+    "latitude": 35.757535,
+    "longitude": 51.40994,
+    "distance_m": 405
+   },
+   {
+    "title": "میدان ونک(کد 493)",
+    "address": "تهران،گاندی،میدان ونک(کد 493)",
+    "latitude": 35.754798,
+    "longitude": 51.410654,
+    "distance_m": 405
+   },
+   {
+    "title": "م. پونک",
+    "address": "تهران،م. پونک",
+    "latitude": 35.759929,
+    "longitude": 51.335149,
+    "distance_m": 403
+   }
+  ]
+ }
+}

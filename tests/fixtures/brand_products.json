@@ -1,0 +1,151 @@
+{
+ "status": 200,
+ "data": {
+  "filters": {
+   "categories": {
+    "type": "checkbox",
+    "title": "دسته‌بندی",
+    "options": [
+     {
+      "id": 100,
+      "title_fa": "ماوس پد",
+      "title_en": "ماوس پد",
+      "code": "mouse-pad"
+     },
+     {
+      "id": 10073,
+      "title_fa": "قطعات یدکی موبایل و تبلت",
+      "title_en": "Mobile and Tablet Spare Parts",
+      "code": "mobile-and-tablet-spare-parts"
+     },
+     {
+      "id": 102,
+      "title_fa": "شارژر مخصوص لپ‌تاپ",
+      "title_en": "شارژر مخصوص لپ تاپ",
+      "code": "laptop-charger"
+     }
+    ]
+   }
+  },
+  "products": [
+   {
+    "id": 20490694,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A17 4G دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت - ویتنام",
+    "title_en": "Samsung Galaxy A17 4G Dual SIM 128GB Storage And 4GB Ram Mobile Phone - Vietnam",
+    "status": "marketable",
+    "rating": {
+     "rate": 87.75,
+     "count": 1017
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 74436055,
+     "price": {
+      "selling_price": 576990000,
+      "rrp_price": 576990000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 389375,
+      "title": "اسمارت تکنولوژی قشم",
+      "code": "CGDG9"
+     }
+    }
+   },
+   {
+    "id": 20109389,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت",
+    "title_en": "Samsung Galaxy A07 Dual SIM Storage 64GB And 4GB RAM Mobile Phone",
+    "status": "marketable",
+    "rating": {
+     "rate": 87.64,
+     "count": 2164
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 72287314,
+     "price": {
+      "selling_price": 425036000,
+      "rrp_price": 425036000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   },
+   {
+    "id": 21660239,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A57 دو سیم‌کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت - ویتنام",
+    "title_en": "Samsung Galaxy A57 Dual SIM Storage 256GB And RAM 8GB Mobile Phone  - Vietnam",
+    "status": "marketable",
+    "rating": {
+     "rate": 87.83,
+     "count": 304
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 80768432,
+     "price": {
+      "selling_price": 1383671000,
+      "rrp_price": 1383671000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   }
+  ],
+  "sort_options": [
+   {
+    "id": 4,
+    "title_fa": "پربازدیدترین"
+   },
+   {
+    "id": 1,
+    "title_fa": "جدیدترین"
+   },
+   {
+    "id": 7,
+    "title_fa": "پرفروش‌ترین‌"
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 30,
+   "total_items": 586
+  }
+ }
+}

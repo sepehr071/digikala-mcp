@@ -1,0 +1,511 @@
+{
+ "status": 200,
+ "data": {
+  "filters": {
+   "brands": {
+    "type": "checkbox",
+    "title": "برند",
+    "options": [
+     {
+      "id": 8,
+      "code": "ibm",
+      "title_fa": "آی بی ام",
+      "title_en": "IBM",
+      "url": {
+       "base": null,
+       "uri": "/brand/ibm/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 24,
+      "code": "i-mate",
+      "title_fa": "آی میت",
+      "title_en": "i-mate",
+      "url": {
+       "base": null,
+       "uri": "/brand/i-mate/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 52,
+      "code": "iriver",
+      "title_fa": "آیریور",
+      "title_en": "Iriver",
+      "url": {
+       "base": null,
+       "uri": "/brand/iriver/"
+      },
+      "visibility": true,
+      "is_premium": false
+     }
+    ]
+   },
+   "categories": {
+    "type": "category_list",
+    "title": "دسته‌بندی",
+    "options": [
+     {
+      "id": 10072,
+      "title_fa": "محافظ لنز گوشی موبایل",
+      "title_en": "Mobile Lens Screen Protector",
+      "code": "mobile-lens-screen-protector"
+     },
+     {
+      "id": 10073,
+      "title_fa": "قطعات یدکی موبایل و تبلت",
+      "title_en": "Mobile and Tablet Spare Parts",
+      "code": "mobile-and-tablet-spare-parts"
+     },
+     {
+      "id": 10116,
+      "title_fa": "برچسب پوششی گوشی موبایل",
+      "title_en": "Cover Sticker",
+      "code": "cover-sticker"
+     }
+    ]
+   }
+  },
+  "products": [
+   {
+    "id": 20109389,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت",
+    "title_en": "Samsung Galaxy A07 Dual SIM Storage 64GB And 4GB RAM Mobile Phone",
+    "status": "marketable",
+    "rating": {
+     "rate": 87.64,
+     "count": 2164
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 72287314,
+     "price": {
+      "selling_price": 425036000,
+      "rrp_price": 425036000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   },
+   {
+    "id": 20110013,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 128گیگابایت و رم 6 گیگابایت ",
+    "title_en": "Samsung Galaxy A07 Dual SIM Storage 128GB And 6GB RAM Mobile Phone",
+    "status": "marketable",
+    "rating": {
+     "rate": 87.74,
+     "count": 1463
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 74547577,
+     "price": {
+      "selling_price": 529608000,
+      "rrp_price": 529608000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "marketable_stock": 2,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   },
+   {
+    "id": 20110012,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت ",
+    "title_en": "Samsung Galaxy A07 Dual SIM Storage 128GB And 4GB RAM Mobile Phone",
+    "status": "marketable",
+    "rating": {
+     "rate": 86.42,
+     "count": 1312
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 73485559,
+     "price": {
+      "selling_price": 468118000,
+      "rrp_price": 468118000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   },
+   {
+    "id": 21013179,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت - نسخه به‌همراه شارژر",
+    "title_en": "Samsung Galaxy A07 Dual SIM Storage 128GB And 4GB RAM Mobile Phone - With Charger Version",
+    "status": "marketable",
+    "rating": {
+     "rate": 83.11,
+     "count": 328
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 75989965,
+     "price": {
+      "selling_price": 475000000,
+      "rrp_price": 475000000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "marketable_stock": 2,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 890528,
+      "title": "سگالینو",
+      "code": "E3GKY"
+     }
+    }
+   },
+   {
+    "id": 20381116,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 128گیگابایت و رم 6 گیگابایت به همراه شارژر 25 وات سامسونگ",
+    "title_en": "Samsung Galaxy A07 Dual SIM Storage 128GB And 6GB RAM Mobile Phone with 25W Samsung Charger",
+    "status": "marketable",
+    "rating": {
+     "rate": 84.2,
+     "count": 295
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 80919850,
+     "price": {
+      "selling_price": 550020000,
+      "rrp_price": 550020000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "marketable_stock": 3,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 394084,
+      "title": "سپاهان همراه یاقوت",
+      "code": "CGXGH"
+     }
+    }
+   },
+   {
+    "id": 20381217,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت به همراه شارژر 25 وات سامسونگ ",
+    "title_en": "Samsung Galaxy A07 Dual SIM Storage 64 GB And 4GB RAM Mobile Phone with 25W Samsung Charger",
+    "status": "marketable",
+    "rating": {
+     "rate": 86.65,
+     "count": 319
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 80919323,
+     "price": {
+      "selling_price": 445180000,
+      "rrp_price": 445180000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "marketable_stock": 1,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 394084,
+      "title": "سپاهان همراه یاقوت",
+      "code": "CGXGH"
+     }
+    }
+   },
+   {
+    "id": 20381216,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت به همراه شارژر 25 وات سامسونگ",
+    "title_en": "Samsung Galaxy A07 Dual SIM Storage 128GB And 4GB RAM Mobile Phone with 25W Samsung Charger ",
+    "status": "marketable",
+    "rating": {
+     "rate": 86.61,
+     "count": 221
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 80916141,
+     "price": {
+      "selling_price": 483770000,
+      "rrp_price": 483770000,
+      "order_limit": 2,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "marketable_stock": 2,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 394084,
+      "title": "سپاهان همراه یاقوت",
+      "code": "CGXGH"
+     }
+    }
+   },
+   {
+    "id": 20626735,
+    "title_fa": "کاور گوف مدل Clear مناسب برای گوشی موبایل سامسونگ Galaxy A07",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 87.68,
+     "count": 190
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "id": 73380665,
+     "price": {
+      "selling_price": 4380000,
+      "rrp_price": 4380000,
+      "order_limit": 5,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 125187,
+      "title": "فروشگاه ایده ال",
+      "code": "ACKUT"
+     }
+    }
+   },
+   {
+    "id": 21370849,
+    "title_fa": "کاور مدل مکسیف07 مناسب برای گوشی موبایل سامسونگ Galaxy A07",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 74.4,
+     "count": 25
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "id": 78346125,
+     "price": {
+      "selling_price": 3200000,
+      "rrp_price": 3200000,
+      "order_limit": 30,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 909221,
+      "title": "نبض دیجیتال جانبی",
+      "code": "E5EEG"
+     }
+    }
+   },
+   {
+    "id": 20915539,
+    "title_fa": "کاور مدل a07_A07 مناسب برای گوشی موبایل سامسونگ galaxy A07",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 85.52,
+     "count": 29
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "id": 74611836,
+     "price": {
+      "selling_price": 2072400,
+      "rrp_price": 2355000,
+      "order_limit": 4,
+      "is_incredible": false,
+      "is_promotion": true,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 12,
+      "badge": {
+       "title": "فروش ویژه",
+       "color": "#E6123D"
+      },
+      "is_digiplus_promotion": false,
+      "is_digiplus_early_access": false,
+      "is_application_incredible": false,
+      "is_lightening_deal": false,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 607303,
+      "title": "پخش بنیامین",
+      "code": "D4SRG"
+     }
+    }
+   },
+   {
+    "id": 20480029,
+    "title_fa": "کاور مدل A-07مناسب برای گوشی موبایل سامسونگ Galaxy A07",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 73.7,
+     "count": 92
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "id": 72516800,
+     "price": {
+      "selling_price": 1450000,
+      "rrp_price": 1450000,
+      "order_limit": 5,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 77437,
+      "title": "میسیز قاب",
+      "code": "A2HNU"
+     }
+    }
+   },
+   {
+    "id": 20915630,
+    "title_fa": "کاور مدل a07-A07 مناسب برای گوشی موبایل سامسونگ galaxy A07",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 86.21,
+     "count": 29
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "id": 74612332,
+     "price": {
+      "selling_price": 2059200,
+      "rrp_price": 2340000,
+      "order_limit": 4,
+      "is_incredible": false,
+      "is_promotion": true,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 12,
+      "badge": {
+       "title": "فروش ویژه",
+       "color": "#E6123D"
+      },
+      "is_digiplus_promotion": false,
+      "is_digiplus_early_access": false,
+      "is_application_incredible": false,
+      "is_lightening_deal": false,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 607303,
+      "title": "پخش بنیامین",
+      "code": "D4SRG"
+     }
+    }
+   }
+  ],
+  "sort_options": [
+   {
+    "id": 22,
+    "title_fa": "مرتبط‌ترین"
+   },
+   {
+    "id": 4,
+    "title_fa": "پربازدیدترین"
+   },
+   {
+    "id": 1,
+    "title_fa": "جدیدترین"
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 42,
+   "total_items": 828
+  }
+ }
+}

@@ -1,0 +1,119 @@
+{
+ "status": 200,
+ "data": {
+  "categories": [
+   {
+    "category": {
+     "id": 10312,
+     "title_fa": "کمک های خیریه",
+     "title_en": "کمک های خیریه",
+     "code": "donation",
+     "url": {
+      "base": null,
+      "uri": "/main/donation/"
+     }
+    }
+   },
+   {
+    "category": {
+     "id": 8450,
+     "title_fa": "ابزار آلات و تجهیزات",
+     "title_en": "وسایل نقلیه و صنعتی",
+     "code": "vehicles",
+     "url": {
+      "base": null,
+      "uri": "/main/vehicles/"
+     }
+    }
+   },
+   {
+    "category": {
+     "id": 5967,
+     "title_fa": "خانه و آشپزخانه",
+     "title_en": "خانه، آشپزخانه و ابزار",
+     "code": "home-and-kitchen",
+     "url": {
+      "base": null,
+      "uri": "/main/home-and-kitchen/"
+     }
+    }
+   },
+   {
+    "parent_id": 6060,
+    "category": {
+     "id": 12,
+     "title_fa": "لوازم جانبی گوشی موبایل",
+     "title_en": "لوازم جانبی گوشی موبایل",
+     "code": "mobile-accessories",
+     "url": {
+      "base": null,
+      "uri": "/search/category-mobile-accessories/"
+     }
+    }
+   },
+   {
+    "parent_id": 8171,
+    "category": {
+     "id": 8172,
+     "title_fa": "هدفون حرفه‌ای",
+     "title_en": "هدفون حرفه‌ای",
+     "code": "monitor-headphones",
+     "url": {
+      "base": null,
+      "uri": "/search/category-monitor-headphones/"
+     }
+    }
+   },
+   {
+    "category": {
+     "id": 1,
+     "title_fa": "موبایل",
+     "title_en": "موبایل",
+     "code": "mobile",
+     "url": {
+      "base": null,
+      "uri": "/main/mobile/"
+     }
+    }
+   },
+   {
+    "category": {
+     "id": 5966,
+     "title_fa": "کالای دیجیتال",
+     "title_en": "کالای دیجیتال",
+     "code": "electronic-devices",
+     "url": {
+      "base": null,
+      "uri": "/main/electronic-devices/"
+     }
+    }
+   },
+   {
+    "parent_id": 5966,
+    "category": {
+     "id": 211,
+     "title_fa": "هدفون، هدست و هندزفری",
+     "title_en": "هدفون، هدست و هندزفری",
+     "code": "headphone",
+     "url": {
+      "base": null,
+      "uri": "/search/category-headphone/"
+     }
+    }
+   },
+   {
+    "parent_id": 1,
+    "category": {
+     "id": 11,
+     "title_fa": "گوشی موبایل",
+     "title_en": "گوشی موبایل",
+     "code": "mobile-phone",
+     "url": {
+      "base": null,
+      "uri": "/search/category-mobile-phone/"
+     }
+    }
+   }
+  ]
+ }
+}

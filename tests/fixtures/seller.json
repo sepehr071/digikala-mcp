@@ -1,0 +1,249 @@
+{
+ "status": 200,
+ "data": {
+  "filters": {
+   "brands": {
+    "type": "checkbox",
+    "title": "برند",
+    "options": [
+     {
+      "id": 8,
+      "code": "ibm",
+      "title_fa": "آی بی ام",
+      "title_en": "IBM",
+      "url": {
+       "base": null,
+       "uri": "/brand/ibm/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 24,
+      "code": "i-mate",
+      "title_fa": "آی میت",
+      "title_en": "i-mate",
+      "url": {
+       "base": null,
+       "uri": "/brand/i-mate/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 10,
+      "code": "apple",
+      "title_fa": "اپل",
+      "title_en": "Apple",
+      "url": {
+       "base": null,
+       "uri": "/brand/apple/"
+      },
+      "visibility": true,
+      "is_premium": false
+     }
+    ]
+   },
+   "categories": {
+    "type": "checkbox",
+    "title": "دسته‌بندی",
+    "options": [
+     {
+      "id": 11,
+      "title_fa": "گوشی موبایل",
+      "title_en": "گوشی موبایل",
+      "code": "mobile-phone"
+     },
+     {
+      "id": 11181,
+      "title_fa": "قمقمه و شیکر ورزشی",
+      "title_en": "Sport Water Bottle and Shaker",
+      "code": "sport-water-bottle-and-shaker"
+     },
+     {
+      "id": 1271,
+      "title_fa": "شارژر تبلت و موبایل",
+      "title_en": "شارژر تبلت و موبایل",
+      "code": "car-charger"
+     }
+    ]
+   }
+  },
+  "products": [
+   {
+    "id": 16200986,
+    "title_fa": "هدفون بلوتوثی انکر مدل R50i NC با حذف نویز فعال (ANC)، درگاه شارژ USB Type-C، باتری قابل شارژ تا 45 ساعت، مقاوم در برابر پاشش آب و گرد و غبار",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 89.08,
+     "count": 10766
+    },
+    "data_layer": {
+     "brand": "انکر"
+    },
+    "default_variant": {
+     "id": 83573765,
+     "price": {
+      "selling_price": 38200000,
+      "rrp_price": 38200000,
+      "order_limit": 10,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 389375,
+      "title": "اسمارت تکنولوژی قشم",
+      "code": "CGDG9"
+     }
+    }
+   },
+   {
+    "id": 13287099,
+    "title_fa": "هدفون بلوتوثی برند کیو سی وای مدل T13 ANC2 با نویز کنسلینگ فعال (ANC)، نویز کنسلینگ میکروفون (ENC) و پخش صدای محیطی (Transparency)، درگاه شارژ USB Type-C، با قابلیت اتصال به چند دستگاه، کنترل لمسی، مقاوم در برابر آب و گردوغبار",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 90.07,
+     "count": 13940
+    },
+    "data_layer": {
+     "brand": "کیو سی وای"
+    },
+    "default_variant": {
+     "id": 84335685,
+     "price": {
+      "selling_price": 28490000,
+      "rrp_price": 28490000,
+      "order_limit": 10,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 389375,
+      "title": "اسمارت تکنولوژی قشم",
+      "code": "CGDG9"
+     }
+    }
+   },
+   {
+    "id": 20490694,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A17 4G دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت - ویتنام",
+    "title_en": "Samsung Galaxy A17 4G Dual SIM 128GB Storage And 4GB Ram Mobile Phone - Vietnam",
+    "status": "marketable",
+    "rating": {
+     "rate": 87.75,
+     "count": 1017
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 74436055,
+     "price": {
+      "selling_price": 576990000,
+      "rrp_price": 576990000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 389375,
+      "title": "اسمارت تکنولوژی قشم",
+      "code": "CGDG9"
+     }
+    }
+   }
+  ],
+  "sort_options": [
+   {
+    "id": 4,
+    "title_fa": "پربازدیدترین"
+   },
+   {
+    "id": 1,
+    "title_fa": "جدیدترین"
+   },
+   {
+    "id": 7,
+    "title_fa": "پرفروش‌ترین‌"
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 7,
+   "total_items": 135
+  },
+  "seller": {
+   "id": 389375,
+   "title": "اسمارت تکنولوژی قشم",
+   "code": "CGDG9",
+   "url": {
+    "base": null,
+    "uri": "/seller/CGDG9/"
+   },
+   "stars": 5,
+   "registration_date": "6 سال و 2 ماه",
+   "grade": {
+    "label": "عالی",
+    "color": "#00a049"
+   },
+   "rating": {
+    "total_rate": 87,
+    "total_count": 82197,
+    "totally_satisfied": {
+     "title": "کاملا راضی",
+     "rate": 66,
+     "rate_count": 53957
+    },
+    "satisfied": {
+     "title": "راضی",
+     "rate": 20,
+     "rate_count": 16361
+    },
+    "neutral": {
+     "title": "نظری ندارم",
+     "rate": 6,
+     "rate_count": 5320
+    },
+    "dissatisfied": {
+     "title": "ناراضی",
+     "rate": 2,
+     "rate_count": 1643
+    },
+    "totally_dissatisfied": {
+     "title": "کاملا ناراضی",
+     "rate": 6,
+     "rate_count": 4916
+    }
+   },
+   "statistics": {
+    "ship_on_time": 99.9,
+    "cancellation": 99.9,
+    "return": 99.9
+   },
+   "properties": {
+    "is_trusted": true,
+    "is_official": false,
+    "official_brands": [],
+    "is_new": false
+   },
+   "description": ""
+  }
+ }
+}

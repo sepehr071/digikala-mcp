@@ -1,0 +1,85 @@
+{
+ "status": 200,
+ "data": {
+  "today": "2026-10-03",
+  "price_chart": [
+   {
+    "id": 0,
+    "title": "مشکی",
+    "history": [
+     {
+      "selling_price": 345000000,
+      "rrp_price": 345000000,
+      "is_marketable": true,
+      "seller": "شاپ آفر پایتخت",
+      "product_warranty": "شرکتی",
+      "day": "1405/07/07"
+     },
+     {
+      "selling_price": 378196000,
+      "rrp_price": 378196000,
+      "is_marketable": true,
+      "seller": "دیجی‌کالا",
+      "product_warranty": "-شرکتی",
+      "day": "1405/07/08"
+     },
+     {
+      "selling_price": 369670000,
+      "rrp_price": 369670000,
+      "is_marketable": true,
+      "seller": "سپاهان همراه یاقوت",
+      "product_warranty": "شرکتی",
+      "day": "1405/07/09"
+     },
+     {
+      "selling_price": 344990000,
+      "rrp_price": 344990000,
+      "is_marketable": true,
+      "seller": "بهار کیهان ارتباطات",
+      "product_warranty": "شرکتی",
+      "day": "1405/07/10"
+     }
+    ]
+   },
+   {
+    "id": 1,
+    "title": "بنفش",
+    "history": [
+     {
+      "selling_price": 343000000,
+      "rrp_price": 343000000,
+      "is_marketable": false,
+      "seller": "بانی نو",
+      "product_warranty": "هماهنگ (داریا همراه)",
+      "day": "1405/07/07"
+     },
+     {
+      "selling_price": 343000000,
+      "rrp_price": 343000000,
+      "is_marketable": false,
+      "seller": "بانی نو",
+      "product_warranty": "هماهنگ (داریا همراه)",
+      "day": "1405/07/08"
+     },
+     {
+      "selling_price": 343000000,
+      "rrp_price": 343000000,
+      "is_marketable": false,
+      "seller": "بانی نو",
+      "product_warranty": "هماهنگ (داریا همراه)",
+      "day": "1405/07/09"
+     },
+     {
+      "selling_price": 343000000,
+      "rrp_price": 343000000,
+      "is_marketable": false,
+      "seller": "بانی نو",
+      "product_warranty": "هماهنگ (داریا همراه)",
+      "day": "1405/07/10"
+     }
+    ]
+   }
+  ],
+  "chart_selection_title": "انتخاب رنگ"
+ }
+}

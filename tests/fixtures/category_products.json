@@ -1,0 +1,112 @@
+{
+ "status": 200,
+ "data": {
+  "filters": {
+   "brands": {
+    "type": "checkbox",
+    "title": "برند",
+    "options": [
+     {
+      "id": 62,
+      "code": "archos",
+      "title_fa": "آرکاس",
+      "title_en": "Archos",
+      "url": {
+       "base": null,
+       "uri": "/brand/archos/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 80,
+      "code": "alcatel",
+      "title_fa": "آلکاتل",
+      "title_en": "Alcatel",
+      "url": {
+       "base": null,
+       "uri": "/brand/alcatel/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 8,
+      "code": "ibm",
+      "title_fa": "آی بی ام",
+      "title_en": "IBM",
+      "url": {
+       "base": null,
+       "uri": "/brand/ibm/"
+      },
+      "visibility": true,
+      "is_premium": false
+     }
+    ]
+   }
+  },
+  "products": [
+   {
+    "id": 22667973,
+    "title_fa": "گوشی موبایل اپل مدل iPhone 18 Pro Zaa تک سیم کارت ظرفیت 256 گیگابایت و رم 12 گیگابایت ",
+    "title_en": "Apple iPhone 18 Pro Zaa Single SIM Storage 256GB and RAM 12GB Mobile Phone",
+    "status": "coming_soon",
+    "rating": {
+     "rate": 0,
+     "count": 0
+    },
+    "data_layer": {
+     "brand": "اپل"
+    },
+    "default_variant": []
+   },
+   {
+    "id": 22719748,
+    "title_fa": "گوشی موبایل اپل مدل iPhone 18 Pro Max CH دو سیم کارت ظرفیت 256 گیگابایت و رم 12 گیگابایت ",
+    "title_en": "Apple iPhone 18 Pro Max CH Dual SIM Storage 256GB and RAM 12GB Mobile Phone ",
+    "status": "coming_soon",
+    "rating": {
+     "rate": 0,
+     "count": 0
+    },
+    "data_layer": {
+     "brand": "اپل"
+    },
+    "default_variant": []
+   },
+   {
+    "id": 22706421,
+    "title_fa": "گوشی موبایل اپل مدل iPhone Duo eSIM ظرفیت 256 گیگابایت و رم 12 گیگابایت",
+    "title_en": "Apple iPhone Duo Storage 256GB and RAM 12GB Mobile Phone",
+    "status": "coming_soon",
+    "rating": {
+     "rate": 0,
+     "count": 0
+    },
+    "data_layer": {
+     "brand": "اپل"
+    },
+    "default_variant": []
+   }
+  ],
+  "sort_options": [
+   {
+    "id": 7,
+    "title_fa": "پرفروش‌ترین‌"
+   },
+   {
+    "id": 22,
+    "title_fa": "مرتبط‌ترین"
+   },
+   {
+    "id": 4,
+    "title_fa": "پربازدیدترین"
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 202,
+   "total_items": 4026
+  }
+ }
+}

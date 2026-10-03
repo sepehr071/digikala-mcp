@@ -1,0 +1,187 @@
+{
+ "status": 200,
+ "data": {
+  "product": {
+   "id": 4369031,
+   "title_fa": "شیر کم چرب پاک - 200 میلی لیتر",
+   "title_en": "",
+   "url": {
+    "base": null,
+    "uri": "/product/dkp-4369031/شیر-کم-چرب-پاک-200-میلی-لیتر"
+   },
+   "status": "marketable",
+   "data_layer": {
+    "brand": "پاک",
+    "category": "[FF,شیر]",
+    "metric6": 2175,
+    "dimension2": 0,
+    "dimension6": 0,
+    "dimension7": "none",
+    "dimension9": 4.3,
+    "dimension11": 1,
+    "dimension20": "marketable",
+    "item_category2": "شیر",
+    "item_category3": "",
+    "item_category4": "",
+    "item_category5": ""
+   },
+   "product_type": "product",
+   "rating": {
+    "rate": 84.47,
+    "count": 2175
+   },
+   "colors": [],
+   "default_variant": {
+    "id": 14073629,
+    "price": {
+     "selling_price": 280000,
+     "rrp_price": 280000,
+     "order_limit": 5,
+     "is_incredible": false,
+     "is_promotion": false,
+     "is_locked_for_digiplus": false,
+     "bnpl_active": false,
+     "discount_percent": 0,
+     "is_plus_early_access": false,
+     "min_order_limit": 1
+    },
+    "seller": {
+     "id": 1,
+     "title": "دیجی‌کالا",
+     "code": "5A52N"
+    }
+   },
+   "properties": {
+    "is_fast_shipping": true,
+    "is_ship_by_seller": false,
+    "free_shipping_badge": false,
+    "is_multi_warehouse": false,
+    "is_fake": false,
+    "has_gift": false,
+    "min_price_in_last_month": 0,
+    "is_non_inventory": false,
+    "is_ad": false,
+    "ad": [],
+    "is_jet_eligible": false,
+    "is_medical_supplement": false,
+    "has_printed_price": true
+   },
+   "has_true_to_size": false,
+   "category": {
+    "id": 73,
+    "title_fa": "شیر کم چرب",
+    "title_en": "شیر کم چرب",
+    "code": "low-fat-milk"
+   },
+   "brand": {
+    "id": 11772,
+    "code": "pak",
+    "title_fa": "پاک",
+    "title_en": "Pak",
+    "url": {
+     "base": null,
+     "uri": "/brand/pak/"
+    },
+    "visibility": true,
+    "is_premium": false,
+    "is_miscellaneous": false,
+    "is_name_similar": false
+   },
+   "variants": [
+    {
+     "id": 14073629,
+     "lead_time": 0,
+     "themes": [],
+     "warranty": {
+      "title_fa": "گارانتی اصالت و سلامت فیزیکی کالا"
+     },
+     "seller": {
+      "title": "دیجی‌کالا",
+      "code": "5A52N",
+      "rating": {
+       "total_rate": 0
+      }
+     },
+     "price": {
+      "selling_price": 280000,
+      "rrp_price": 280000,
+      "order_limit": 5,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "shipment_methods": {
+      "description": "موجود در انبار دیجی‌کالا",
+      "providers": [
+       {
+        "title": "ارسال سریع سوپرمارکتی دیجی‌کالا"
+       }
+      ]
+     }
+    }
+   ],
+   "questions_count": 3,
+   "comments_count": 936,
+   "specifications": [
+    {
+     "title": "مشخصات",
+     "attributes": [
+      {
+       "title": "حجم",
+       "values": [
+        "0.200 لیتر"
+       ]
+      },
+      {
+       "title": "وزن بسته‌بندی",
+       "values": [
+        "  گرم"
+       ]
+      },
+      {
+       "title": "ابعاد بسته‌بندی",
+       "values": [
+        "  سانتی‌متر"
+       ]
+      },
+      {
+       "title": "نوع شیر",
+       "values": [
+        "گاو "
+       ]
+      },
+      {
+       "title": "شماره پروانه بهداشت",
+       "values": [
+        "25/10977 "
+       ]
+      },
+      {
+       "title": "روش نگهداری",
+       "values": [
+        "- در یخچال نگهداری شود. "
+       ]
+      },
+      {
+       "title": "نوع ویتامین و مواد معدنی",
+       "values": [
+        "کلسیم "
+       ]
+      },
+      {
+       "title": "نوع بسته‌بندی",
+       "values": [
+        "پاکتی "
+       ]
+      }
+     ]
+    }
+   ],
+   "digify_touchpoint": ""
+  }
+ }
+}

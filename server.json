@@ -1,0 +1,32 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.sepehr071/digikala-mcp",
+  "title": "Digikala",
+  "description": "Unofficial read-only Digikala: search products, compare sellers, price history, reviews, deals.",
+  "repository": {
+    "url": "https://github.com/sepehr071/digikala-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://github.com/sepehr071/digikala-mcp",
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "digikala-mcp",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "DIGIKALA_MCP_PROXY",
+          "description": "Optional HTTP proxy URL for every request (e.g. one with an Iranian exit if Digikala blocks yours); system proxy settings are ignored.",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

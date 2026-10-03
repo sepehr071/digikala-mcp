@@ -1,0 +1,288 @@
+{
+ "status": 200,
+ "data": {
+  "compare_products": [
+   {
+    "product": {
+     "id": 20109389,
+     "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت",
+     "title_en": "Samsung Galaxy A07 Dual SIM Storage 64GB And 4GB RAM Mobile Phone",
+     "status": "marketable",
+     "rating": {
+      "rate": 87.64,
+      "count": 2164
+     },
+     "data_layer": {
+      "brand": "سامسونگ"
+     },
+     "default_variant": {
+      "id": 72287314,
+      "price": {
+       "selling_price": 425036000,
+       "rrp_price": 425036000,
+       "order_limit": 1,
+       "is_incredible": false,
+       "is_promotion": false,
+       "is_locked_for_digiplus": false,
+       "bnpl_active": false,
+       "discount_percent": 0,
+       "is_plus_early_access": false,
+       "min_order_limit": 1
+      },
+      "seller": {
+       "id": 1,
+       "title": "دیجی‌کالا",
+       "code": "5A52N"
+      }
+     }
+    },
+    "attribute_groups": [
+     {
+      "id": 2693,
+      "title": "مشخصات کلی",
+      "attributes": [
+       {
+        "id": 9588,
+        "title": "نوع گوشی موبایل",
+        "values": [
+         "سیستم عامل اندروید"
+        ]
+       },
+       {
+        "id": 7805,
+        "title": "دسته ‌بندی",
+        "values": [
+         "اقتصادی"
+        ]
+       },
+       {
+        "id": 7350,
+        "title": "مدل",
+        "values": [
+         "Galaxy A07"
+        ]
+       },
+       {
+        "id": 2249,
+        "title": "توضیحات بدنه",
+        "values": [
+         "قاب جلو از جنس شیشه / \nقاب پشت و فریم از جنس پلاستیک"
+        ]
+       },
+       {
+        "id": 6517,
+        "title": "تعداد سیم کارت",
+        "values": [
+         "دو عدد"
+        ]
+       },
+       {
+        "id": 6526,
+        "title": "نوع سیم کارت",
+        "values": [
+         "سایز نانو (8.8 × 12.3 میلی‌متر)"
+        ]
+       }
+      ]
+     },
+     {
+      "id": 2696,
+      "title": "صفحه نمایش",
+      "attributes": [
+       {
+        "id": 6525,
+        "title": "فناوری صفحه‌ نمایش",
+        "values": [
+         "LCD"
+        ]
+       },
+       {
+        "id": 2987,
+        "title": "نرخ به‌روزرسانی تصویر",
+        "values": [
+         "90 هرتز"
+        ]
+       },
+       {
+        "id": 2196,
+        "title": "اندازه",
+        "values": [
+         "6.7 اینچ"
+        ]
+       },
+       {
+        "id": 6539,
+        "title": "نسبت صفحه‌ نمایش به بدنه",
+        "values": [
+         "83.8"
+        ]
+       },
+       {
+        "id": 7358,
+        "title": "نسبت تصویر",
+        "values": [
+         "20:9"
+        ]
+       },
+       {
+        "id": 7357,
+        "title": "رزولوشن صفحه نمایش",
+        "values": [
+         "1600x720 پیکسل"
+        ]
+       },
+       {
+        "id": 2234,
+        "title": "تراکم پیکسلی",
+        "values": [
+         "262 پیکسل بر اینچ"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "product": {
+     "id": 20110013,
+     "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 128گیگابایت و رم 6 گیگابایت ",
+     "title_en": "Samsung Galaxy A07 Dual SIM Storage 128GB And 6GB RAM Mobile Phone",
+     "status": "marketable",
+     "rating": {
+      "rate": 87.74,
+      "count": 1463
+     },
+     "data_layer": {
+      "brand": "سامسونگ"
+     },
+     "default_variant": {
+      "id": 74547577,
+      "price": {
+       "selling_price": 529608000,
+       "rrp_price": 529608000,
+       "order_limit": 1,
+       "is_incredible": false,
+       "is_promotion": false,
+       "is_locked_for_digiplus": false,
+       "bnpl_active": false,
+       "marketable_stock": 2,
+       "discount_percent": 0,
+       "is_plus_early_access": false,
+       "min_order_limit": 1
+      },
+      "seller": {
+       "id": 1,
+       "title": "دیجی‌کالا",
+       "code": "5A52N"
+      }
+     }
+    },
+    "attribute_groups": [
+     {
+      "id": 2693,
+      "title": "مشخصات کلی",
+      "attributes": [
+       {
+        "id": 9588,
+        "title": "نوع گوشی موبایل",
+        "values": [
+         "سیستم عامل اندروید"
+        ]
+       },
+       {
+        "id": 7805,
+        "title": "دسته ‌بندی",
+        "values": [
+         "اقتصادی"
+        ]
+       },
+       {
+        "id": 7350,
+        "title": "مدل",
+        "values": [
+         "Galaxy A07"
+        ]
+       },
+       {
+        "id": 2249,
+        "title": "توضیحات بدنه",
+        "values": [
+         "قاب جلو از جنس شیشه / \nقاب پشت و فریم از جنس پلاستیک"
+        ]
+       },
+       {
+        "id": 6517,
+        "title": "تعداد سیم کارت",
+        "values": [
+         "دو عدد"
+        ]
+       },
+       {
+        "id": 6526,
+        "title": "نوع سیم کارت",
+        "values": [
+         "سایز نانو (8.8 × 12.3 میلی‌متر)"
+        ]
+       }
+      ]
+     },
+     {
+      "id": 2696,
+      "title": "صفحه نمایش",
+      "attributes": [
+       {
+        "id": 6525,
+        "title": "فناوری صفحه‌ نمایش",
+        "values": [
+         "LCD"
+        ]
+       },
+       {
+        "id": 2987,
+        "title": "نرخ به‌روزرسانی تصویر",
+        "values": [
+         "90 هرتز"
+        ]
+       },
+       {
+        "id": 2196,
+        "title": "اندازه",
+        "values": [
+         "6.7 اینچ"
+        ]
+       },
+       {
+        "id": 6539,
+        "title": "نسبت صفحه‌ نمایش به بدنه",
+        "values": [
+         "83.8"
+        ]
+       },
+       {
+        "id": 7358,
+        "title": "نسبت تصویر",
+        "values": [
+         "20:9"
+        ]
+       },
+       {
+        "id": 7357,
+        "title": "رزولوشن صفحه نمایش",
+        "values": [
+         "1600x720 پیکسل"
+        ]
+       },
+       {
+        "id": 2234,
+        "title": "تراکم پیکسلی",
+        "values": [
+         "262 پیکسل بر اینچ"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

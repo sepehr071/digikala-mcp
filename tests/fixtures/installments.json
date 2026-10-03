@@ -1,0 +1,29 @@
+{
+ "status": 200,
+ "data": {
+  "url": "https://www.digikala.com/my-digipay/?action=408",
+  "items": {
+   "71571641": {
+    "cash_pay_amount": 891742000,
+    "credit_amount": 700000000,
+    "installment_count": 12,
+    "installment_amount": 65853000,
+    "is_partial": true
+   },
+   "71571681": {
+    "cash_pay_amount": 891742000,
+    "credit_amount": 700000000,
+    "installment_count": 12,
+    "installment_amount": 65853000,
+    "is_partial": true
+   },
+   "72287314": {
+    "cash_pay_amount": 891742000,
+    "credit_amount": 700000000,
+    "installment_count": 12,
+    "installment_amount": 65853000,
+    "is_partial": true
+   }
+  }
+ }
+}

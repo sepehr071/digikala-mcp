@@ -1,0 +1,51 @@
+name: Publish
+
+# Tag a release (git tag v0.1.0 && git push --tags) after bumping the version in
+# pyproject.toml and server.json.
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  pypi:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # PyPI trusted publishing
+      contents: write  # GitHub Release
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.2.0
+      - name: Check versions match the tag
+        run: |
+          TAG=${GITHUB_REF_NAME#v}
+          grep -q "^version = \"$TAG\"" pyproject.toml
+          test "$(jq -r .version server.json)" = "$TAG"
+          test "$(jq -r '.packages[0].version' server.json)" = "$TAG"
+      - run: uv sync --locked && uv run pytest -q
+      - run: uv build
+      - uses: pypa/gh-action-pypi-publish@release/v1
+      - run: gh release create "$GITHUB_REF_NAME" dist/* --generate-notes --title "$GITHUB_REF_NAME"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  mcp-registry:
+    needs: pypi
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # MCP Registry login via GitHub OIDC
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - name: Wait for PyPI to serve the new version
+        run: |
+          for i in $(seq 1 30); do
+            curl -sf "https://pypi.org/pypi/digikala-mcp/${GITHUB_REF_NAME#v}/json" >/dev/null && exit 0
+            sleep 10
+          done
+          exit 1
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+      - run: ./mcp-publisher login github-oidc
+      - run: ./mcp-publisher publish

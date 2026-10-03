@@ -1,0 +1,126 @@
+{
+ "status": 200,
+ "data": {
+  "filters": {},
+  "products": [
+   {
+    "id": 4369031,
+    "title_fa": "شیر کم چرب پاک - 200 میلی لیتر",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 84.47,
+     "count": 2175
+    },
+    "data_layer": {
+     "brand": "پاک"
+    },
+    "default_variant": {
+     "id": 14073629,
+     "price": {
+      "selling_price": 280000,
+      "rrp_price": 280000,
+      "order_limit": 5,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   },
+   {
+    "id": 775049,
+    "title_fa": "شیر کم چرب روزانه حجم 0.2 لیتر",
+    "title_en": "Rouzaneh Low Fat Milk 0.2 Lit",
+    "status": "marketable",
+    "rating": {
+     "rate": 86.97,
+     "count": 284
+    },
+    "data_layer": {
+     "brand": "روزانه"
+    },
+    "default_variant": {
+     "id": 1674920,
+     "price": {
+      "selling_price": 400000,
+      "rrp_price": 400000,
+      "order_limit": 5,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   },
+   {
+    "id": 801637,
+    "title_fa": "شیر پرچرب دومینو - 0.2 لیتر",
+    "title_en": "Domino Full Fat Milk 0.2 Lit",
+    "status": "marketable",
+    "rating": {
+     "rate": 89.73,
+     "count": 74
+    },
+    "data_layer": {
+     "brand": "دومینو"
+    },
+    "default_variant": {
+     "id": 1674143,
+     "price": {
+      "selling_price": 406000,
+      "rrp_price": 406000,
+      "order_limit": 5,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   }
+  ],
+  "sort_options": [
+   {
+    "id": 22,
+    "title_fa": "مرتبط‌ترین"
+   },
+   {
+    "id": 1,
+    "title_fa": "جدیدترین"
+   },
+   {
+    "id": 20,
+    "title_fa": "ارزان‌ترین"
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 7,
+   "total_items": 138
+  }
+ }
+}

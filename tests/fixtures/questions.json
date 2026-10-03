@@ -1,0 +1,165 @@
+{
+ "status": 200,
+ "data": {
+  "sort": {
+   "default": "created_at"
+  },
+  "sort_options": [
+   {
+    "id": "created_at",
+    "title": "جدیدترین"
+   },
+   {
+    "id": "answers",
+    "title": "بیشترین پاسخ"
+   }
+  ],
+  "questions": [
+   {
+    "id": 8854750,
+    "status": "accepted",
+    "text": "بنظرتون برای استفاده روزمره، سامسونگ a07 بهتره یا شیائومی REDMI A5؟",
+    "answer_count": 18,
+    "sender": "محمود دارش",
+    "created_at": "22 دی 1404",
+    "answers": [
+     {
+      "id": 11977570,
+      "user_id": 42837673,
+      "text": "صد در صد سامسونگ بهنره",
+      "reactions": {
+       "likes": 28,
+       "dislikes": 7
+      },
+      "created_at": "22 دی 1404",
+      "sender": "نسیم آرادمتین",
+      "type": "buyer",
+      "marketplace_seller_id": null,
+      "user_reaction": null,
+      "has_qa_badge": false
+     },
+     {
+      "id": 12036799,
+      "user_id": 11037405,
+      "text": "شیامی هم خوبه کاریه اینم اوکیه سلیقه ایه A07خوب۲۰۲۵هستش بهتره",
+      "reactions": {
+       "likes": 17,
+       "dislikes": 2
+      },
+      "created_at": "24 دی 1404",
+      "sender": "یونس قدیمی زنجانی",
+      "type": "buyer",
+      "marketplace_seller_id": null,
+      "user_reaction": null,
+      "has_qa_badge": false
+     },
+     {
+      "id": 11979176,
+      "user_id": 10777835,
+      "text": "صد در صد a07",
+      "reactions": {
+       "likes": 5,
+       "dislikes": 0
+      },
+      "created_at": "22 دی 1404",
+      "sender": "پژمان بشارتی",
+      "type": "buyer",
+      "marketplace_seller_id": null,
+      "user_reaction": null,
+      "has_qa_badge": false
+     },
+     {
+      "id": 11981054,
+      "user_id": 718727,
+      "text": "A07 \r\nعالیه",
+      "reactions": {
+       "likes": 6,
+       "dislikes": 0
+      },
+      "created_at": "23 دی 1404",
+      "sender": "ولی شکری هاچه سو",
+      "type": "buyer",
+      "marketplace_seller_id": null,
+      "user_reaction": null,
+      "has_qa_badge": false
+     }
+    ]
+   },
+   {
+    "id": 8710305,
+    "status": "accepted",
+    "text": "شارژ چند وات باید براش بخریم ؟ قیمت شارژر چقدره حدودا",
+    "answer_count": 10,
+    "sender": "محسن بهبودی",
+    "created_at": "23 آذر 1404",
+    "answers": [
+     {
+      "id": 11542763,
+      "user_id": 38645703,
+      "text": "۲۵ وات فکر کنم ۷۰۰ تومن باشه ",
+      "reactions": {
+       "likes": 3,
+       "dislikes": 7
+      },
+      "created_at": "24 آذر 1404",
+      "sender": "ع ع",
+      "type": "buyer",
+      "marketplace_seller_id": null,
+      "user_reaction": null,
+      "has_qa_badge": false
+     },
+     {
+      "id": 11605447,
+      "user_id": 8044490,
+      "text": "۲۰وات بخر\nداخل دیجی کالا اصلش هست قیمتش هم حدود نهصد و خرده ای من خریدم عالیه",
+      "reactions": {
+       "likes": 5,
+       "dislikes": 12
+      },
+      "created_at": "28 آذر 1404",
+      "sender": "پیمان کاظمی",
+      "type": "buyer",
+      "marketplace_seller_id": null,
+      "user_reaction": null,
+      "has_qa_badge": false
+     },
+     {
+      "id": 11539860,
+      "user_id": 55484585,
+      "text": "۲۵ وات، اصلیش حدود ۹۰۰",
+      "reactions": {
+       "likes": 2,
+       "dislikes": 0
+      },
+      "created_at": "24 آذر 1404",
+      "sender": "محمد نمازی",
+      "type": "buyer",
+      "marketplace_seller_id": null,
+      "user_reaction": null,
+      "has_qa_badge": false
+     },
+     {
+      "id": 11531045,
+      "user_id": 8331338,
+      "text": "سلام 25 وات خوبه ولی 25وات یکم گرونه خوبش تقریبا یک میلیون به بالا\nولی برای این مدل میتونید از شارژر فست خوب و اصلی سامسونگ که قبلا دورن جعبه گوشی ها میزاشتن نیز استفاده کنید",
+      "reactions": {
+       "likes": 1,
+       "dislikes": 0
+      },
+      "created_at": "23 آذر 1404",
+      "sender": "محسن امیران",
+      "type": "buyer",
+      "marketplace_seller_id": null,
+      "user_reaction": null,
+      "has_qa_badge": false
+     }
+    ]
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 21,
+   "total_items": 411
+  }
+ }
+}

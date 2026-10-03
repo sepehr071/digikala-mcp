@@ -1,0 +1,42 @@
+name: Bug report
+description: A tool failed or returned wrong data
+labels: [bug]
+body:
+  - type: input
+    id: tool
+    attributes:
+      label: Tool
+      description: Which tool, e.g. dk_find_cheapest
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Arguments and result
+      description: The arguments the agent sent and the error or wrong output. Remove anything personal.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: e.g. the price shown on digikala.com for the same product
+  - type: input
+    id: client
+    attributes:
+      label: MCP client and OS
+      placeholder: Claude Desktop 1.x on Windows 11
+  - type: dropdown
+    id: network
+    attributes:
+      label: Network
+      options:
+        - Iranian IP, no VPN
+        - VPN or proxy
+        - DIGIKALA_MCP_PROXY set
+  - type: input
+    id: version
+    attributes:
+      label: digikala-mcp version
+      placeholder: "0.1.0"

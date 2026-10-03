@@ -1,0 +1,18 @@
+{
+ "status": 200,
+ "data": {
+  "last_price": 26072500,
+  "chart": {
+   "type": "daily",
+   "min": 25679800,
+   "min_index": 92,
+   "max": 26185800,
+   "max_index": 63,
+   "change": {
+    "percentage": 1.53,
+    "is_negative": false
+   },
+   "data": {}
+  }
+ }
+}

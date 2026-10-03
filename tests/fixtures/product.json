@@ -1,0 +1,556 @@
+{
+ "status": 200,
+ "data": {
+  "product": {
+   "id": 20109389,
+   "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت",
+   "title_en": "Samsung Galaxy A07 Dual SIM Storage 64GB And 4GB RAM Mobile Phone",
+   "url": {
+    "uri": "/product/dkp-20109389/گوشی-موبایل-سامسونگ-مدل-galaxy-a07-دو-سیم-کارت-ظرفیت-64-گیگابایت-و-رم-4-گیگابایت"
+   },
+   "status": "marketable",
+   "product_type": "product",
+   "rating": {
+    "rate": 87.64,
+    "count": 2164,
+    "percentages": {
+     "20": 5.31,
+     "40": 1.66,
+     "60": 9.01,
+     "80": 17.51,
+     "100": 66.51
+    }
+   },
+   "colors": [
+    {
+     "id": 6,
+     "title": "سبز",
+     "hex_code": "#008000"
+    },
+    {
+     "id": 1,
+     "title": "مشکی",
+     "hex_code": "#000000"
+    }
+   ],
+   "default_variant": {
+    "id": 72287314,
+    "price": {
+     "selling_price": 425036000,
+     "rrp_price": 425036000,
+     "order_limit": 1,
+     "is_incredible": false,
+     "is_promotion": false,
+     "is_locked_for_digiplus": false,
+     "bnpl_active": false,
+     "discount_percent": 0,
+     "sold_percentage": 19,
+     "is_plus_early_access": false,
+     "min_order_limit": 1
+    },
+    "seller": {
+     "id": 1,
+     "title": "دیجی‌کالا",
+     "code": "5A52N"
+    }
+   },
+   "properties": {
+    "min_price_in_last_month": 283736000
+   },
+   "variants": [
+    {
+     "id": 72287314,
+     "lead_time": 0,
+     "themes": [
+      {
+       "value": {
+        "title": "سبز"
+       }
+      }
+     ],
+     "warranty": {
+      "title_fa": "گارانتی 18 ماهه هماهنگ (داریا همراه)"
+     },
+     "seller": {
+      "title": "دیجی‌کالا",
+      "code": "5A52N",
+      "rating": {
+       "total_rate": 84.0
+      }
+     },
+     "price": {
+      "selling_price": 425036000,
+      "rrp_price": 425036000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "sold_percentage": 19,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "shipment_methods": {
+      "description": "موجود در انبار دیجی‌کالا",
+      "providers": [
+       {
+        "type": "digikala",
+        "title": "تحویل عادی دیجی‌کالا"
+       },
+       {
+        "type": "jet",
+        "title": "تحویل سریع دیجی‌کالا (تهران و کرج)"
+       }
+      ]
+     }
+    },
+    {
+     "id": 74547381,
+     "lead_time": 0,
+     "themes": [
+      {
+       "value": {
+        "title": "سبز"
+       }
+      }
+     ],
+     "warranty": {
+      "title_fa": "گارانتی 18 ماهه -شرکتی"
+     },
+     "seller": {
+      "title": "دیجی‌کالا",
+      "code": "5A52N",
+      "rating": {
+       "total_rate": 84.0
+      }
+     },
+     "price": {
+      "selling_price": 429794000,
+      "rrp_price": 429794000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "sold_percentage": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "shipment_methods": {
+      "description": "موجود در انبار دیجی‌کالا",
+      "providers": [
+       {
+        "type": "digikala",
+        "title": "تحویل عادی دیجی‌کالا"
+       },
+       {
+        "type": "jet",
+        "title": "تحویل سریع دیجی‌کالا (تهران و کرج)"
+       }
+      ]
+     }
+    },
+    {
+     "id": 71571681,
+     "lead_time": 0,
+     "themes": [
+      {
+       "value": {
+        "title": "سبز"
+       }
+      }
+     ],
+     "warranty": {
+      "title_fa": "گارانتی 18 ماهه شرکتی"
+     },
+     "seller": {
+      "title": "دیجی‌کالا",
+      "code": "5A52N",
+      "rating": {
+       "total_rate": 84.0
+      }
+     },
+     "price": {
+      "selling_price": 429794000,
+      "rrp_price": 429794000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "marketable_stock": 2,
+      "discount_percent": 0,
+      "sold_percentage": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "shipment_methods": {
+      "description": "موجود در انبار دیجی‌کالا",
+      "providers": [
+       {
+        "type": "digikala",
+        "title": "تحویل عادی دیجی‌کالا"
+       },
+       {
+        "type": "jet",
+        "title": "تحویل سریع دیجی‌کالا (تهران و کرج)"
+       }
+      ]
+     }
+    },
+    {
+     "id": 74441057,
+     "lead_time": 0,
+     "themes": [
+      {
+       "value": {
+        "title": "مشکی"
+       }
+      }
+     ],
+     "warranty": {
+      "title_fa": "گارانتی 18 ماهه شرکتی"
+     },
+     "seller": {
+      "title": "اسمارت تکنولوژی قشم",
+      "code": "CGDG9",
+      "rating": {
+       "total_rate": 87.0
+      }
+     },
+     "price": {
+      "selling_price": 429990000,
+      "rrp_price": 429990000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "sold_percentage": 9,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "shipment_methods": {
+      "description": "موجود در انبار دیجی‌کالا",
+      "providers": [
+       {
+        "type": "digikala",
+        "title": "تحویل عادی دیجی‌کالا"
+       },
+       {
+        "type": "jet",
+        "title": "تحویل سریع دیجی‌کالا (تهران و کرج)"
+       }
+      ]
+     }
+    },
+    {
+     "id": 71571641,
+     "lead_time": 0,
+     "themes": [
+      {
+       "value": {
+        "title": "مشکی"
+       }
+      }
+     ],
+     "warranty": {
+      "title_fa": "گارانتی 18 ماهه شرکتی"
+     },
+     "seller": {
+      "title": "دیجی‌کالا",
+      "code": "5A52N",
+      "rating": {
+       "total_rate": 84.0
+      }
+     },
+     "price": {
+      "selling_price": 430595000,
+      "rrp_price": 430595000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "sold_percentage": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "shipment_methods": {
+      "description": "موجود در انبار دیجی‌کالا",
+      "providers": [
+       {
+        "type": "digikala",
+        "title": "تحویل عادی دیجی‌کالا"
+       },
+       {
+        "type": "jet",
+        "title": "تحویل سریع دیجی‌کالا (تهران و کرج)"
+       }
+      ]
+     }
+    },
+    {
+     "id": 74547380,
+     "lead_time": 0,
+     "themes": [
+      {
+       "value": {
+        "title": "مشکی"
+       }
+      }
+     ],
+     "warranty": {
+      "title_fa": "گارانتی 18 ماهه -شرکتی"
+     },
+     "seller": {
+      "title": "دیجی‌کالا",
+      "code": "5A52N",
+      "rating": {
+       "total_rate": 84.0
+      }
+     },
+     "price": {
+      "selling_price": 430595000,
+      "rrp_price": 430595000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "sold_percentage": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "shipment_methods": {
+      "description": "موجود در انبار دیجی‌کالا",
+      "providers": [
+       {
+        "type": "digikala",
+        "title": "تحویل عادی دیجی‌کالا"
+       },
+       {
+        "type": "jet",
+        "title": "تحویل سریع دیجی‌کالا (تهران و کرج)"
+       }
+      ]
+     }
+    },
+    {
+     "id": 80919193,
+     "lead_time": 0,
+     "themes": [
+      {
+       "value": {
+        "title": "سبز"
+       }
+      }
+     ],
+     "warranty": {
+      "title_fa": "گارانتی 18 ماهه شرکتی"
+     },
+     "seller": {
+      "title": "سپاهان همراه یاقوت",
+      "code": "CGXGH",
+      "rating": {
+       "total_rate": 86.0
+      }
+     },
+     "price": {
+      "selling_price": 429180000,
+      "rrp_price": 429180000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "marketable_stock": 2,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "shipment_methods": {
+      "description": "موجود در انبار دیجی‌کالا",
+      "providers": [
+       {
+        "type": "digikala",
+        "title": "تحویل عادی دیجی‌کالا"
+       }
+      ]
+     }
+    },
+    {
+     "id": 78587602,
+     "lead_time": 0,
+     "themes": [
+      {
+       "value": {
+        "title": "مشکی"
+       }
+      }
+     ],
+     "warranty": {
+      "title_fa": "گارانتی 18 ماهه شرکتی فروشگاه حضوری"
+     },
+     "seller": {
+      "title": "فروشگاه رویال مال",
+      "code": "CCUH2",
+      "rating": {
+       "total_rate": 86.0
+      }
+     },
+     "price": {
+      "selling_price": 430618000,
+      "rrp_price": 430618000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "marketable_stock": 1,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "shipment_methods": {
+      "description": "موجود در انبار فروشنده",
+      "providers": [
+       {
+        "type": "seller",
+        "title": "تحویل عادی فروشنده"
+       }
+      ]
+     }
+    }
+   ],
+   "category": {
+    "id": 11,
+    "title_fa": "گوشی موبایل",
+    "title_en": "گوشی موبایل",
+    "code": "mobile-phone"
+   },
+   "brand": {
+    "id": 18,
+    "code": "samsung",
+    "title_fa": "سامسونگ",
+    "title_en": "Samsung",
+    "url": {
+     "uri": "/brand/samsung/"
+    },
+    "visibility": true,
+    "is_premium": false,
+    "is_miscellaneous": false,
+    "is_name_similar": false
+   },
+   "questions_count": 411,
+   "comments_count": 1251,
+   "specifications": [
+    {
+     "title": "مشخصات کلی",
+     "attributes": [
+      {
+       "title": "نوع گوشی موبایل",
+       "values": [
+        "سیستم عامل اندروید "
+       ]
+      },
+      {
+       "title": "دسته ‌بندی",
+       "values": [
+        "اقتصادی "
+       ]
+      },
+      {
+       "title": "مدل",
+       "values": [
+        "Galaxy A07 "
+       ]
+      },
+      {
+       "title": "توضیحات بدنه",
+       "values": [
+        "قاب جلو از جنس شیشه / \nقاب پشت و فریم از جنس پلاستیک "
+       ]
+      },
+      {
+       "title": "تعداد سیم کارت",
+       "values": [
+        "دو عدد"
+       ]
+      },
+      {
+       "title": "نوع سیم کارت",
+       "values": [
+        "سایز نانو (8.8 × 12.3 میلی‌متر) "
+       ]
+      }
+     ]
+    },
+    {
+     "title": "صفحه نمایش",
+     "attributes": [
+      {
+       "title": "فناوری صفحه‌ نمایش",
+       "values": [
+        "LCD "
+       ]
+      },
+      {
+       "title": "نرخ به‌روزرسانی تصویر",
+       "values": [
+        "90 هرتز"
+       ]
+      },
+      {
+       "title": "اندازه",
+       "values": [
+        "6.7 اینچ"
+       ]
+      },
+      {
+       "title": "نسبت صفحه‌ نمایش به بدنه",
+       "values": [
+        "83.8 "
+       ]
+      },
+      {
+       "title": "نسبت تصویر",
+       "values": [
+        "20:9 "
+       ]
+      },
+      {
+       "title": "رزولوشن صفحه نمایش",
+       "values": [
+        "1600x720 پیکسل"
+       ]
+      },
+      {
+       "title": "تراکم پیکسلی",
+       "values": [
+        "262 پیکسل بر اینچ"
+       ]
+      }
+     ]
+    }
+   ],
+   "has_price_chart": true,
+   "has_true_to_size": false,
+   "has_size_guide": false,
+   "cars_reservable": false,
+   "has_offline_shop_stock": true,
+   "has_style_try_on": false,
+   "digify_touchpoint": "",
+   "show_type": "normal",
+   "ai_voice_url": "https://s3.ir-thr-at1.arvanstorage.ir/digikala-public/digikala-static-audio/bedeaa4043bef3d2b9a89eaceb3ed76bca5b56d1_1767113512.mp3",
+   "data_layer": {
+    "brand": "سامسونگ"
+   }
+  }
+ }
+}

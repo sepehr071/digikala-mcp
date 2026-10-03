@@ -1,0 +1,134 @@
+{
+ "status": 200,
+ "data": {
+  "products": [
+   {
+    "id": 15572856,
+    "title_fa": "گوشی موبایل نوکیا مدل 105 2023 دو سیم‌ کارت - مونتاژ ایران تحت لیسانس نوکیا",
+    "title_en": "Nokia 105 2023 Dual SIM Mobile Phone - Assembled in Iran under the license of Nokia",
+    "status": "marketable",
+    "rating": {
+     "rate": 83.75,
+     "count": 4098
+    },
+    "data_layer": {
+     "brand": "نوکیا"
+    },
+    "default_variant": {
+     "id": 70923505,
+     "price": {
+      "selling_price": 30017000,
+      "rrp_price": 30945000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": true,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 3,
+      "badge": {
+       "title": "فروش ویژه",
+       "color": "#E6123D"
+      },
+      "is_digiplus_promotion": false,
+      "is_digiplus_early_access": false,
+      "is_application_incredible": false,
+      "is_lightening_deal": false,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   },
+   {
+    "id": 20109389,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت",
+    "title_en": "Samsung Galaxy A07 Dual SIM Storage 64GB And 4GB RAM Mobile Phone",
+    "status": "marketable",
+    "rating": {
+     "rate": 87.64,
+     "count": 2164
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 72287314,
+     "price": {
+      "selling_price": 425036000,
+      "rrp_price": 425036000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   },
+   {
+    "id": 20110012,
+    "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت ",
+    "title_en": "Samsung Galaxy A07 Dual SIM Storage 128GB And 4GB RAM Mobile Phone",
+    "status": "marketable",
+    "rating": {
+     "rate": 86.42,
+     "count": 1312
+    },
+    "data_layer": {
+     "brand": "سامسونگ"
+    },
+    "default_variant": {
+     "id": 73485559,
+     "price": {
+      "selling_price": 468118000,
+      "rrp_price": 468118000,
+      "order_limit": 1,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   }
+  ],
+  "categories": [
+   {
+    "id": 1,
+    "title_fa": "موبایل",
+    "title_en": "موبایل",
+    "code": "mobile"
+   },
+   {
+    "id": 6027,
+    "title_fa": "اسباب بازی",
+    "title_en": "اسباب بازی",
+    "code": "toys"
+   },
+   {
+    "id": 5966,
+    "title_fa": "کالای دیجیتال",
+    "title_en": "کالای دیجیتال",
+    "code": "electronic-devices"
+   }
+  ]
+ }
+}

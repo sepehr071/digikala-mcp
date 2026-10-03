@@ -1,0 +1,194 @@
+{
+ "status": 200,
+ "data": {
+  "filters": {
+   "brands": {
+    "type": "checkbox",
+    "title": "برند",
+    "options": [
+     {
+      "id": 10541,
+      "code": "alis",
+      "title_fa": "عالیس",
+      "title_en": "Alis",
+      "url": {
+       "base": null,
+       "uri": "/brand/alis/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 10556,
+      "code": "pegah",
+      "title_fa": "پگاه",
+      "title_en": "Pegah",
+      "url": {
+       "base": null,
+       "uri": "/brand/pegah/"
+      },
+      "visibility": true,
+      "is_premium": false
+     },
+     {
+      "id": 10696,
+      "code": "marta",
+      "title_fa": "مارتا",
+      "title_en": "Marta",
+      "url": {
+       "base": null,
+       "uri": "/brand/marta/"
+      },
+      "visibility": true,
+      "is_premium": false
+     }
+    ]
+   },
+   "categories": {
+    "type": "category_list",
+    "title": "دسته‌بندی",
+    "options": [
+     {
+      "id": 63,
+      "title_fa": "پنیر صبحانه",
+      "title_en": "پنیر صبحانه",
+      "code": "breakfast-cheese"
+     },
+     {
+      "id": 61,
+      "title_fa": "پنیر خامه‌ ای",
+      "title_en": "پنیر خامه‌ ای",
+      "code": "cream-cheese"
+     },
+     {
+      "id": 60,
+      "title_fa": "پنیر پیتزا",
+      "title_en": "پنیر پیتزا",
+      "code": "pizza-cheese"
+     }
+    ]
+   }
+  },
+  "products": [
+   {
+    "id": 4458598,
+    "title_fa": "دوغ پاک - 1 لیتر",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 83.04,
+     "count": 2396
+    },
+    "data_layer": {
+     "brand": "پاک"
+    },
+    "default_variant": {
+     "id": 14570611,
+     "price": {
+      "selling_price": 650000,
+      "rrp_price": 650000,
+      "order_limit": 3,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "marketable_stock": 3,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   },
+   {
+    "id": 11327614,
+    "title_fa": "پنیر خامه ای  رامک - 750 گرم",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 88.67,
+     "count": 1601
+    },
+    "data_layer": {
+     "brand": "رامک"
+    },
+    "default_variant": {
+     "id": 40216236,
+     "price": {
+      "selling_price": 4900000,
+      "rrp_price": 4900000,
+      "order_limit": 5,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   },
+   {
+    "id": 888493,
+    "title_fa": "ماست یونانی پر چرب میهن مقدار 900 گرم",
+    "title_en": "Mihan Greek Full Fat Yoghurt 900 gr",
+    "status": "marketable",
+    "rating": {
+     "rate": 86.89,
+     "count": 879
+    },
+    "data_layer": {
+     "brand": "میهن"
+    },
+    "default_variant": {
+     "id": 1771237,
+     "price": {
+      "selling_price": 2610000,
+      "rrp_price": 2610000,
+      "order_limit": 5,
+      "is_incredible": false,
+      "is_promotion": false,
+      "is_locked_for_digiplus": false,
+      "bnpl_active": false,
+      "discount_percent": 0,
+      "is_plus_early_access": false,
+      "min_order_limit": 1
+     },
+     "seller": {
+      "id": 1,
+      "title": "دیجی‌کالا",
+      "code": "5A52N"
+     }
+    }
+   }
+  ],
+  "sort_options": [
+   {
+    "id": 22,
+    "title_fa": "مرتبط‌ترین"
+   },
+   {
+    "id": 1,
+    "title_fa": "جدیدترین"
+   },
+   {
+    "id": 20,
+    "title_fa": "ارزان‌ترین"
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 140,
+   "total_items": 2791
+  }
+ }
+}

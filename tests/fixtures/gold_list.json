@@ -1,0 +1,46 @@
+{
+ "status": 200,
+ "data": {
+  "values": [
+   {
+    "id": 1,
+    "title": "سکه امامی",
+    "price": 266317700,
+    "has_selling_stock": true,
+    "change": {
+     "percentage": -0.49,
+     "is_negative": true
+    }
+   },
+   {
+    "id": 2,
+    "title": "نیم سکه",
+    "price": 0,
+    "has_selling_stock": false,
+    "change": {
+     "percentage": 0,
+     "is_negative": false
+    }
+   },
+   {
+    "id": 3,
+    "title": "ربع سکه",
+    "price": 0,
+    "has_selling_stock": false,
+    "change": {
+     "percentage": 0,
+     "is_negative": false
+    }
+   }
+  ],
+  "updated_at": "چند لحظه پیش",
+  "updated_at_timestamp": 1791009245,
+  "title": "آخرین قیمت سکه",
+  "background_color": "#000000",
+  "text_color": "#ffffff",
+  "action": {
+   "title": "خرید سکه از دیجیکالا",
+   "url": "https://www.digikala.com/search/category-gold-coin/"
+  }
+ }
+}

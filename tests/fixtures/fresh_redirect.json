@@ -1,0 +1,23 @@
+{
+ "status": 301,
+ "redirect_url": {
+  "base": "https://api.digikala.com",
+  "uri": "/v1/user/sso-redirect/?channel=fresh&redirect_url=https%3A%2F%2Fwww.digikala.com%2Fsupermarket%2Fproduct%2F4369031%3FviewSource%3Ddk_product%26dkPid%3D4369031%26addCartSource%3Ddigikala_fresh_shipment_page%26utm_source%3Ddigikala-superapp%26utm_medium%3Dpdp"
+ },
+ "data": {
+  "replace": true,
+  "url": {
+   "url": "https://www.digikala.com/supermarket/product/4369031?viewSource=dk_product&dkPid=4369031&addCartSource=digikala_fresh_shipment_page&utm_source=digikala-superapp&utm_medium=pdp",
+   "page": "web_link",
+   "params": {
+    "url": "https://www.digikala.com/supermarket/product/4369031?viewSource=dk_product&dkPid=4369031&addCartSource=digikala_fresh_shipment_page&utm_source=digikala-superapp&utm_medium=pdp"
+   },
+   "queries": {
+    "viewSource": "dk_variant",
+    "addCartSource": "digikala_fresh_shipment_page",
+    "utm_source": "digikala-superapp",
+    "utm_medium": "pdp"
+   }
+  }
+ }
+}
