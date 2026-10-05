@@ -1,10 +1,9 @@
 name: Live
 
-# Calls every tool against the real Digikala API once a day, so an upstream change shows up
-# as a red badge before users report it.
+# Calls every tool against the real Digikala API, on demand. Not scheduled: from GitHub's US runners
+# Digikala times out or answers inconsistently on a few calls each run (2026-10-05), so a daily run would
+# be red for no real reason. The same tests pass from an Iranian connection.
 on:
-  schedule:
-    - cron: "17 4 * * *"
   workflow_dispatch:
 
 jobs:
