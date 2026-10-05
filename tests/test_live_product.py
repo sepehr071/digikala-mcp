@@ -70,6 +70,8 @@ async def test_dk_shortlist(client):
     assert [p["id"] for p in data["products"]] == [20109389, 20110013]
     assert all(p["price"] and p["cheapest_offer"] <= p["price"] for p in data["products"] if p["in_stock"])
     assert [e["id"] for e in data["errors"]] == [999999999]
+    # a low that held two days is never below Digikala's one-day low
+    assert all(p["low_30d"] >= p["lowest_one_day_30d"] for p in data["products"] if p["low_30d"])
 
 
 async def test_dk_installments(client):

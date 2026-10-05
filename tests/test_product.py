@@ -2,6 +2,8 @@ import httpx
 import pytest
 from conftest import fixture
 
+from digikala_mcp.product import held_low
+
 pytestmark = pytest.mark.anyio
 
 PID = {"product_id": 20109389}
@@ -82,8 +84,16 @@ async def test_dk_price_history(client, api):
     black, purple = data["variants"]
     assert black["variant"] == "مشکی" and black["lowest"] == 34499000 and black["highest"] == 37819600
     assert black["last_price"] == 34499000 and black["days"][0] == {"day": "1405/07/07", "price": 34500000}
+    # 34.5M and 34.499M were single days; 36,967,000 held on two days in a row (09 and 10)
+    assert black["lowest_2_days"] == 36967000
     # a variant not for sale on any day has no prices
-    assert purple["days"] == [] and purple["lowest"] is None
+    assert purple["days"] == [] and purple["lowest"] is None and purple["lowest_2_days"] is None
+
+
+def test_held_low_skips_a_one_day_dip():
+    # 20109389 lilac, 1405/06/27-29: one day at 28.4M between 34M days
+    assert held_low([34000000, 28373600, 34100000, 33900000, 34000000]) == 34000000
+    assert held_low([5]) is None and held_low([]) is None
 
 
 async def test_dk_reviews(client, api):
@@ -148,12 +158,21 @@ async def test_dk_compare_needs_two(client, api):
 
 async def test_dk_shortlist(client, api):
     api["/product/v1/products/20109389/"] = fixture("product.json")  # 999 has no route: 404
+    api["/v1/product/20109389/price-chart/"] = fixture("price_chart.json")
     data = (await client.call_tool("dk_shortlist", {"product_ids": [20109389, 999]})).structured_content
     p = data["products"][0]
     assert (p["id"], p["price"], p["in_stock"], p["offers_count"]) == (20109389, 42503600, True, 8)
-    assert (p["cheapest_offer"], p["lowest_price_30d"]) == (42503600, 28373600)
-    assert p["vs_30d_low_pct"] == 50  # (42,503,600 - 28,373,600) / 28,373,600
+    assert p["cheapest_offer"] == 42503600
+    # the two-day low of the chart, not Digikala's one-day 28,373,600
+    assert (p["low_30d"], p["lowest_one_day_30d"]) == (36967000, 28373600)
+    assert p["vs_30d_low_pct"] == 15  # (42,503,600 - 36,967,000) / 36,967,000
     assert data["errors"][0]["id"] == 999 and "404" in data["errors"][0]["error"]
+
+
+async def test_dk_shortlist_without_a_price_chart(client, api):
+    api["/product/v1/products/20109389/"] = fixture("product.json")  # the chart route is missing: 404
+    p = (await client.call_tool("dk_shortlist", {"product_ids": [20109389]})).structured_content["products"][0]
+    assert p["price"] == 42503600 and p["low_30d"] is None and p["vs_30d_low_pct"] is None
 
 
 async def test_dk_installments(client, api):

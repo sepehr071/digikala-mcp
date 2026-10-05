@@ -1,6 +1,6 @@
 [project]
 name = "digikala-mcp"
-version = "0.2.0"
+version = "0.2.1"
 description = "Unofficial read-only MCP server for Digikala: search with feature filters, best picks for a budget, compare sellers and prices, price history, reviews, deals."
 readme = "README.md"
 license = "MIT"

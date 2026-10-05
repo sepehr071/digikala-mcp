@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from itertools import pairwise
 from typing import Annotated, Any, Literal
 
 from pydantic import Field
@@ -34,8 +35,8 @@ async def dk_product(
 
     Each offer is one color/size from one seller, with price in Toman, stock_left (only
     shown when low), warranty, seller rating 0-5 and shipping (ships_by: 'digikala',
-    'jet' = same-day in Tehran/Karaj, 'seller'; free_shipping when the seller ships free). lowest_price_30d helps judge today's price;
-    dk_price_history has the daily curve. Exact shipping cost is only known at checkout.
+    'jet' = same-day in Tehran/Karaj, 'seller'; free_shipping when the seller ships free). lowest_price_30d is Digikala's
+    own figure and can be a one-day dip of one color; dk_price_history (lowest_2_days) is steadier. Exact shipping cost is only known at checkout.
     Grocery items come from the supermarket store (store='supermarket'): its price can differ
     from the main-store price that dk_search, dk_compare and dk_price_history show.
     """
@@ -85,7 +86,8 @@ async def dk_product(
 async def dk_price_history(product_id: ProductId) -> dict[str, Any]:
     """Get about 30 days of daily buy-box prices (Toman) per color/variant, with lowest and highest.
 
-    Use to answer "is this a good price right now?". Days are Jalali (YYYY/MM/DD); days when
+    Use to answer "is this a good price right now?". `lowest_2_days` is the lowest price that held
+    on two days in a row; `lowest` can be a one-day dip. Days are Jalali (YYYY/MM/DD); days when
     the variant was not for sale are left out. An unknown id gives no variants; check it with dk_product.
     """
     data = (await fetch(f"/v1/product/{product_id}/price-chart/"))["data"]
@@ -102,11 +104,20 @@ async def dk_price_history(product_id: ProductId) -> dict[str, Any]:
                 "variant": c.get("title"),
                 "last_price": prices[-1] if prices else None,
                 "lowest": min(prices, default=None),
+                "lowest_2_days": held_low(prices),
                 "highest": max(prices, default=None),
                 "days": days,
             }
         )
     return {"today": data.get("today"), "variants": variants}
+
+
+def held_low(prices: list[int]) -> int | None:
+    """Lowest price that held on two days in a row: a one-day dip (a flash sale, a mispriced offer) is skipped.
+
+    Seen 2026-10-05: one color of 20109389 sold for 28.4M on one day, while every other day of the month was 33.2M+.
+    """
+    return min((max(a, b) for a, b in pairwise(prices)), default=None)
 
 
 @tool("Product reviews")
@@ -259,29 +270,35 @@ async def dk_shortlist(
 
     Use to refresh a list the user is watching or deciding between, or to check a saved
     product is still in stock. `cheapest_offer` can be lower than `price` (the site's featured
-    offer). `vs_30d_low_pct` is how far today's price sits above the lowest price of the last 30
-    days (0 = at the low). For specs side by side use dk_compare.
+    offer). `low_30d` is the lowest price of the last 30 days that held on two days in a row (any
+    color), and `vs_30d_low_pct` how far today's price sits above it (0 = at the low).
+    `lowest_one_day_30d` is Digikala's own figure, which can be a one-day dip of one color.
+    For specs side by side use dk_compare; for the daily curve dk_price_history.
     """
     found = await asyncio.gather(
         *(dk_product(pid, max_offers=1, include_specs=False) for pid in product_ids), return_exceptions=True
     )
+    # the history is only an extra: a failed chart leaves low_30d null instead of dropping the product
+    charts = await asyncio.gather(*(dk_price_history(pid) for pid in product_ids), return_exceptions=True)
     rows, errors = [], []
-    for pid, p in zip(product_ids, found, strict=True):
+    for pid, p, chart in zip(product_ids, found, charts, strict=True):
         if isinstance(p, ApiError):
             errors.append({"id": pid, "error": str(p)})
             continue
         if isinstance(p, BaseException):
             raise p
         offer = (p["offers"] or [{}])[0]
-        low = p["lowest_price_30d"]
+        lows = [] if isinstance(chart, BaseException) else [v["lowest_2_days"] for v in chart["variants"]]
+        low = min((x for x in lows if x), default=None)
         rows.append(
             {
                 **{k: p[k] for k in SHORTLIST_KEYS},
                 "cheapest_offer": offer.get("price"),
                 "cheapest_seller": offer.get("seller"),
                 "offers_count": p["offers_count"],
-                "lowest_price_30d": low,
+                "low_30d": low,
                 "vs_30d_low_pct": round(100 * (p["price"] - low) / low) if p["price"] and low else None,
+                "lowest_one_day_30d": p["lowest_price_30d"],
                 "url": p["url"],
             }
         )
