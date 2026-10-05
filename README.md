@@ -42,7 +42,7 @@ cheapest offer, and whether today's price is a good one* means a lot of clicking
 >
 > The 64 GB model is cheapest at 42,503,600, sold by Digikala itself; the next seller asks 42,918,000.
 > But it's not a great moment: the black one sold for 34,499,000 yesterday and 33,200,000 at its lowest this
-> month, and the 30-day low was 28,373,600. Today's best offer is about 23% above yesterday's, so waiting may pay off.
+> month. Today's best offer is about 23% above yesterday's, so waiting may pay off.
 
 <sub>Real tool output from 2026-10-03; prices change all the time. Prices are in Toman.</sub>
 
@@ -193,6 +193,8 @@ All tools are annotated `readOnlyHint: true` and return compact structured JSON,
 - **`sort=cheapest` on a text search shows accessories first**; that's how Digikala ranks it. Use `dk_find_cheapest` for "cheapest X".
 - **Search always returns something**, even for nonsense words (Digikala's search is semantic). `dk_search` marks each result `match: all / some / none` (with the missing words), and `dk_find_cheapest` and `dk_best_for_budget` keep only titles that contain every query word.
 - **Filters by feature**: `dk_filters(category_code="mobile-phone")` lists ids like operating system → Android, then `dk_category_products(attributes={2226: [19239]})` filters on them.
+- **The 30-day low ignores one-day dips.** `dk_shortlist` compares today's price with the lowest price that held on two days in a row (`low_30d`), because Digikala's own 30-day low (`lowest_one_day_30d`, `dk_product`'s `lowest_price_30d`) can be a single day of one color. `dk_price_history` gives both per color.
+- **Prices move several times an hour** on popular listings with many sellers; re-check right before buying.
 - **Answers are cached for 2 minutes**, so an agent repeating a call doesn't hit Digikala again; prices can lag the site by that much.
 - **Groceries** come from the supermarket store: `dk_product` shows its price, which can differ from the main-store price in search results.
 - **Shipping cost** is only calculated at checkout (login). `dk_product` shows how each offer ships, and `dk_plus_plans` the free-shipping plans.
@@ -298,6 +300,9 @@ uv run pytest            # offline, against recorded responses
 uv run pytest -m live    # real API
 uv run ruff check .
 ```
+
+The live tests can also run on GitHub (Actions → Live → Run workflow). They are not scheduled: from GitHub's US
+runners Digikala times out on a few calls each run, while the same tests pass from an Iranian connection.
 
 Tools live in `src/digikala_mcp/catalog.py`, `product.py` and `services.py`; each is a typed async function with a
 docstring that tells the agent when to use it. Issues and PRs are welcome, especially new tools and fixes for API changes.
