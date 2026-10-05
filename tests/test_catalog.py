@@ -2,6 +2,8 @@ import httpx
 import pytest
 from conftest import fixture
 
+from digikala_mcp import catalog
+
 pytestmark = pytest.mark.anyio
 
 
@@ -26,7 +28,12 @@ async def test_dk_search(client, api):
         "rating_count": 2164,
         "deal_ends": None,
         "url": "https://www.digikala.com/product/dkp-20109389/",
+        "match": "all",
     }
+    # cases for the phone: Persian title only, so 'samsung' is missing; 'a07' is in some of them
+    case = next(p for p in data["products"] if p["id"] == 20915539)
+    assert case["match"] == "some" and case["missing_words"] == ["samsung"]
+    assert data["matches"] == {"all": 7, "some": 5, "none": 0} and "note" not in data
     deal = next(p for p in data["products"] if p["id"] == 20915539)
     assert deal["discount_pct"] == 12 and deal["price_before_discount"] == 235500
     # the facets list low-id brands (IBM, ...) and unrelated categories, so they are dropped
@@ -155,6 +162,108 @@ async def test_dk_category_products_unsellable_cards(client, api):
     assert p["id"] == 22667973 and p["in_stock"] is False and p["price"] is None and p["seller"] is None
     assert p["rating"] is None and p["rating_count"] == 0 and "brands" not in data
     assert api.calls[0].url.params["sort"] == "22"
+
+
+async def test_dk_category_products_feature_filters(client, api):
+    api["/v1/categories/mobile-phone/search/"] = fixture("category_products.json")
+    args = {
+        "category_code": "mobile-phone",
+        "attributes": {"2226": [19239], "2251": [19515, 19516]},  # Android; two storage sizes
+        "colors": [1],
+        "seller_type": "digikala",
+        "fast_delivery": True,
+        "ready_to_ship": True,
+    }
+    assert not (await client.call_tool("dk_category_products", args)).is_error
+    sent = api.calls[0].url.params
+    assert sent["attributes[2226][0]"] == "19239"
+    assert (sent["attributes[2251][0]"], sent["attributes[2251][1]"]) == ("19515", "19516")
+    assert sent["color_palettes[0]"] == "1" and sent["seller_types[0]"] == "digikala"
+    assert sent["has_jet_shipment_by_seller_or_digikala"] == "1" and sent["has_ready_to_shipment"] == "1"
+
+
+async def test_dk_filters_for_a_category(client, api):
+    api["/v1/categories/mobile-phone/search/"] = fixture("category_filters.json")
+    data = (await client.call_tool("dk_filters", {"category_code": "mobile-phone"})).structured_content
+    assert data["total"] == 4031
+    assert data["price_range"] == {"min": 1635000, "max": 579999000}  # Rial / 10
+    os_ = data["attributes"][0]
+    assert (os_["id"], os_["title"]) == (2226, "سیستم عامل")
+    assert os_["values"]["Android"] == 19239 and "value_count" not in os_
+    assert data["colors"]["صورتی"] == 1
+    assert data["seller_types"] == ["trusted", "digikala"] and data["fast_delivery_available"] is True
+    assert data["brands"]["archos"] == 62 and "categories" not in data
+
+
+async def test_dk_filters_one_attribute_and_cap(client, api, monkeypatch):
+    api["/v1/categories/mobile-phone/search/"] = fixture("category_filters.json")
+    monkeypatch.setattr(catalog, "FILTER_VALUES", 2)
+    data = (await client.call_tool("dk_filters", {"category_code": "mobile-phone"})).structured_content
+    # an alphabetical list cut short would hide common values, so a long one only gives its count
+    assert data["attributes"][0] == {"id": 2226, "title": "سیستم عامل", "value_count": 4}
+    assert data["attributes"][2]["values"] == {"فاقد پشتیبانی از کارت حافظه": 31362, "microSD": 19520}  # 2: listed
+    one = (
+        await client.call_tool("dk_filters", {"category_code": "mobile-phone", "attribute_id": 2226})
+    ).structured_content
+    assert one["title"] == "سیستم عامل" and len(one["values"]) == 4  # every value, not cut
+    missing = await client.call_tool("dk_filters", {"category_code": "mobile-phone", "attribute_id": 1})
+    assert missing.is_error and "No attribute 1" in missing.content[0].text
+
+
+async def test_dk_filters_for_a_query(client, api):
+    api["/v1/search/"] = fixture("search_filters.json")
+    data = (await client.call_tool("dk_filters", {"query": "هدفون بی سیم"})).structured_content
+    assert list(data["categories"]) == ["headphone", "telephone-headset", "monitor-headphones"]
+    assert "brands" not in data  # the search's brand facet is not the query's brands
+    assert data["seller_types"] == ["official", "trusted", "digikala", "roosta"]
+    assert api.calls[0].url.params["q"] == "هدفون بی سیم"
+
+
+async def test_dk_filters_needs_a_category_or_query(client, api):
+    result = await client.call_tool("dk_filters", {})
+    assert result.is_error and not api.calls
+
+
+async def test_dk_best_for_budget(client, api):
+    api["/v1/search/"] = fixture("budget_search.json")
+    data = (
+        await client.call_tool("dk_best_for_budget", {"query": "هدفون بی سیم", "max_price": 5000000})
+    ).structured_content
+    # only titles with every word (most 'هدفون بلوتوثی' ones are out); mean of the 6 ratings = 21.8 / 6
+    assert data["candidates"] == 6 and data["skipped_few_ratings"] == 0 and data["average_rating"] == 3.63
+    assert [p["id"] for p in data["picks"]] == [15556320, 9053401, 11477591, 5112620, 6454441, 19019009]
+    top = data["picks"][0]
+    assert (top["rating"], top["rating_count"], top["weighted_rating"]) == (4.0, 68, 3.92)  # (20*3.633 + 4*68) / 88
+    assert top["price"] == 950000 and top["budget_used_pct"] == 19
+    # both 3.8, but 3129 ratings hold their score better than 142 ratings
+    assert [p["weighted_rating"] for p in data["picks"][1:3]] == [3.8, 3.78]
+    budget = api.calls[0].url.params
+    assert budget["price[max]"] == "50000000" and budget["has_selling_stock"] == "1"
+    assert "price[max]" not in api.calls[-1].url.params  # the unfiltered call for the accessory floor
+
+
+async def test_dk_best_for_budget_min_ratings_and_empty(client, api):
+    api["/v1/search/"] = fixture("budget_search.json")
+    args = {"query": "هدفون بی سیم", "max_price": 5000000, "min_ratings": 100}
+    data = (await client.call_tool("dk_best_for_budget", args)).structured_content
+    assert data["skipped_few_ratings"] == 2 and len(data["picks"]) == 4  # 65 and 68 ratings dropped
+    data = (await client.call_tool("dk_best_for_budget", {**args, "max_price": 1000})).structured_content
+    assert data["picks"] == [] and "note" in data
+
+
+async def test_dk_best_for_budget_by_category(client, api):
+    api["/v1/categories/headphone/search/"] = fixture("budget_search.json")
+    args = {"category_code": "headphone", "max_price": 5000000, "pages": 1}
+    data = (await client.call_tool("dk_best_for_budget", args)).structured_content
+    assert data["candidates"] == 12  # no title check when browsing a category
+    assert len(api.calls) == 1 and api.calls[0].url.params["price[max]"] == "50000000"
+
+
+async def test_fetch_reuses_a_recent_answer(client, api):
+    api["/v1/search/"] = fixture("search.json")
+    for _ in range(2):
+        await client.call_tool("dk_search", {"query": "samsung a07"})
+    assert len(api.calls) == 1
 
 
 async def test_dk_category_products_one_brand(client, api):

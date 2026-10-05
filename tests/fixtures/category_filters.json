@@ -1,0 +1,251 @@
+{
+ "status": 200,
+ "data": {
+  "filters": {
+   "brands": {
+    "type": "checkbox",
+    "title": "برند",
+    "options": [
+     {
+      "id": 62,
+      "code": "archos",
+      "title_fa": "آرکاس",
+      "title_en": "Archos"
+     },
+     {
+      "id": 80,
+      "code": "alcatel",
+      "title_fa": "آلکاتل",
+      "title_en": "Alcatel"
+     },
+     {
+      "id": 8,
+      "code": "ibm",
+      "title_fa": "آی بی ام",
+      "title_en": "IBM"
+     },
+     {
+      "id": 24,
+      "code": "i-mate",
+      "title_fa": "آی میت",
+      "title_en": "i-mate"
+     }
+    ]
+   },
+   "color_palettes": {
+    "type": "checkbox",
+    "title": "رنگ",
+    "options": [
+     {
+      "id": 1,
+      "title": "صورتی",
+      "hex_code": "#ff69b4"
+     },
+     {
+      "id": 10,
+      "title": "قهوه‌‌ای",
+      "hex_code": "#8b4513"
+     },
+     {
+      "id": 11,
+      "title": "سبز",
+      "hex_code": "#12b844"
+     },
+     {
+      "id": 12,
+      "title": "آبی",
+      "hex_code": "#1c75d4"
+     }
+    ]
+   },
+   "has_jet_shipment_by_seller_or_digikala": {
+    "type": "switch",
+    "title": "ارسال سریع",
+    "icon": "https://dkstatics-public.digikala.com/digikala-static/262c38c0e4990522af759e0016a287508bbc84f6_1684761217.png",
+    "options": [
+     {
+      "id": 0,
+      "title": "ارسال سریع"
+     }
+    ]
+   },
+   "has_ship_by_seller": {
+    "type": "switch",
+    "title": "ارسال فروشنده",
+    "description": "با خرید از کالاهایی با امکان ارسال توسط فروشنده می‌توانید سفارش خود را زودتر تحویل بگیرید",
+    "icon": "https://dkstatics-public.digikala.com/digikala-static/7fd084adca1efff834cdd871cb97a0307c0f8c51_1700488931.svg",
+    "options": [
+     {
+      "id": 0,
+      "title": "فقط در شهر تهران"
+     }
+    ]
+   },
+   "price": {
+    "type": "slider",
+    "title": "محدوده قیمت",
+    "options": {
+     "min": 16350000,
+     "max": 5799990000
+    }
+   },
+   "has_selling_stock": {
+    "type": "switch",
+    "title": "فقط کالاهای موجود",
+    "options": [
+     {
+      "id": 0,
+      "title": "کالاهای موجود"
+     }
+    ]
+   },
+   "has_ready_to_shipment": {
+    "type": "switch",
+    "title": "فقط کالاهای موجود در انبار دیجی‌کالا",
+    "options": [
+     {
+      "id": 0,
+      "title": "کالاهای آماده ارسال"
+     }
+    ]
+   },
+   "seller_types": {
+    "type": "checkbox",
+    "title": "نوع فروشنده",
+    "options": [
+     {
+      "id": "trusted",
+      "title": "فروشنده برگزیده"
+     },
+     {
+      "id": "digikala",
+      "title": "دیجی‌کالا"
+     }
+    ]
+   },
+   "attributes": {
+    "type": "nested_list",
+    "title": "ویژگی‌ها",
+    "options": [
+     {
+      "type": "checkbox",
+      "title": "سیستم عامل",
+      "id": 2226,
+      "options": [
+       {
+        "id": 19289,
+        "title_fa": "بدون سیستم عامل",
+        "title_en": "without-operating-system"
+       },
+       {
+        "id": 19239,
+        "title_fa": "Android",
+        "title_en": "Android"
+       },
+       {
+        "id": 19241,
+        "title_fa": "Apple iOS",
+        "title_en": "Apple-iOS"
+       },
+       {
+        "id": 19245,
+        "title_fa": "BlackBerry OS",
+        "title_en": "BlackBerry-OS"
+       }
+      ]
+     },
+     {
+      "type": "checkbox",
+      "title": "حافظه داخلی",
+      "id": 2251,
+      "options": [
+       {
+        "id": 19515,
+        "title_fa": "1 ترابایت",
+        "title_en": "1-TB"
+       },
+       {
+        "id": 19516,
+        "title_fa": "1 گیگابایت",
+        "title_en": "1-GB"
+       },
+       {
+        "id": 19517,
+        "title_fa": "1 مگابایت",
+        "title_en": "One-megabyte"
+       },
+       {
+        "id": 19455,
+        "title_fa": "100 مگابایت",
+        "title_en": "100-MB"
+       }
+      ]
+     },
+     {
+      "type": "checkbox",
+      "title": "پشتیبانی از کارت حافظه",
+      "id": 2252,
+      "options": [
+       {
+        "id": 31362,
+        "title_fa": "فاقد پشتیبانی از کارت حافظه",
+        "title_en": "No-memory-card-support"
+       },
+       {
+        "id": 19520,
+        "title_fa": "microSD",
+        "title_en": "microSD"
+       }
+      ]
+     }
+    ]
+   },
+   "has_offline_shop_stock": {
+    "type": "switch",
+    "title": "خرید حضوری در تهران",
+    "icon": "https://dkstatics-public.digikala.com/digikala-static/bb58fcdbbe6895197929f6cc3d7f1347643dea93_1738407764.png",
+    "options": [
+     {
+      "id": 0,
+      "title": "خرید حضوری در تهران"
+     }
+    ]
+   }
+  },
+  "products": [
+   {
+    "id": 22719748,
+    "title_fa": "گوشی موبایل اپل مدل iPhone 18 Pro Max CH دو سیم کارت ظرفیت 256 گیگابایت و رم 12 گیگابایت ",
+    "title_en": "Apple iPhone 18 Pro Max CH Dual SIM Storage 256GB and RAM 12GB Mobile Phone ",
+    "status": "coming_soon",
+    "rating": {
+     "rate": 0,
+     "count": 0
+    },
+    "data_layer": {
+     "brand": "اپل"
+    },
+    "default_variant": []
+   },
+   {
+    "id": 22667973,
+    "title_fa": "گوشی موبایل اپل مدل iPhone 18 Pro Zaa تک سیم کارت ظرفیت 256 گیگابایت و رم 12 گیگابایت ",
+    "title_en": "Apple iPhone 18 Pro Zaa Single SIM Storage 256GB and RAM 12GB Mobile Phone",
+    "status": "coming_soon",
+    "rating": {
+     "rate": 0,
+     "count": 0
+    },
+    "data_layer": {
+     "brand": "اپل"
+    },
+    "default_variant": []
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 202,
+   "total_items": 4031
+  }
+ }
+}

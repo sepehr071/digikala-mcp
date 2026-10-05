@@ -48,8 +48,10 @@ cheapest offer, and whether today's price is a good one* means a lot of clicking
 
 ## What it can do
 
-- 🔎 **Search** the whole catalogue in Persian or English, with price range, brand and in-stock filters
+- 🔎 **Search** the whole catalogue in Persian or English, with price, brand, feature (OS, storage, ...), color, seller and fast-delivery filters; every result says whether its title really matches
 - 💸 **Find the real cheapest match**, with accessories filtered out, and every seller's offer for a product
+- 🏆 **Best picks for a budget**, ranked by a rating weighted by how many buyers rated it, with the reasoning shown
+- 📋 **Re-check a shortlist** of up to 10 products in one call: price, cheapest offer, stock, distance from the 30-day low
 - 📈 **Judge a price** with about 30 days of daily price history and the 30-day low
 - 🗂️ **Browse** categories, brands, sellers and best sellers, sorted by price, sales, views, newest or buyers' pick
 - ⭐ **Check quality** with reviews, pros/cons, buyer Q&A and seller reputation
@@ -138,15 +140,17 @@ Product ids are the number in a `digikala.com/product/dkp-<id>/` link. Every lis
 id, title, brand, price, discount, stock, seller, rating and the product link.
 
 <details open>
-<summary><b>🔎 Find products</b> (10)</summary>
+<summary><b>🔎 Find products</b> (12)</summary>
 
 | Tool | What it does |
 |---|---|
-| `dk_search` | Search by words with sort, price range, brand and in-stock filters |
+| `dk_search` | Search by words with sort, price, brand, feature, color and seller filters; flags loose title matches |
 | `dk_find_cheapest` | Cheapest in-stock real matches for a query, accessories dropped, one list |
+| `dk_best_for_budget` | Best-rated real matches under a budget, rating weighted by number of ratings |
 | `dk_suggest` | Autocomplete: better keywords, category codes and brand ids |
+| `dk_filters` | Filter options of a category or search: features (OS, storage, ...), colors, brands, sellers, price range |
 | `dk_categories` | Find category codes and main-category ids |
-| `dk_category_products` | Browse a category with sort and filters, optionally one brand |
+| `dk_category_products` | Browse a category with sort and the same filters, optionally one brand |
 | `dk_brand_products` | Browse a brand's products |
 | `dk_seller` | A seller's rating, on-time shipping, cancellations, returns and products |
 | `dk_deals` | Incredible Offers or supermarket deals, biggest discount first |
@@ -155,11 +159,12 @@ id, title, brand, price, discount, stock, seller, rating and the product link.
 </details>
 
 <details open>
-<summary><b>📦 One product</b> (7)</summary>
+<summary><b>📦 Products</b> (8)</summary>
 
 | Tool | What it does |
 |---|---|
 | `dk_product` | Price, stock, specs and every seller's offer (color, warranty, shipping), cheapest first |
+| `dk_shortlist` | Re-price up to 10 products at once: price, cheapest offer, stock, rating, distance from the 30-day low |
 | `dk_price_history` | About 30 days of daily prices per color, with low and high |
 | `dk_reviews` | Customer reviews with stars, pros/cons and verified-buyer flag |
 | `dk_questions` | Customer questions with their top answers |
@@ -186,7 +191,9 @@ All tools are annotated `readOnlyHint: true` and return compact structured JSON,
 - **Ratings are 0–5**, like the site (the API's 0–100 divided by 20); `null` means not rated yet. Review stars are 1–5.
 - **Persian and English queries both work** (`گوشی سامسونگ`, `airpods pro`). Category and brand codes are English slugs (`mobile-phone`, `samsung`).
 - **`sort=cheapest` on a text search shows accessories first**; that's how Digikala ranks it. Use `dk_find_cheapest` for "cheapest X".
-- **Search always returns something**, even for nonsense words (Digikala's search is semantic). `dk_find_cheapest` keeps only titles that contain every query word.
+- **Search always returns something**, even for nonsense words (Digikala's search is semantic). `dk_search` marks each result `match: all / some / none` (with the missing words), and `dk_find_cheapest` and `dk_best_for_budget` keep only titles that contain every query word.
+- **Filters by feature**: `dk_filters(category_code="mobile-phone")` lists ids like operating system → Android, then `dk_category_products(attributes={2226: [19239]})` filters on them.
+- **Answers are cached for 2 minutes**, so an agent repeating a call doesn't hit Digikala again; prices can lag the site by that much.
 - **Groceries** come from the supermarket store: `dk_product` shows its price, which can differ from the main-store price in search results.
 - **Shipping cost** is only calculated at checkout (login). `dk_product` shows how each offer ships, and `dk_plus_plans` the free-shipping plans.
 
@@ -242,11 +249,25 @@ npx @modelcontextprotocol/inspector uvx digikala-mcp
 **digikala-mcp** به دستیار هوش مصنوعی شما (Claude، Cursor، Copilot و ...) اجازه می&zwnj;دهد در دیجی&zwnj;کالا جستجو کند،
 قیمت همه فروشندگان یک کالا را مقایسه کند، تاریخچه قیمت، نظرات و پرسش&zwnj;وپاسخ&zwnj;ها را بخواند و پیشنهادهای شگفت&zwnj;انگیز را پیدا کند.
 
+**چه کارهایی می&zwnj;کند**
+
+- **جستجو** به فارسی یا انگلیسی، با فیلتر قیمت، برند، ویژگی (سیستم عامل، حافظه و ...)، رنگ، نوع فروشنده و ارسال سریع؛ کنار هر نتیجه می&zwnj;گوید عنوانش واقعاً با جستجو جور است یا نه.
+- **ارزان&zwnj;ترین کالای واقعی** را پیدا می&zwnj;کند (لوازم جانبی مثل قاب و کابل را کنار می&zwnj;گذارد) و پیشنهاد همه فروشندگان یک کالا را از ارزان به گران نشان می&zwnj;دهد.
+- **بهترین انتخاب با بودجه شما**: کالاها را بر اساس امتیازی رتبه&zwnj;بندی می&zwnj;کند که تعداد امتیازدهنده&zwnj;ها را هم در نظر می&zwnj;گیرد، تا یک کالای ۵ ستاره با ۳ رأی از کالای ۴٫۶ ستاره با ۹۰۰ رأی جلو نزند.
+- **تاریخچه قیمت** حدود ۳۰ روز گذشته و کمترین قیمت ماه، برای اینکه بدانید الان وقت خرید است یا نه.
+- **بررسی دوباره فهرست منتخب**: قیمت، موجودی و فاصله تا کمترین قیمت ماه تا ۱۰ کالا با یک درخواست.
+- **کیفیت**: نظرات خریداران با نقاط قوت و ضعف، پرسش&zwnj;وپاسخ&zwnj;ها، و کارنامه فروشنده (ارسال به&zwnj;موقع، لغو، مرجوعی).
+- **تخفیف&zwnj;ها**: شگفت&zwnj;انگیزها، پرفروش&zwnj;ها و تخفیف&zwnj;های سوپرمارکت (دیجی&zwnj;کالا فرش).
+- **بیشتر**: مقایسه مشخصات فنی، طرح&zwnj;های دیجی&zwnj;کالا پلاس، قیمت لحظه&zwnj;ای طلا و سکه.
+
+**نکته&zwnj;ها**
+
 - فقط خواندنی است: وارد حساب نمی&zwnj;شود، سبد خرید نمی&zwnj;سازد و سفارش ثبت نمی&zwnj;کند.
 - همه قیمت&zwnj;ها به تومان است و امتیازها مثل سایت از ۵.
-- روی سیستم خود شما اجرا می&zwnj;شود و به هیچ سرور واسطی داده نمی&zwnj;فرستد.
+- روی سیستم خود شما اجرا می&zwnj;شود، کلید API لازم ندارد و به هیچ سرور واسطی داده نمی&zwnj;فرستد.
+- پاسخ&zwnj;ها تا ۲ دقیقه نگه داشته می&zwnj;شوند؛ قیمت ممکن است همین&zwnj;قدر از سایت عقب باشد.
 
-**نصب در Claude Code:**
+**نصب** (اول [uv](https://docs.astral.sh/uv/getting-started/installation/) را نصب کنید). در Claude Code:
 
 </div>
 
@@ -256,7 +277,15 @@ claude mcp add digikala -- uvx digikala-mcp
 
 <div dir="rtl">
 
-بعد بپرسید: «ارزان&zwnj;ترین گوشی سامسونگ A07 کدام است و الان قیمتش خوب است؟»
+در Claude Desktop، Cursor و بقیه برنامه&zwnj;ها همان تنظیم بخش [Quick start](#quick-start) را بگذارید.
+
+**نمونه پرسش&zwnj;ها**
+
+- «ارزان&zwnj;ترین گوشی سامسونگ A07 کدام است و الان قیمتش خوب است؟»
+- «بهترین هدفون بی&zwnj;سیم تا ۳ میلیون تومان چیست؟»
+- «گوشی اندرویدی با ۲۵۶ گیگ حافظه که خود دیجی&zwnj;کالا می&zwnj;فروشد، از ارزان به گران.»
+- «این سه لپ&zwnj;تاپ را مقایسه کن و بگو کدام ارزش خرید دارد.»
+- «امروز چه شگفت&zwnj;انگیزی برای هدفون هست؟»
 
 </div>
 

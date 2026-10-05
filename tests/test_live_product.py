@@ -65,6 +65,16 @@ async def test_dk_compare(client):
     assert await text_size(client, "dk_compare", four) < 15000
 
 
+async def test_dk_shortlist(client):
+    data = await call(client, "dk_shortlist", {"product_ids": [20109389, 20110013, 999999999]})
+    assert [p["id"] for p in data["products"]] == [20109389, 20110013]
+    assert all(p["price"] and p["cheapest_offer"] <= p["price"] for p in data["products"] if p["in_stock"])
+    assert [e["id"] for e in data["errors"]] == [999999999]
+
+
 async def test_dk_installments(client):
     data = await call(client, "dk_installments", PID)
-    assert data["plans"] and data["plans"][0]["monthly_repayment"] > 0 and data["plans"][0]["credit_amount"] > 0
+    # Digikala stopped listing plans on 2026-10-05 (its own product page shows none either)
+    assert data["plans"] or "note" in data
+    for plan in data["plans"]:
+        assert plan["monthly_repayment"] > 0 and plan["credit_amount"] > 0

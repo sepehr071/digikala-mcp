@@ -1,0 +1,324 @@
+{
+ "status": 200,
+ "data": {
+  "products": [
+   {
+    "id": 19019009,
+    "title_fa": "هدفون بلوتوثی مدل HEADPHONE WIRELESS STEREO P9 V5.3 بدون نویز کنسلینگ، درگاه شارژ USB Type-C، با قابلیت اتصال به 2 دستگاه همزمان، دارای باتری قابل شارژ، اتصال دوگانه (بی‌سیم و ‌)، دارای نشانگر LED، دارای شیار کارت حافظه",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 60.74,
+     "count": 298
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "price": {
+      "selling_price": 9050000,
+      "rrp_price": 9050000,
+      "discount_percent": 0,
+      "is_incredible": false
+     },
+     "seller": {
+      "id": 1769563,
+      "title": "نما نور شهر ری",
+      "code": "HAC7U"
+     }
+    }
+   },
+   {
+    "id": 5112620,
+    "title_fa": "هدفون بی سیم مدل P47 5.0+EDR کد 123",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 74.34,
+     "count": 145
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "price": {
+      "selling_price": 8000000,
+      "rrp_price": 8000000,
+      "discount_percent": 0,
+      "is_incredible": false
+     },
+     "seller": {
+      "id": 163288,
+      "title": "ماهانرایانه",
+      "code": "AJXHT"
+     }
+    }
+   },
+   {
+    "id": 3869566,
+    "title_fa": "هدفون بلوتوثی P47 با بلوتوث 5.0، میکروفون، پشتیبانی از کارت حافظه و قابلیت استفاده با کابل AUX، مناسب ورزش",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 73.98,
+     "count": 1827
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "price": {
+      "selling_price": 5000000,
+      "rrp_price": 5000000,
+      "discount_percent": 0,
+      "is_incredible": false
+     },
+     "seller": {
+      "id": 1978843,
+      "title": "جی کلاس",
+      "code": "J3VNW"
+     }
+    }
+   },
+   {
+    "id": 11477591,
+    "title_fa": "هدفون بی سیم مدل MZ023",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 76.06,
+     "count": 142
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "price": {
+      "selling_price": 12800000,
+      "rrp_price": 12800000,
+      "discount_percent": 0,
+      "is_incredible": false
+     },
+     "seller": {
+      "id": 1769563,
+      "title": "نما نور شهر ری",
+      "code": "HAC7U"
+     }
+    }
+   },
+   {
+    "id": 6454441,
+    "title_fa": "هدفون بی سیم مدل BS-N65BT 2021",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 70.77,
+     "count": 65
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "price": {
+      "selling_price": 18950000,
+      "rrp_price": 18950000,
+      "discount_percent": 0,
+      "is_incredible": false
+     },
+     "seller": {
+      "id": 1989558,
+      "title": "مجیتک",
+      "code": "J549T"
+     }
+    }
+   },
+   {
+    "id": 15556320,
+    "title_fa": "هدفون بی سیم  مدل RGB MZ-39m",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 79.71,
+     "count": 68
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "price": {
+      "selling_price": 9500000,
+      "rrp_price": 9500000,
+      "discount_percent": 0,
+      "is_incredible": false
+     },
+     "seller": {
+      "id": 1575967,
+      "title": " لوازم جانبی سارال",
+      "code": "GJRX2"
+     }
+    }
+   },
+   {
+    "id": 7172345,
+    "title_fa": "هدفون بلوتوثی مدل P47 wireless 2-2022 با بلوتوث 5.0، میکروفون، پشتیبانی از کارت حافظه SD CARD، حذف نویز، مقاومت در برابر رطوبت و عرق و عمر باتری تا 6 ساعت",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 71.3,
+     "count": 216
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "price": {
+      "selling_price": 4850000,
+      "rrp_price": 4850000,
+      "discount_percent": 0,
+      "is_incredible": false
+     },
+     "seller": {
+      "id": 1978843,
+      "title": "جی کلاس",
+      "code": "J3VNW"
+     }
+    }
+   },
+   {
+    "id": 5866372,
+    "title_fa": "هدفون بلوتوثی مدل P47-5.0+EDR، پشتیبانی از کارت حافظه و رادیو، طراحی تاشو، باتری 500 میلی‌آمپرساعتی و کابل AUX",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 69.88,
+     "count": 723
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "price": {
+      "selling_price": 4800000,
+      "rrp_price": 4800000,
+      "discount_percent": 0,
+      "is_incredible": false
+     },
+     "seller": {
+      "id": 1463445,
+      "title": "لوازم جانبی طلوع اراک",
+      "code": "G526S"
+     }
+    }
+   },
+   {
+    "id": 4228930,
+    "title_fa": "\nهدفون بلوتوثی P39 فاقد نویز کنسلینگ، درگاه شارژ microUSB، دارای میکروفون داخلی",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 74.09,
+     "count": 5208
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "price": {
+      "selling_price": 16139200,
+      "rrp_price": 21031600,
+      "discount_percent": 23,
+      "is_incredible": false
+     },
+     "seller": {
+      "id": 290714,
+      "title": "تاک استور",
+      "code": "C2SWD"
+     }
+    }
+   },
+   {
+    "id": 9053401,
+    "title_fa": "هدفون بی سیم مدل  BTH-F9-5",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 76.54,
+     "count": 3129
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "price": {
+      "selling_price": 7200000,
+      "rrp_price": 7200000,
+      "discount_percent": 0,
+      "is_incredible": false
+     },
+     "seller": {
+      "id": 1512025,
+      "title": "جانبی رفیق",
+      "code": "GC95P"
+     }
+    }
+   },
+   {
+    "id": 546343,
+    "title_fa": "هدفون بلوتوثی مدل P47 بدون قابلیت نویز کنسلینگ، درگاه شارژ Micro USB، دارای شیار کارت حافظه",
+    "title_en": "P47 Wireless Headphone",
+    "status": "marketable",
+    "rating": {
+     "rate": 74.79,
+     "count": 2992
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "price": {
+      "selling_price": 5492000,
+      "rrp_price": 5492000,
+      "discount_percent": 0,
+      "is_incredible": false
+     },
+     "seller": {
+      "id": 1933729,
+      "title": "کالا جدیدپلاس",
+      "code": "HXK47"
+     }
+    }
+   },
+   {
+    "id": 5357021,
+    "title_fa": "\nهدفون بلوتوثی P9 بدون قابلیت نویز کنسلینگ، درگاه شارژ microUSB",
+    "title_en": "",
+    "status": "marketable",
+    "rating": {
+     "rate": 73.64,
+     "count": 931
+    },
+    "data_layer": {
+     "brand": "متفرقه"
+    },
+    "default_variant": {
+     "price": {
+      "selling_price": 7500000,
+      "rrp_price": 7500000,
+      "discount_percent": 0,
+      "is_incredible": false
+     },
+     "seller": {
+      "id": 1463445,
+      "title": "لوازم جانبی طلوع اراک",
+      "code": "G526S"
+     }
+    }
+   }
+  ],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 45,
+   "total_items": 893
+  }
+ }
+}

@@ -1,0 +1,249 @@
+{
+ "status": 200,
+ "data": {
+  "filters": {
+   "categories": {
+    "type": "category_list",
+    "title": "دسته‌بندی",
+    "options": [
+     {
+      "id": 211,
+      "code": "headphone",
+      "title_fa": "هدفون، هدست و هندزفری",
+      "title_en": "هدفون، هدست و هندزفری"
+     },
+     {
+      "id": 5738,
+      "code": "telephone-headset",
+      "title_fa": "هدست تلفن",
+      "title_en": "هدست تلفن"
+     },
+     {
+      "id": 8172,
+      "code": "monitor-headphones",
+      "title_fa": "هدفون حرفه‌ای",
+      "title_en": "هدفون حرفه‌ای"
+     }
+    ]
+   },
+   "brands": {
+    "type": "checkbox",
+    "title": "برند",
+    "options": [
+     {
+      "id": 62,
+      "code": "archos",
+      "title_fa": "آرکاس",
+      "title_en": "Archos"
+     },
+     {
+      "id": 80,
+      "code": "alcatel",
+      "title_fa": "آلکاتل",
+      "title_en": "Alcatel"
+     },
+     {
+      "id": 8,
+      "code": "ibm",
+      "title_fa": "آی بی ام",
+      "title_en": "IBM"
+     },
+     {
+      "id": 24,
+      "code": "i-mate",
+      "title_fa": "آی میت",
+      "title_en": "i-mate"
+     }
+    ]
+   },
+   "color_palettes": {
+    "type": "checkbox",
+    "title": "رنگ",
+    "options": [
+     {
+      "id": 1,
+      "title": "صورتی",
+      "hex_code": "#ff69b4"
+     },
+     {
+      "id": 10,
+      "title": "قهوه‌‌ای",
+      "hex_code": "#8b4513"
+     },
+     {
+      "id": 11,
+      "title": "سبز",
+      "hex_code": "#12b844"
+     },
+     {
+      "id": 12,
+      "title": "آبی",
+      "hex_code": "#1c75d4"
+     }
+    ]
+   },
+   "has_jet_shipment_by_seller_or_digikala": {
+    "type": "switch",
+    "title": "ارسال سریع",
+    "icon": "https://dkstatics-public.digikala.com/digikala-static/262c38c0e4990522af759e0016a287508bbc84f6_1684761217.png",
+    "options": [
+     {
+      "id": 0,
+      "title": "ارسال سریع"
+     }
+    ]
+   },
+   "has_ship_by_seller": {
+    "type": "switch",
+    "title": "ارسال فروشنده",
+    "description": "با خرید از کالاهایی با امکان ارسال توسط فروشنده می‌توانید سفارش خود را زودتر تحویل بگیرید",
+    "icon": "https://dkstatics-public.digikala.com/digikala-static/7fd084adca1efff834cdd871cb97a0307c0f8c51_1700488931.svg",
+    "options": [
+     {
+      "id": 0,
+      "title": "فقط در شهر تهران"
+     }
+    ]
+   },
+   "price": {
+    "type": "slider",
+    "title": "محدوده قیمت",
+    "options": {
+     "min": 2210000,
+     "max": 1230058000
+    }
+   },
+   "has_ready_to_shipment": {
+    "type": "switch",
+    "title": "فقط کالاهای موجود در انبار دیجی‌کالا",
+    "options": [
+     {
+      "id": 0,
+      "title": "کالاهای آماده ارسال"
+     }
+    ]
+   },
+   "seller_types": {
+    "type": "checkbox",
+    "title": "نوع فروشنده",
+    "options": [
+     {
+      "id": "official",
+      "title": "فروشنده رسمی"
+     },
+     {
+      "id": "trusted",
+      "title": "فروشنده برگزیده"
+     },
+     {
+      "id": "digikala",
+      "title": "دیجی‌کالا"
+     },
+     {
+      "id": "roosta",
+      "title": "کسب و کارهای بومی"
+     }
+    ]
+   },
+   "attributes": {
+    "type": "nested_list",
+    "title": "ویژگی‌ها",
+    "options": [
+     {
+      "type": "checkbox",
+      "title": "درگاه‌های ارتباطی",
+      "id": 2204,
+      "options": [
+       {
+        "id": 16896,
+        "title_fa": "3.5 میلی‌متر",
+        "title_en": "3-5-mm"
+       },
+       {
+        "id": 16977,
+        "title_fa": "بلوتوث",
+        "title_en": "Bluetooth"
+       },
+       {
+        "id": 16982,
+        "title_fa": "پورت لایتنینگ اپل",
+        "title_en": "Apple-Lightning-port"
+       },
+       {
+        "id": 16987,
+        "title_fa": "شیار کارت حافظه",
+        "title_en": "Memory-card-slot"
+       }
+      ]
+     },
+     {
+      "type": "checkbox",
+      "title": "امکانات ارتباطی",
+      "id": 2206,
+      "options": [
+       {
+        "id": 19167,
+        "title_fa": "4G",
+        "title_en": "4G"
+       },
+       {
+        "id": 19172,
+        "title_fa": "شبکه بی‌سیم (Wi-Fi)",
+        "title_en": "Wireless-network-Wi-Fi"
+       },
+       {
+        "id": 19171,
+        "title_fa": "NFC",
+        "title_en": "NFC"
+       }
+      ]
+     },
+     {
+      "type": "checkbox",
+      "title": "نوع باتری",
+      "id": 2309,
+      "options": [
+       {
+        "id": 21343,
+        "title_fa": "12 سلولی",
+        "title_en": "12-cells"
+       },
+       {
+        "id": 21359,
+        "title_fa": "ساعتی",
+        "title_en": "Watch"
+       },
+       {
+        "id": 21364,
+        "title_fa": "فاقد باتری",
+        "title_en": "no-battery"
+       },
+       {
+        "id": 21370,
+        "title_fa": "لیتیوم پلیمری",
+        "title_en": "Lithium-polymer"
+       }
+      ]
+     }
+    ]
+   },
+   "has_offline_shop_stock": {
+    "type": "switch",
+    "title": "خرید حضوری در تهران",
+    "icon": "https://dkstatics-public.digikala.com/digikala-static/bb58fcdbbe6895197929f6cc3d7f1347643dea93_1738407764.png",
+    "options": [
+     {
+      "id": 0,
+      "title": "خرید حضوری در تهران"
+     }
+    ]
+   }
+  },
+  "products": [],
+  "pager": {
+   "current_page": 1,
+   "total_pages": 46,
+   "total_items": 915
+  }
+ }
+}

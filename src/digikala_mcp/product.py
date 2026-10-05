@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from typing import Annotated, Any, Literal
 
 from pydantic import Field
@@ -244,6 +245,49 @@ async def dk_compare(
     }
 
 
+SHORTLIST_KEYS = ("id", "title", "price", "price_before_discount", "discount_pct", "in_stock", "rating", "rating_count")
+
+
+@tool("Re-check a shortlist")
+async def dk_shortlist(
+    product_ids: Annotated[
+        list[int],
+        Field(min_length=1, max_length=10, description="1-10 product ids, e.g. [20109389, 20110013]."),
+    ],
+) -> dict[str, Any]:
+    """Re-price up to 10 products in one call: today's price, cheapest offer, stock, rating and 30-day low.
+
+    Use to refresh a list the user is watching or deciding between, or to check a saved
+    product is still in stock. `cheapest_offer` can be lower than `price` (the site's featured
+    offer). `vs_30d_low_pct` is how far today's price sits above the lowest price of the last 30
+    days (0 = at the low). For specs side by side use dk_compare.
+    """
+    found = await asyncio.gather(
+        *(dk_product(pid, max_offers=1, include_specs=False) for pid in product_ids), return_exceptions=True
+    )
+    rows, errors = [], []
+    for pid, p in zip(product_ids, found, strict=True):
+        if isinstance(p, ApiError):
+            errors.append({"id": pid, "error": str(p)})
+            continue
+        if isinstance(p, BaseException):
+            raise p
+        offer = (p["offers"] or [{}])[0]
+        low = p["lowest_price_30d"]
+        rows.append(
+            {
+                **{k: p[k] for k in SHORTLIST_KEYS},
+                "cheapest_offer": offer.get("price"),
+                "cheapest_seller": offer.get("seller"),
+                "offers_count": p["offers_count"],
+                "lowest_price_30d": low,
+                "vs_30d_low_pct": round(100 * (p["price"] - low) / low) if p["price"] and low else None,
+                "url": p["url"],
+            }
+        )
+    return {"products": rows, "errors": errors}
+
+
 @tool("Installment plans")
 async def dk_installments(product_id: ProductId) -> dict[str, Any]:
     """Get the Digipay credit-line offers available when buying a product, in Toman.
@@ -268,6 +312,8 @@ async def dk_installments(product_id: ProductId) -> dict[str, Any]:
             },
         )
         plan["variant_ids"].append(int(variant_id))
+    if not plans:  # since 2026-10-05 every product answers no items, and the product page shows no credit box either
+        return {"plans": [], "note": "Digikala offers no Digipay credit plan for this product right now."}
     return {"plans": list(plans.values())}
 
 

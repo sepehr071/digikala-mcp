@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+import time
 from typing import Any
 
 import httpx
@@ -24,10 +25,15 @@ HEADERS = {
 }
 
 MAX_CONCURRENCY = 4
+# Agents often repeat a call (search, then the same search with one more filter); prices move slowly enough
+# that a short cache saves Digikala and the user time. ponytail: unbounded age-ordered dict, trimmed by size.
+CACHE_SECONDS = 120
+CACHE_SIZE = 300
 
 _transport: httpx.AsyncBaseTransport | None = None
 _client: httpx.AsyncClient | None = None
 _limit: asyncio.Semaphore | None = None
+_cache: dict[tuple[str, tuple[tuple[str, Any], ...]], tuple[float, Any]] = {}
 
 
 class ApiError(ToolError):
@@ -42,6 +48,7 @@ def set_transport(transport: httpx.AsyncBaseTransport | None) -> None:
     """Swap the transport (tests use httpx.MockTransport). Drops the current client."""
     global _transport, _client, _limit
     _transport, _client, _limit = transport, None, None
+    _cache.clear()
 
 
 def _get_client() -> tuple[httpx.AsyncClient, asyncio.Semaphore]:
@@ -67,7 +74,21 @@ async def fetch(path: str, params: dict[str, Any] | None = None) -> Any:
     """GET an api.digikala.com path (e.g. '/v1/search/') and return the parsed JSON body.
 
     The body `status` is authoritative: HTTP 200 with `{"status": 404}` raises ApiError too.
+    Successful bodies are reused for CACHE_SECONDS; callers must not mutate them.
     """
+    key = (path, tuple(sorted((params or {}).items())))
+    hit = _cache.get(key)
+    if hit and time.monotonic() - hit[0] < CACHE_SECONDS:
+        return hit[1]
+    body = await _get(path, params)
+    _cache.pop(key, None)
+    _cache[key] = (time.monotonic(), body)
+    if len(_cache) > CACHE_SIZE:
+        del _cache[next(iter(_cache))]  # oldest entry
+    return body
+
+
+async def _get(path: str, params: dict[str, Any] | None) -> Any:
     client, limit = _get_client()
     host = httpx.URL(API).host
     try:

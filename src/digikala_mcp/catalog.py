@@ -57,6 +57,22 @@ BrandIds = Annotated[
 ]
 InStock = Annotated[bool, Field(description="Only products that can be bought now.")]
 Code = Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9_.'’-]{1,80}$")]  # a few real codes have _ . ' ’
+Attributes = Annotated[
+    dict[int, list[int]] | None,
+    Field(
+        max_length=10,
+        description="Feature filters from dk_filters: {attribute id: [value ids]}, e.g. {2226: [19239]} for Android phones. Values of one attribute are OR'ed, attributes are AND'ed.",
+    ),
+]
+Colors = Annotated[list[int] | None, Field(max_length=10, description="Color ids from dk_filters, e.g. [1].")]
+SellerType = Annotated[
+    Literal["digikala", "official", "trusted", "roosta"] | None,
+    Field(
+        description="Only offers from Digikala itself, official brand sellers, trusted sellers or rural (roosta) sellers."
+    ),
+]
+FastDelivery = Annotated[bool, Field(description="Only items with fast (Jet) delivery.")]
+ReadyToShip = Annotated[bool, Field(description="Only items already in Digikala's warehouse (ship sooner).")]
 
 
 @tool("Search products")
@@ -66,13 +82,20 @@ async def dk_search(
     min_price: MinPrice = None,
     max_price: MaxPrice = None,
     brand_ids: BrandIds = None,
+    attributes: Attributes = None,
+    colors: Colors = None,
+    seller_type: SellerType = None,
+    fast_delivery: FastDelivery = False,
+    ready_to_ship: ReadyToShip = False,
     in_stock_only: InStock = True,
     page: Page = 1,
 ) -> dict[str, Any]:
     """Search Digikala products by name, with price (Toman), discount, seller and rating.
 
-    Returns 20 products per page. The API always returns ~500 loosely related items, even for
-    nonsense, so check titles before claiming a match. For category codes use dk_suggest or
+    Returns 20 products per page. Digikala's search also returns loosely related items, even
+    for nonsense: each product has `match` ('all' query words in its title, 'some' with
+    `missing_words`, or 'none'), and `matches` counts them; prefer 'all'. Feature, color and
+    seller filters come from dk_filters(query=...). For category codes use dk_suggest or
     dk_categories; for one brand in a category, dk_category_products(brand_code=...). Note:
     sort=cheapest over a text query puts cheap accessories (cases, cables) first; for the
     cheapest real match use dk_find_cheapest. With brand_ids plus a price range the API orders
@@ -80,13 +103,23 @@ async def dk_search(
     on later pages (dk_category_products keeps a strict order). Next: dk_product for all
     sellers' offers of one product (for groceries it shows the supermarket price, which can differ).
     """
-    data = (
-        await fetch(
-            "/v1/search/", {"q": query, **listing_params(sort, min_price, max_price, brand_ids, in_stock_only, page)}
-        )
-    )["data"]
+    params = {
+        "q": query,
+        **listing_params(sort, min_price, max_price, brand_ids, in_stock_only, page),
+        **filter_params(attributes, colors, seller_type, fast_delivery, ready_to_ship),
+    }
+    data = (await fetch("/v1/search/", params))["data"]
     # the brand/category facets are not left in: they list low-id brands and unrelated categories, not the query's
     result = listing(data)
+    words = query_words(query)
+    for c, p in zip(result["products"], data.get("products") or [], strict=True):
+        missing = [w for w in words if w not in title_text(p)]
+        c["match"] = "none" if len(missing) == len(words) else "some" if missing else "all"
+        if c["match"] == "some":
+            c["missing_words"] = missing
+    result["matches"] = {m: sum(c["match"] == m for c in result["products"]) for m in ("all", "some", "none")}
+    if result["products"] and not result["matches"]["all"]:
+        result["note"] = "No title on this page has every query word: these are loose matches. Try dk_suggest."
     if sort in ("cheapest", "most_expensive") and brand_ids and (min_price is not None or max_price is not None):
         result["products"].sort(key=lambda c: c["price"] or 0, reverse=sort == "most_expensive")
     return result
@@ -135,6 +168,80 @@ async def dk_find_cheapest(
     return result
 
 
+PRIOR_WEIGHT = 20  # ratings a product needs before its own score outweighs the average
+
+
+@tool("Best picks for a budget")
+async def dk_best_for_budget(
+    max_price: Annotated[int, Field(ge=1, description="Budget in Toman, e.g. 20000000 for 20 million Toman.")],
+    query: Annotated[
+        str | None,
+        Field(min_length=2, max_length=100, description="What to buy, e.g. 'هدفون بی سیم' or 'گوشی سامسونگ'."),
+    ] = None,
+    category_code: Annotated[
+        Code | None, Field(description="Or a category code instead of a query, e.g. 'mobile-phone' (from dk_suggest).")
+    ] = None,
+    min_price: Annotated[
+        int | None,
+        Field(
+            ge=0, description="Skip anything cheaper, in Toman. Default for a query: a floor that drops accessories."
+        ),
+    ] = None,
+    min_ratings: Annotated[int, Field(ge=0, le=1000, description="Skip products with fewer ratings than this.")] = 5,
+    pages: Annotated[int, Field(ge=1, le=5, description="Result pages to scan, 20 products each.")] = 3,
+    limit: Annotated[int, Field(ge=1, le=30, description="Max picks to return.")] = 10,
+) -> dict[str, Any]:
+    """Rank the best-rated in-stock products within a budget, with the reasoning shown.
+
+    Ranks by a weighted rating: a product's rating pulled toward the average of the candidates
+    until it has about 20 ratings, so a 5.0 from 3 buyers does not beat a 4.6 from 900. Ties
+    go to the cheaper one. For a query only titles with every query word count, and
+    accessories are dropped. Use for "best X under Y Toman"; then dk_product on a pick for
+    every seller's price, dk_reviews for what buyers say.
+    """
+    if not query and not category_code:
+        raise ApiError("Pass a query (e.g. 'هدفون بی سیم') or a category_code (e.g. 'mobile-phone').")
+    budget = _prices(min_price, max_price)
+    if category_code:
+        bodies = await asyncio.gather(
+            *(
+                fetch(f"/v1/categories/{category_code}/search/", {**budget, "has_selling_stock": 1, "page": n})
+                for n in range(1, pages + 1)
+            )
+        )
+        found = [c for b in bodies for c in map(card, b["data"].get("products") or []) if c["in_stock"] and c["price"]]
+    else:
+        base = {"q": query, "has_selling_stock": 1}
+        calls = [fetch("/v1/search/", {**base, **budget, "page": n}) for n in range(1, pages + 1)]
+        if min_price is None:
+            calls.append(fetch("/v1/search/", {**base, "page": 1}))  # unfiltered, to see what the real items cost
+        bodies = await asyncio.gather(*calls)
+        found = _matches(query, bodies[:pages])[0]
+        if min_price is None and (top := _matches(query, bodies[pages:])[0]):
+            # ponytail: same crude accessory floor as dk_find_cheapest, capped so a small budget still gets results
+            floor = min(statistics.median(c["price"] for c in top[:5]) / 4, max_price / 2)
+            found = [c for c in found if c["price"] >= floor]
+    found = list({c["id"]: c for c in found if c["price"] <= max_price}.values())
+    rated = [c for c in found if c["rating"] and c["rating_count"] >= min_ratings]
+    mean = statistics.mean(c["rating"] for c in rated) if rated else 0
+    for c in rated:
+        n = c["rating_count"]
+        c["weighted_rating"] = round((PRIOR_WEIGHT * mean + c["rating"] * n) / (PRIOR_WEIGHT + n), 2)
+        c["budget_used_pct"] = round(100 * c["price"] / max_price)
+    rated.sort(key=lambda c: (-c["weighted_rating"], c["price"]))
+    result: dict[str, Any] = {
+        "candidates": len(found),
+        "skipped_few_ratings": len(found) - len(rated),
+        "average_rating": round(mean, 2) if rated else None,
+        "picks": rated[:limit],
+    }
+    if not rated:
+        result["note"] = (
+            "Nothing rated in this budget; raise max_price, lower min_ratings or try dk_suggest for other words."
+        )
+    return result
+
+
 ACCESSORY = "مناسب برای"  # "suitable for": Digikala's accessory titles say what they fit
 
 
@@ -143,13 +250,13 @@ def _matches(query: str, bodies: list[Any]) -> tuple[list[dict[str, Any]], bool]
 
     Semantic search answers even nonsense with unrelated items, so titles are checked here.
     """
-    words = [w for w in norm(query).split() if len(w) > 1]
+    words = query_words(query)
     keep_accessories = ACCESSORY in norm(query)
     cards, seen = [], set()
     for body in bodies:
         for p in body["data"].get("products") or []:
             c = card(p)
-            title = norm(f"{p.get('title_fa') or ''} {p.get('title_en') or ''}")
+            title = title_text(p)
             if c["in_stock"] and c["price"] and c["id"] not in seen and (keep_accessories or ACCESSORY not in title):
                 seen.add(c["id"])
                 cards.append((c, title))
@@ -158,6 +265,15 @@ def _matches(query: str, bodies: list[Any]) -> tuple[list[dict[str, Any]], bool]
         return strict, False
     loose = [c for c, title in cards if any(w in title for w in words)]
     return loose, bool(loose)
+
+
+def query_words(query: str) -> list[str]:
+    return [w for w in norm(query).split() if len(w) > 1]
+
+
+def title_text(p: dict[str, Any]) -> str:
+    """Persian and English title, normalized, for word matching."""
+    return norm(f"{p.get('title_fa') or ''} {p.get('title_en') or ''}")
 
 
 @tool("Search suggestions")
@@ -187,6 +303,82 @@ async def dk_suggest(
         ],
         "trending": [t.get("keyword") for t in data.get("trends") or []],
     }
+
+
+FILTER_VALUES = 15  # phone storage, cameras, screens have 20-50 values; attribute_id lists all of one
+
+
+@tool("Filter options")
+async def dk_filters(
+    category_code: Annotated[
+        Code | None, Field(description="Category code from dk_suggest or dk_categories, e.g. 'mobile-phone'.")
+    ] = None,
+    query: Annotated[
+        str | None,
+        Field(min_length=2, max_length=100, description="Search words instead of a category, e.g. 'هدفون بی سیم'."),
+    ] = None,
+    brand_code: Annotated[
+        Code | None, Field(description="With category_code: only this brand, e.g. 'samsung'.")
+    ] = None,
+    attribute_id: Annotated[
+        int | None,
+        Field(ge=1, description="Return only this attribute with all its values, e.g. 2251 (phone storage)."),
+    ] = None,
+) -> dict[str, Any]:
+    """List the filters Digikala offers for a category or a search: features, colors, sellers, price range.
+
+    Returns attributes (operating system, storage, connection type, ...) with their values as
+    {value title: value id}; an attribute with more than 15 values only has `value_count`: call
+    again with attribute_id for its values. Also colors as {title: id}, seller types, the price range in Toman, and
+    the brands as {code: id} (category only) or the categories the search spans as {code: title}
+    (query only). Pass the ids to dk_category_products or dk_search
+    (attributes={attribute id: [value ids]}, colors=[...], seller_type=..., brand_ids=[...]).
+    """
+    if category_code:
+        path = f"/v1/categories/{category_code}/" + (f"brands/{brand_code}/" if brand_code else "") + "search/"
+        data = (await fetch(path, {"page": 1}))["data"]
+    elif query:
+        data = (await fetch("/v1/search/", {"q": query, "page": 1}))["data"]
+    else:
+        raise ApiError("Pass a category_code (e.g. 'mobile-phone') or a query (e.g. 'هدفون بی سیم').")
+    f = data.get("filters") or {}
+
+    def options(key: str) -> list[dict[str, Any]]:
+        return (f.get(key) or {}).get("options") or []
+
+    if attribute_id:
+        a = next((a for a in options("attributes") if a.get("id") == attribute_id), None)
+        if a is None:
+            raise ApiError(f"No attribute {attribute_id} here. Call dk_filters without attribute_id for the list.")
+        return {
+            "id": attribute_id,
+            "title": a.get("title"),
+            "values": {o.get("title_fa"): o.get("id") for o in a["options"]},
+        }
+    price = (f.get("price") or {}).get("options") or {}
+    result: dict[str, Any] = {
+        "total": (data.get("pager") or {}).get("total_items"),
+        "price_range": {"min": toman(price.get("min")), "max": toman(price.get("max"))},
+        # title -> id maps: a phone category has ~400 values, and repeated keys would double the size.
+        # Long lists are alphabetical (1 TB, 1 GB, 1 MB, ...), so a cut list would hide common values: give the count.
+        "attributes": [
+            {"id": a.get("id"), "title": a.get("title"), "values": {o.get("title_fa"): o.get("id") for o in opts}}
+            if len(opts) <= FILTER_VALUES
+            else {"id": a.get("id"), "title": a.get("title"), "value_count": len(opts)}
+            for a in options("attributes")
+            for opts in [a.get("options") or []]
+        ],
+        "colors": {c.get("title"): c.get("id") for c in options("color_palettes")},
+        "seller_types": [s.get("id") for s in options("seller_types")],
+        "fast_delivery_available": "has_jet_shipment_by_seller_or_digikala" in f,
+    }
+    if category_code and not brand_code:
+        result["brands"] = {
+            b.get("code"): b.get("id") for b in options("brands")
+        }  # code for brand_code, id for brand_ids
+    if query:  # the search's brand facet is not the query's brands (see dk_search), its categories are
+        result["categories"] = {c.get("code"): c.get("title_fa") for c in options("categories")}
+    return result
 
 
 _tree: list[dict[str, Any]] | None = None
@@ -248,18 +440,26 @@ async def dk_category_products(
         Field(description="Only this brand: its English slug, e.g. 'xiaomi' or 'lenovo' (dk_product's brand_code)."),
     ] = None,
     brand_ids: BrandIds = None,
+    attributes: Attributes = None,
+    colors: Colors = None,
+    seller_type: SellerType = None,
+    fast_delivery: FastDelivery = False,
+    ready_to_ship: ReadyToShip = False,
     in_stock_only: InStock = True,
     page: Page = 1,
 ) -> dict[str, Any]:
-    """List the products of one category with sort and filters (price in Toman, brand, stock).
+    """List the products of one category with sort and filters (price in Toman, brand, features, stock).
 
     Use for "cheapest laptops" (category 'notebook-netbook-ultrabook'), "best-selling Xiaomi
-    phones" (brand_code='xiaomi') and similar browsing. The API ignores text queries here.
+    phones" (brand_code='xiaomi') and similar browsing. For "256 GB Android phones" get the
+    attribute and value ids from dk_filters(category_code=...) first. The API ignores text queries here.
     """
     path = f"/v1/categories/{category_code}/" + (f"brands/{brand_code}/" if brand_code else "") + "search/"
-    return listing(
-        (await fetch(path, listing_params(sort, min_price, max_price, brand_ids, in_stock_only, page)))["data"]
-    )
+    params = {
+        **listing_params(sort, min_price, max_price, brand_ids, in_stock_only, page),
+        **filter_params(attributes, colors, seller_type, fast_delivery, ready_to_ship),
+    }
+    return listing((await fetch(path, params))["data"])
 
 
 @tool("Browse a brand")
@@ -448,6 +648,29 @@ def listing_params(
     for i, b in enumerate(brand_ids or []):
         params[f"brands[{i}]"] = b
     return {**params, **_prices(min_price, max_price)}
+
+
+def filter_params(
+    attributes: dict[int, list[int]] | None,
+    colors: list[int] | None,
+    seller_type: str | None,
+    fast_delivery: bool,
+    ready_to_ship: bool,
+) -> dict[str, Any]:
+    """Facet filters in the site's query format (ids from dk_filters)."""
+    params: dict[str, Any] = {}
+    for attr, values in (attributes or {}).items():
+        for i, v in enumerate(values):
+            params[f"attributes[{attr}][{i}]"] = v
+    for i, c in enumerate(colors or []):
+        params[f"color_palettes[{i}]"] = c
+    if seller_type:
+        params["seller_types[0]"] = seller_type
+    if fast_delivery:
+        params["has_jet_shipment_by_seller_or_digikala"] = 1
+    if ready_to_ship:
+        params["has_ready_to_shipment"] = 1
+    return params
 
 
 def _prices(min_price: int | None, max_price: int | None) -> dict[str, int]:

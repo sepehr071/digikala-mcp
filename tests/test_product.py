@@ -146,6 +146,16 @@ async def test_dk_compare_needs_two(client, api):
     assert result.is_error and not api.calls
 
 
+async def test_dk_shortlist(client, api):
+    api["/product/v1/products/20109389/"] = fixture("product.json")  # 999 has no route: 404
+    data = (await client.call_tool("dk_shortlist", {"product_ids": [20109389, 999]})).structured_content
+    p = data["products"][0]
+    assert (p["id"], p["price"], p["in_stock"], p["offers_count"]) == (20109389, 42503600, True, 8)
+    assert (p["cheapest_offer"], p["lowest_price_30d"]) == (42503600, 28373600)
+    assert p["vs_30d_low_pct"] == 50  # (42,503,600 - 28,373,600) / 28,373,600
+    assert data["errors"][0]["id"] == 999 and "404" in data["errors"][0]["error"]
+
+
 async def test_dk_installments(client, api):
     api["/v1/product/20109389/digipay-credit/"] = fixture("installments.json")
     data = (await client.call_tool("dk_installments", PID)).structured_content

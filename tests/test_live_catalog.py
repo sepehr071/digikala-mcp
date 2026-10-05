@@ -29,6 +29,39 @@ async def test_dk_search(client):
     assert await text_size(client, "dk_search", {"query": "گوشی سامسونگ"}) < 15000
 
 
+async def test_dk_search_flags_loose_matches(client):
+    data = await call(client, "dk_search", {"query": "گوشی سامسونگ"})
+    assert data["matches"]["all"] > 0 and all("match" in p for p in data["products"])
+    nonsense = await call(client, "dk_search", {"query": "zxqv blorptastic"})
+    assert not nonsense["matches"]["all"]
+
+
+async def test_dk_filters_then_filtered_browse(client):
+    f = await call(client, "dk_filters", {"category_code": "mobile-phone"})
+    assert f["brands"] and f["colors"] and f["price_range"]["min"] < f["price_range"]["max"]
+    os_ = next(a for a in f["attributes"] if a["id"] == 2226)  # operating system
+    android = os_["values"]["Android"]
+    plain = await call(client, "dk_category_products", {"category_code": "mobile-phone"})
+    only = await call(
+        client, "dk_category_products", {"category_code": "mobile-phone", "attributes": {2226: [android]}}
+    )
+    assert 0 < only["total"] < plain["total"]
+    by_seller = await call(client, "dk_category_products", {"category_code": "mobile-phone", "seller_type": "digikala"})
+    assert 0 < by_seller["total"] < plain["total"]
+    assert await text_size(client, "dk_filters", {"category_code": "mobile-phone"}) < 15000
+    q = await call(client, "dk_filters", {"query": "هدفون بی سیم"})
+    assert "headphone" in q["categories"]
+
+
+async def test_dk_best_for_budget(client):
+    data = await call(client, "dk_best_for_budget", {"query": "هدفون بی سیم", "max_price": 3000000})
+    picks = data["picks"]
+    assert picks and all(p["price"] <= 3000000 and p["in_stock"] for p in picks)
+    assert [p["weighted_rating"] for p in picks] == sorted((p["weighted_rating"] for p in picks), reverse=True)
+    cat = await call(client, "dk_best_for_budget", {"category_code": "mobile-phone", "max_price": 20000000, "pages": 1})
+    assert cat["picks"] and all(p["price"] <= 20000000 for p in cat["picks"])
+
+
 async def test_dk_search_brand_and_price_cheapest(client):
     args = {
         "query": "گوشی سامسونگ",
