@@ -2,6 +2,8 @@
 
 <div align="center">
 
+<img src="https://raw.githubusercontent.com/sepehr071/digikala-mcp/main/.github/banner.png" alt="digikala-mcp: let your AI agent compare every seller on Digikala" width="100%">
+
 # 🛍️ digikala-mcp
 
 **Let your AI agent shop around on Digikala.**<br>
@@ -11,7 +13,7 @@ read reviews and Q&A, and catch today's Incredible Offers, all from Claude, Curs
 [![PyPI](https://img.shields.io/pypi/v/digikala-mcp?color=2563eb)](https://pypi.org/project/digikala-mcp/)
 [![Python](https://img.shields.io/pypi/pyversions/digikala-mcp)](https://pypi.org/project/digikala-mcp/)
 [![CI](https://github.com/sepehr071/digikala-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/sepehr071/digikala-mcp/actions/workflows/ci.yml)
-[![MCP Registry](https://img.shields.io/badge/MCP_Registry-io.github.sepehr071%2Fdigikala--mcp-7c3aed)](https://registry.modelcontextprotocol.io/v0/servers?search=digikala-mcp)
+[![MCP Registry](https://img.shields.io/badge/MCP_Registry-io.github.sepehr071%2Fdigikala--mcp-7c3aed)](https://registry.modelcontextprotocol.io/?q=digikala-mcp)
 [![License: MIT](https://img.shields.io/badge/license-MIT-16a34a)](https://github.com/sepehr071/digikala-mcp/blob/main/LICENSE)
 
 [![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=digikala&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyJkaWdpa2FsYS1tY3AiXX0=)
@@ -183,7 +185,7 @@ id, title, brand, price, discount, stock, seller, rating and the product link.
 | `dk_location` | Address → coordinates, or coordinates → address with Digikala city/province ids |
 </details>
 
-All tools are annotated `readOnlyHint: true` and return compact structured JSON, so they don't flood the agent's context.
+All 23 tools are annotated `readOnlyHint: true` and return compact structured JSON, so they don't flood the agent's context.
 
 ## Good to know
 
