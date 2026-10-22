@@ -19,7 +19,7 @@ check a product's price history, read reviews and Q&A, and catch today's Incredi
 [![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=digikala&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyJkaWdpa2FsYS1tY3AiXX0=)
 [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_digikala--mcp-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=digikala&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22digikala-mcp%22%5D%7D)
 
-[For AI agents](#for-ai-agents) · [Quick start](#quick-start) · [What it can do](#what-it-can-do) · [Tools](#tools) · [FAQ](#faq) · [فارسی](#فارسی)
+[For AI agents](#for-ai-agents) · [Why](#why) · [What it can do](#what-it-can-do) · [Quick start](#quick-start) · [Tools](#tools) · [How it works](#how-it-works) · [Good to know](#good-to-know) · [FAQ](#faq) · [Configuration](#configuration) · [فارسی](#فارسی) · [Development](#development) · [Related](#related-servers)
 
 </div>
 
@@ -27,7 +27,7 @@ check a product's price history, read reviews and Q&A, and catch today's Incredi
 
 ## For AI agents
 
-- **What:** unofficial MCP server for Digikala (digikala.com, Iran). Queries in Persian or English, prices in Toman.
+- **What:** unofficial MCP server (model context protocol) for Digikala (digikala.com, Iran) and its Fresh supermarket. Queries in Persian or English, prices in Toman.
 - **Install:** `uvx digikala-mcp` or `claude mcp add digikala -- uvx digikala-mcp`. Transport: stdio. Needs [uv](https://docs.astral.sh/uv/getting-started/installation/) (Python 3.10+).
 - **Auth:** none, no API key or account. Optional `DIGIKALA_MCP_PROXY` (HTTP proxy, or a comma-separated list, e.g. with an Iranian exit if Digikala blocks yours).
 - **Access:** read-only. No login, cart, checkout or payment, so no confirmation is needed before calling any tool.
@@ -36,6 +36,7 @@ check a product's price history, read reviews and Q&A, and catch today's Incredi
 - **Use when:** finding, comparing or judging prices of products and sellers on Digikala, including the Fresh supermarket.
 - **Do not use when:** the user wants to buy, or needs shipping cost (only calculated at checkout) or anything behind a login.
 - **Output:** compact JSON. Prices in Toman, ratings 0-5 (`null` = not rated). Numeric product ids (the `<id>` of `dkp-<id>`) pass between tools.
+- **Network:** talks to `api.digikala.com` directly from your machine. On "refused the request (HTTP 403)" for every call, set `DIGIKALA_MCP_PROXY`.
 - **Machine-readable:** [`server.json`](https://github.com/sepehr071/digikala-mcp/blob/main/server.json) and the
   [awesome-iran-mcp catalog](https://github.com/sepehr071/awesome-iran-mcp) (`TOOLS.md`, `servers.json`, `llms.txt`).
 
@@ -64,16 +65,16 @@ cheapest offer, and whether today's price is a good one* means a lot of clicking
 
 ## What it can do
 
-- 🔎 **Search** the whole catalogue in Persian or English, with price, brand, feature (OS, storage, ...), color, seller and fast-delivery filters; every result says whether its title really matches
-- 💸 **Find the real cheapest match**, with accessories filtered out, and every seller's offer for a product
-- 🏆 **Best picks for a budget**, ranked by a rating weighted by how many buyers rated it, with the reasoning shown
-- 📋 **Re-check a shortlist** of up to 10 products in one call: price, cheapest offer, stock, distance from the 30-day low
-- 📈 **Judge a price** with about 30 days of daily price history and the 30-day low
-- 🗂️ **Browse** categories, brands, sellers and best sellers, sorted by price, sales, views, newest or buyers' pick
-- ⭐ **Check quality** with reviews, pros/cons, buyer Q&A and seller reputation
-- ⚡ **Catch deals**: Incredible Offers and supermarket (Digikala Fresh) discounts
-- 🧾 **Extras**: spec comparison, installment plans, Digikala Plus shipping plans, live gold and coin prices
-- 🔒 **Read-only by design**: no login, no cart, no orders, no payment
+- **Search** the whole catalogue in Persian or English, with price, brand, feature (OS, storage, ...), color, seller and fast-delivery filters; every result says whether its title really matches
+- **Find the real cheapest match**, with accessories filtered out, and every seller's offer for a product
+- **Best picks for a budget**, ranked by a rating weighted by how many buyers rated it, with the reasoning shown
+- **Re-check a shortlist** of up to 10 products in one call: price, cheapest offer, stock, distance from the 30-day low
+- **Judge a price** with about 30 days of daily price history and the 30-day low
+- **Browse** categories, brands, sellers and best sellers, sorted by price, sales, views, newest or buyers' pick
+- **Check quality** with reviews, pros/cons, buyer Q&A and seller reputation
+- **Catch deals**: Incredible Offers and supermarket (Digikala Fresh) discounts
+- **Extras**: spec comparison, installment plans, Digikala Plus shipping plans, live gold and coin prices
+- **Read-only by design**: no login, no cart, no orders, no payment
 
 ## Quick start
 
@@ -122,6 +123,42 @@ Click **Install in VS Code** above, or add to `.vscode/mcp.json`:
 </details>
 
 <details>
+<summary><b>Codex CLI</b></summary>
+
+```bash
+codex mcp add digikala -- uvx digikala-mcp
+```
+
+Or in `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.digikala]
+command = "uvx"
+args = ["digikala-mcp"]
+```
+</details>
+
+<details>
+<summary><b>Gemini CLI</b></summary>
+
+Add to `~/.gemini/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "digikala": { "command": "uvx", "args": ["digikala-mcp"] }
+  }
+}
+```
+</details>
+
+<details>
+<summary><b>Windsurf</b></summary>
+
+Add the Claude Desktop block to `~/.codeium/windsurf/mcp_config.json`.
+</details>
+
+<details>
 <summary><b>Anything else</b></summary>
 
 It's a standard stdio MCP server: run `uvx digikala-mcp`, or `pip install digikala-mcp` and run `digikala-mcp`.
@@ -132,23 +169,11 @@ Then just ask:
 - "Cheapest AirPods-style earbuds under 3 million Toman with at least 4 stars?"
 - "Compare the Galaxy A07 64 GB and 128 GB. Is the bigger one worth the difference?"
 - "Is this seller reliable? CGDG9"
+- "What are today's Incredible Offers on headphones, biggest discount first?"
+- "Which Android phones with 256 GB sold by Digikala itself are under 20 million Toman?"
 - <span dir="rtl">ارزان&zwnj;ترین شیر کم&zwnj;چرب در سوپرمارکت دیجی&zwnj;کالا چند است؟</span>
-
-## How it works
-
-```text
-  AI agent  (Claude, Cursor, Copilot, ...)
-      │
-      │  MCP over stdio
-      ▼
-  digikala-mcp  (runs on your machine)
-      │
-      │  HTTPS
-      └──────▶  api.digikala.com   products, sellers, deals, Fresh supermarket
-```
-
-`digikala-mcp` runs locally and calls the same public endpoints the digikala.com web app uses. There's no
-hosted server in between, no API key, and nothing about you is sent anywhere else.
+- <span dir="rtl">ارزان&zwnj;ترین گوشی سامسونگ A07 کدام است و الان وقت خرید است؟</span>
+- <span dir="rtl">امروز چه شگفت&zwnj;انگیزی برای هدفون هست؟</span>
 
 ## Tools
 
@@ -156,7 +181,7 @@ Product ids are the number in a `digikala.com/product/dkp-<id>/` link. Every lis
 id, title, brand, price, discount, stock, seller, rating, a photo URL (`image`) and the product link.
 
 <details open>
-<summary><b>🔎 Find products</b> (12)</summary>
+<summary><b>Find products</b> (12)</summary>
 
 | Tool | What it does |
 |---|---|
@@ -175,7 +200,7 @@ id, title, brand, price, discount, stock, seller, rating, a photo URL (`image`) 
 </details>
 
 <details open>
-<summary><b>📦 Products</b> (8)</summary>
+<summary><b>Products</b> (8)</summary>
 
 | Tool | What it does |
 |---|---|
@@ -190,7 +215,7 @@ id, title, brand, price, discount, stock, seller, rating, a photo URL (`image`) 
 </details>
 
 <details open>
-<summary><b>🧾 Other</b> (3)</summary>
+<summary><b>Other</b> (3)</summary>
 
 | Tool | What it does |
 |---|---|
@@ -200,6 +225,22 @@ id, title, brand, price, discount, stock, seller, rating, a photo URL (`image`) 
 </details>
 
 All 23 tools are annotated `readOnlyHint: true` and return compact structured JSON, so they don't flood the agent's context.
+
+## How it works
+
+```text
+  AI agent  (Claude, Cursor, Copilot, ...)
+      │
+      │  MCP over stdio
+      ▼
+  digikala-mcp  (runs on your machine)
+      │
+      │  HTTPS
+      └──────▶  api.digikala.com   products, sellers, deals, Fresh supermarket
+```
+
+`digikala-mcp` runs locally and calls the same public endpoints the digikala.com web app uses. There's no
+hosted server in between, no API key, and nothing about you is sent anywhere else.
 
 ## Good to know
 
@@ -265,6 +306,26 @@ no price. Searches use `in_stock_only: true` by default.
 </details>
 
 <details>
+<summary><b>Does it cover the Digikala Fresh supermarket?</b></summary>
+
+Yes. `dk_fresh_search` searches and browses Digikala Fresh, `dk_deals` takes `store='supermarket'`, and `dk_product`
+falls back to the Fresh product API for supermarket ids.
+</details>
+
+<details>
+<summary><b>Are prices in Rial or Toman?</b></summary>
+
+Toman, like the website. The API answers in Rial and every tool divides by 10; gold and coin prices are already Toman.
+</details>
+
+<details>
+<summary><b>Why does <code>dk_installments</code> return a note instead of offers?</b></summary>
+
+Since 2026-10-05 Digikala's Digipay credit endpoint answers an empty list for every product (the product page shows no
+credit box either), so the tool returns a note instead of offers.
+</details>
+
+<details>
 <summary><b>Claude Desktop says <code>uvx</code> is not found</b></summary>
 
 Use the full path to `uvx` (`where uvx` on Windows, `which uvx` on macOS/Linux) as `command`.
@@ -286,9 +347,11 @@ npx @modelcontextprotocol/inspector uvx digikala-mcp
 
 <a id="فارسی"></a>
 
-## فارسی: سرور MCP دیجی&zwnj;کالا
+## فارسی
 
 <div dir="rtl">
+
+### سرور MCP دیجی&zwnj;کالا برای دستیار هوش مصنوعی
 
 **digikala-mcp** یک سرور MCP غیررسمی و فقط&zwnj;خواندنی برای دیجی&zwnj;کالا، بزرگ&zwnj;ترین فروشگاه اینترنتی ایران، است. این سرور به دستیار هوش مصنوعی شما (Claude، Cursor، Copilot و ...) اجازه می&zwnj;دهد در دیجی&zwnj;کالا جستجو کند،
 قیمت همه فروشندگان یک کالا را مقایسه کند، تاریخچه قیمت، نظرات و پرسش&zwnj;وپاسخ&zwnj;ها را بخواند و پیشنهادهای شگفت&zwnj;انگیز را پیدا کند.
@@ -310,6 +373,8 @@ npx @modelcontextprotocol/inspector uvx digikala-mcp
 - همه قیمت&zwnj;ها به تومان است و امتیازها مثل سایت از ۵.
 - روی سیستم خود شما اجرا می&zwnj;شود، کلید API لازم ندارد و به هیچ سرور واسطی داده نمی&zwnj;فرستد.
 - پاسخ&zwnj;ها تا ۲ دقیقه نگه داشته می&zwnj;شوند؛ قیمت ممکن است همین&zwnj;قدر از سایت عقب باشد.
+
+**کلیدواژه&zwnj;ها:** دیجی&zwnj;کالا، digikala، سرور MCP دیجی&zwnj;کالا، مقایسه قیمت، ارزان&zwnj;ترین قیمت، تاریخچه قیمت، شگفت&zwnj;انگیز دیجی&zwnj;کالا، دیجی&zwnj;کالا فرش، فروشگاه اینترنتی، خرید آنلاین.
 
 **نصب** (اول [uv](https://docs.astral.sh/uv/getting-started/installation/) را نصب کنید). در Claude Code:
 
@@ -356,6 +421,9 @@ publishes to PyPI and the [MCP Registry](https://registry.modelcontextprotocol.i
 
 - [Technolife MCP server](https://github.com/sepehr071/technolife-mcp) for electronics prices, with installment prices
 - [MasterKala MCP server](https://github.com/sepehr071/masterkala-mcp) for gadgets and phone accessories
+- [Torob MCP server](https://github.com/sepehr071/torob-mcp) for price comparison across Iranian shops
+- [Okala MCP server](https://github.com/sepehr071/okala-mcp) for online grocery shopping
+- [Banimode MCP server](https://github.com/sepehr071/banimode-mcp) for fashion and clothing
 - [awesome-iran-mcp](https://github.com/sepehr071/awesome-iran-mcp): catalog of all Iranian-service MCP servers
 
 ## Disclaimer
