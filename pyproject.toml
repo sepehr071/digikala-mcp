@@ -33,6 +33,7 @@ browser = ["patchright==1.63.0"]
 [project.urls]
 Homepage = "https://github.com/sepehr071/digikala-mcp"
 Issues = "https://github.com/sepehr071/digikala-mcp/issues"
+Website = "https://mcpfarsi.ir/servers/digikala/"
 
 [project.scripts]
 digikala-mcp = "digikala_mcp.server:main"

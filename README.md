@@ -15,6 +15,7 @@ check a product's price history, read reviews and Q&A, and catch today's Incredi
 [![CI](https://github.com/sepehr071/digikala-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/sepehr071/digikala-mcp/actions/workflows/ci.yml)
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-io.github.sepehr071%2Fdigikala--mcp-7c3aed)](https://registry.modelcontextprotocol.io/?q=digikala-mcp)
 [![License: MIT](https://img.shields.io/badge/license-MIT-16a34a)](https://github.com/sepehr071/digikala-mcp/blob/main/LICENSE)
+[![mcpfarsi](https://mcpfarsi.ir/badge/digikala.svg)](https://mcpfarsi.ir/servers/digikala/)
 
 [![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=digikala&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyJkaWdpa2FsYS1tY3AiXX0=)
 [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_digikala--mcp-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=digikala&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22digikala-mcp%22%5D%7D)
@@ -425,6 +426,7 @@ publishes to PyPI and the [MCP Registry](https://registry.modelcontextprotocol.i
 - [Okala MCP server](https://github.com/sepehr071/okala-mcp) for online grocery shopping
 - [Banimode MCP server](https://github.com/sepehr071/banimode-mcp) for fashion and clothing
 - [iran-mcp](https://github.com/sepehr071/iran-mcp): catalog of all Iranian-service MCP servers
+- Listed on [mcpfarsi.ir](https://mcpfarsi.ir/servers/digikala/), the Persian MCP marketplace
 
 ## Disclaimer
 
