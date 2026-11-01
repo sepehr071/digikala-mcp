@@ -15,7 +15,7 @@ jobs:
       contents: write  # GitHub Release
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10.2.0
+      - uses: astral-sh/setup-uv@v10.3.3
       - name: Check versions match the tag
         run: |
           TAG=${GITHUB_REF_NAME#v}
