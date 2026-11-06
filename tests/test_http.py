@@ -89,6 +89,20 @@ async def test_one_retry_on_5xx_but_not_on_4xx(client, api):
     assert sum(r.url.path == "/v1/best-selling/" for r in api.calls) == 1
 
 
+async def test_jitter_skipped_only_for_a_lone_call(api, monkeypatch):
+    """Bot protection: a call after QUIET_SECONDS of silence goes out at once; one right after waits the jitter."""
+    monkeypatch.setattr(http, "JITTER", (0.3, 0.3))
+    monkeypatch.setattr(http, "_last_active", float("-inf"))
+    api["/v1/digiplus/plans/"] = fixture("plus_plans.json")
+    loop = asyncio.get_running_loop()
+    t0 = loop.time()
+    await http.fetch("/v1/digiplus/plans/", {"n": 1})
+    t1 = loop.time()
+    await http.fetch("/v1/digiplus/plans/", {"n": 2})  # uncached, right after the first
+    t2 = loop.time()
+    assert t1 - t0 < 0.25 and t2 - t1 >= 0.3
+
+
 async def test_redirect_to_another_host_is_refused(client, api):
     api["/v1/autocomplete/"] = lambda r: httpx.Response(307, headers={"Location": "https://evil.example/x"})
     result = await client.call_tool("dk_suggest", {"query": "samsung"})

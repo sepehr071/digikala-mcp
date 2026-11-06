@@ -36,7 +36,8 @@ HEADERS = {
 }
 
 MAX_CONCURRENCY = 2
-JITTER = (0.15, 0.6)  # seconds before each uncached call
+JITTER = (0.15, 0.6)  # seconds before each uncached call, unless it is a lone one (see QUIET_SECONDS)
+QUIET_SECONDS = 2
 MAX_RETRIES = 2
 MAX_RETRY_WAIT = 10  # cap for Retry-After and backoff, seconds
 # Agents often repeat a call (search, then the same search with one more filter); prices move slowly enough
@@ -52,6 +53,8 @@ _proxy_index = 0
 _retired: set[asyncio.Task] = set()
 _browser_lock: asyncio.Lock | None = None
 _cleared: tuple[httpx.AsyncClient, float] | None = None
+_in_flight = 0
+_last_active = float("-inf")  # monotonic time the last upstream request started or ended
 _cache: dict[tuple[str, tuple[tuple[str, Any], ...]], tuple[float, Any]] = {}
 
 
@@ -187,8 +190,16 @@ async def _send(client: httpx.AsyncClient, limit: asyncio.Semaphore, path: str, 
     host = httpx.URL(API).host
     try:
         async with limit:
-            await asyncio.sleep(random.uniform(*JITTER))
-            return await client.get(API + path, params=params)
+            global _in_flight, _last_active
+            # a lone call (nothing sent for QUIET_SECONDS) goes out at once; bursts keep the jitter
+            if _in_flight or time.monotonic() - _last_active < QUIET_SECONDS:
+                await asyncio.sleep(random.uniform(*JITTER))
+            _in_flight += 1
+            try:
+                return await client.get(API + path, params=params)
+            finally:
+                _in_flight -= 1
+                _last_active = time.monotonic()
     except httpx.TimeoutException as e:
         raise ApiError(f"{host} did not answer in time. Try again in a moment.") from e
     except httpx.TooManyRedirects as e:
