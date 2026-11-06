@@ -624,7 +624,6 @@ def card(p: dict[str, Any]) -> dict[str, Any]:
     """Compact product card. Unsellable products have no default_variant ([] or null) and no price.
 
     Null fields, a zero discount and a zero rating count are left out (a listing repeats 20 cards).
-    server.compact() also drops `url` and list items' `image` for agents; Python callers keep them.
     """
     v = p.get("default_variant") or {}
     price = v.get("price") or {}

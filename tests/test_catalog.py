@@ -24,6 +24,8 @@ async def test_dk_search(client, api):
         "seller": "دیجی\u200cکالا",
         "rating": 4.4,  # 87.64 / 20
         "rating_count": 2164,
+        "image": "https://dkstatics-public.digikala.com/digikala-products/img20109389.jpg?x-oss-process=image/resize,m_lfit,h_300,w_300/quality,q_80",
+        "url": "https://www.digikala.com/product/dkp-20109389/",
         "match": "all",
     }
     # cases for the phone: Persian title only, so 'samsung' is missing; 'a07' is in some of them
@@ -156,7 +158,13 @@ async def test_dk_category_products_unsellable_cards(client, api):
     assert data["total"] == 4026
     p = data["products"][0]
     # null fields and a zero rating count are left out of cards
-    assert p == {"id": 22667973, "title": p["title"], "brand": "اپل", "in_stock": False} and "brands" not in data
+    assert {k: v for k, v in p.items() if k not in ("image", "url")} == {
+        "id": 22667973,
+        "title": p["title"],
+        "brand": "اپل",
+        "in_stock": False,
+    }
+    assert p["url"].endswith("dkp-22667973/") and p["image"].startswith("https://") and "brands" not in data
     assert api.calls[0].url.params["sort"] == "22"
 
 
@@ -302,7 +310,7 @@ async def test_dk_seller(client, api):
         "member_for": "6 سال و 2 ماه",
         "is_trusted": True,
         "is_official": False,
-        # `url` is dropped from MCP output (pattern in INSTRUCTIONS); dk_seller() still returns it
+        "url": "https://www.digikala.com/seller/CGDG9/",
     }
     assert data["total"] == 135 and data["products"][0]["price"] == 3820000
 

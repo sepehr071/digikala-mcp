@@ -2,7 +2,7 @@ import httpx
 import pytest
 from conftest import fixture
 
-from digikala_mcp.product import dk_product, held_low
+from digikala_mcp.product import held_low
 
 pytestmark = pytest.mark.anyio
 
@@ -17,7 +17,7 @@ async def test_dk_product(client, api):
     assert p["category"] == {"id": 11, "code": "mobile-phone", "title": "گوشی موبایل"}
     assert p["lowest_price_30d"] == 28373600 and p["colors"] == ["سبز", "مشکی"]
     assert p["offers_count"] == 8
-    assert p["image"].startswith("https://") and "images" not in p
+    assert p["image"].startswith("https://") and len(p["images"]) == 4 and p["images"][0] != p["image"]
     # cheapest first, across colors and sellers
     assert [(o["variant_id"], o["price"]) for o in p["offers"]] == [
         (72287314, 42503600),
@@ -63,8 +63,7 @@ async def test_dk_product_falls_back_to_fresh(client, api):
     api["/fresh/v1/product/4369031/"] = fixture("fresh_product.json")
     p = (await client.call_tool("dk_product", {"product_id": 4369031})).structured_content
     assert p["price"] == 28000 and p["category"]["code"] == "low-fat-milk"
-    assert p["store"] == "supermarket" and "url" not in p  # MCP output drops url; Python callers get it:
-    assert (await dk_product(4369031))["url"] == "https://www.digikala.com/supermarket/product/4369031/"
+    assert p["store"] == "supermarket" and p["url"] == "https://www.digikala.com/supermarket/product/4369031/"
     assert (
         p["offers"][0]["ships_by"] == ["ارسال سریع سوپرمارکتی دیجی\u200cکالا"] and "seller_rating" not in p["offers"][0]
     )
