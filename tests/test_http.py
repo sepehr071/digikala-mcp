@@ -121,7 +121,7 @@ async def test_jitter_skipped_only_for_a_lone_call(api, monkeypatch):
     t1 = loop.time()
     await http.fetch("/v1/digiplus/plans/", {"n": 2})  # uncached, right after the first
     t2 = loop.time()
-    assert t1 - t0 < 0.25 and t2 - t1 >= 0.3
+    assert t1 - t0 < 0.25 and t2 - t1 >= 0.25  # not 0.3: Windows' ~15 ms clock reads a 0.3 s sleep as 0.297
 
 
 async def test_redirect_to_another_host_is_refused(client, api):
