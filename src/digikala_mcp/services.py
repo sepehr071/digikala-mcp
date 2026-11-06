@@ -14,7 +14,7 @@ from .registry import tool
 
 @tool("Digikala Plus plans")
 async def dk_plus_plans() -> dict[str, Any]:
-    """List Digikala Plus plans (free shipments per month: jet = same-day Tehran/Karaj, fresh = supermarket) with price in Toman and benefits."""
+    """List Digikala Plus plans (monthly free shipments; fresh = supermarket) with price in Toman and benefits."""
     data = (await fetch("/v1/digiplus/plans/"))["data"]
     return {
         "plans": [
@@ -40,8 +40,7 @@ async def dk_plus_plans() -> dict[str, Any]:
 async def dk_gold_prices() -> dict[str, Any]:
     """Get the live 18k gold price per gram and gold coin prices, in Toman.
 
-    gold18_day_change_pct is vs the previous daily point; period change, low and high cover the ~3-month
-    chart. Coins' change_pct is as Digikala shows it. Coins with price null are not for sale.
+    Period change, low and high cover ~3 months. A coin with price null is not for sale.
     """
     coins, gold = await asyncio.gather(fetch("/v1/super-app/price-list/"), fetch("/v1/super-app/price-chart/gold18/"))
     coins, gold = coins["data"], gold["data"]
@@ -73,24 +72,22 @@ async def dk_location(
         Field(
             min_length=2,
             max_length=200,
-            description="Address or landmark in Persian, e.g. 'میدان ونک'. Latin text matches poorly.",
+            description="Persian address or landmark, e.g. 'میدان ونک'.",
         ),
     ] = None,
     city: Annotated[
         str | None,
         Field(
             max_length=50,
-            description="Persian city name; without it most addresses find nothing, e.g. 'تهران' or 'مشهد'.",
+            description="Persian city, e.g. 'تهران'; needed for most addresses.",
         ),
     ] = None,
-    lat: Annotated[
-        float | None, Field(ge=24, le=40, description="Latitude, to describe a point instead (Iran: ~25 to ~40).")
-    ] = None,
-    long: Annotated[float | None, Field(ge=44, le=64, description="Longitude, with lat.")] = None,
+    lat: Annotated[float | None, Field(ge=24, le=40, description="With long: describe a point instead.")] = None,
+    long: Annotated[float | None, Field(ge=44, le=64)] = None,
 ) -> dict[str, Any]:
     """Turn an address into coordinates, or coordinates into an address with Digikala's city_id and state_id.
 
-    Pass address + city, or lat + long. Prices are the same everywhere; location only affects delivery.
+    Prices are the same everywhere; location only affects delivery.
     """
     if lat is not None and long is not None:
         a = (await fetch("/v1/map/reverse-geo/", {"latitude": lat, "longitude": long}))["data"].get("address") or {}

@@ -12,16 +12,9 @@ from .catalog import InStock, Page, Sort, card, image_url, listing, listing_para
 from .http import SITE, ApiError, fetch
 from .registry import tool
 
-ProductId = Annotated[
-    int,
-    Field(
-        ge=1,
-        le=10**9,
-        description="Digikala product id, the number in 'dkp-<id>' (from dk_search etc.), e.g. 20109389.",
-    ),
-]
+ProductId = Annotated[int, Field(ge=1, le=10**9)]  # INSTRUCTIONS: the number in dkp-<id>
 
-FullText = Annotated[bool, Field(description="Skip text cuts and pros/cons caps; return everything whole.")]
+FullText = Annotated[bool, Field(description="No text cuts.")]
 
 ANSWERS_PER_QUESTION = 2
 TEXT_CHARS = 300  # a few reviews and answers are essays; keep a page of 20 small
@@ -31,15 +24,13 @@ PROCON_ITEMS, PROCON_CHARS = 5, 80
 @tool("Product details and offers")
 async def dk_product(
     product_id: ProductId,
-    max_offers: Annotated[int, Field(ge=1, le=50, description="Max seller offers to return, cheapest first.")] = 15,
-    include_specs: Annotated[bool, Field(description="Include the specification table.")] = True,
+    max_offers: Annotated[int, Field(ge=1, le=50)] = 15,
+    include_specs: Annotated[bool, Field()] = True,
 ) -> dict[str, Any]:
     """Get one product's price, stock, rating, specs and every seller's offer (cheapest first).
 
-    An offer is one color/size from one seller: price (Toman), stock_left (only when low), warranty,
-    seller rating 0-5, ships_by ('digikala', 'jet' = same-day Tehran/Karaj, 'seller'), free_shipping.
-    lowest_price_30d can be a one-day dip of one color; dk_price_history's lowest_2_days is steadier.
-    Groceries have store='supermarket' and a price that can differ from dk_search's.
+    An offer is one color/size from one seller; stock_left only when low; ships_by 'jet' = same-day
+    Tehran/Karaj. lowest_price_30d can be a one-day dip (dk_price_history's lowest_2_days is steadier).
     """
     store = "digikala"
     try:
@@ -54,7 +45,7 @@ async def dk_product(
         raise ApiError(
             f"Product {product_id} does not exist or is no longer listed. Find it again with dk_search.", 404
         )
-    offers = sorted((_offer(v) for v in p.get("variants") or []), key=lambda o: o["price"] or float("inf"))
+    offers = sorted((_offer(v) for v in p.get("variants") or []), key=lambda o: o.get("price") or float("inf"))
     brand, category = p.get("brand") or {}, p.get("category") or {}
     result = {
         **card(p),
@@ -69,7 +60,7 @@ async def dk_product(
         "questions_count": p.get("questions_count"),
         "offers_count": len(offers),
         "offers": offers[:max_offers],
-        "images": [u for u in map(image_url, (p.get("images") or {}).get("list") or []) if u][:4],
+        "image": image_url((p.get("images") or {}).get("main")),
     }
     if store == "supermarket":  # where the main service's 301 points
         result["url"] = f"{SITE}/supermarket/product/{product_id}/"
@@ -88,8 +79,7 @@ async def dk_product(
 async def dk_price_history(product_id: ProductId) -> dict[str, Any]:
     """Get ~30 days of daily buy-box prices (Toman) per color/variant, with lowest and highest.
 
-    For "is this a good price?": `lowest_2_days` is the lowest price held two days in a row (`lowest`
-    can be a one-day dip). Days are Jalali. An unknown id gives no variants; check it with dk_product.
+    `lowest_2_days` is the lowest price held two days in a row (`lowest` can be a one-day dip). Days are Jalali.
     """
     data = (await fetch(f"/v1/product/{product_id}/price-chart/"))["data"]
     variants = []
@@ -124,17 +114,14 @@ def held_low(prices: list[int]) -> int | None:
 @tool("Product reviews")
 async def dk_reviews(
     product_id: ProductId,
-    sort: Annotated[
-        Literal["most_helpful", "newest", "buyers_first"], Field(description="Order of the reviews.")
-    ] = "most_helpful",
+    sort: Annotated[Literal["most_helpful", "newest", "buyers_first"], Field()] = "most_helpful",
     page: Page = 1,
-    limit: Annotated[int, Field(ge=1, le=20, description="Max reviews from the page (20 per page).")] = 10,
+    limit: Annotated[int, Field(ge=1, le=20, description="Of the page's 20.")] = 10,
     full_text: FullText = False,
 ) -> dict[str, Any]:
     """Read customer reviews: stars 1-5 (null = none), text, pros/cons, verified buyer flag.
 
-    The overall rating (0-5) is in dk_product. Texts are cut to 300 characters, pros/cons to 5 of 80;
-    full_text=true returns them whole. An unknown id gives no reviews; check it with dk_product.
+    Texts are cut to 300 characters, pros/cons to 5 of 80 (full_text=true: whole).
     """
     chars, procon_chars, procon_items = (None, None, None) if full_text else (TEXT_CHARS, PROCON_CHARS, PROCON_ITEMS)
     api_sort = {"most_helpful": "default", "newest": "newest", "buyers_first": "buyers"}[sort]
@@ -156,7 +143,7 @@ async def dk_reviews(
             "seller": (item.get("seller") or {}).get("title"),
             "variant": (item.get("color") or {}).get("title"),
         }
-        reviews.append({k: v for k, v in review.items() if v is not None})
+        reviews.append({k: v for k, v in review.items() if v is not None and v != []})
     return {
         "total": pager.get("total_items"),
         "page": pager.get("current_page"),
@@ -168,13 +155,13 @@ async def dk_reviews(
 @tool("Product questions and answers")
 async def dk_questions(
     product_id: ProductId,
-    sort: Annotated[Literal["newest", "most_answered"], Field(description="Order of the questions.")] = "most_answered",
+    sort: Annotated[Literal["newest", "most_answered"], Field()] = "most_answered",
     page: Page = 1,
     full_text: FullText = False,
 ) -> dict[str, Any]:
     """Read customers' questions (20 per page) with up to 2 answers each (answered_by: buyer, seller, ...).
 
-    Texts are cut to 300 characters (full_text=true: whole). Use for practical doubts (compatibility, size, registration).
+    Texts are cut to 300 characters (full_text=true: whole).
     """
     chars = None if full_text else TEXT_CHARS
     api_sort = {"newest": "created_at", "most_answered": "answers"}[sort]
@@ -210,10 +197,7 @@ async def dk_similar(
     in_stock_only: InStock = True,
     page: Page = 1,
 ) -> dict[str, Any]:
-    """List products similar to one (same kind, other models and brands).
-
-    sort='cheapest' gives cheaper alternatives; then dk_compare.
-    """
+    """List products similar to one (same kind, other models and brands); sort='cheapest' for cheaper ones."""
     try:
         data = (
             await fetch(
@@ -231,13 +215,12 @@ async def dk_similar(
 async def dk_compare(
     product_ids: Annotated[
         list[int],
-        Field(min_length=2, max_length=4, description="2-4 product ids of the same kind, e.g. [20109389, 20110013]."),
+        Field(min_length=2, max_length=4, description="Same kind, e.g. [20109389, 20110013]."),
     ],
 ) -> dict[str, Any]:
     """Compare 2-4 products side by side: price and rating, then the spec rows where they differ.
 
-    `values` in a `specs` row follow the order of `products` (null = no such spec); identical rows
-    fold into `same_specs`. Best within one category. Unknown ids are listed in `missing_ids`.
+    A `specs` row's `values` follow `products` order (null = no such spec); identical rows fold into `same_specs`.
     """
     params = {f"product_ids[{i}]": pid for i, pid in enumerate(product_ids)}
     items = (await fetch("/v1/product/compare/", params))["data"]["compare_products"]
@@ -260,7 +243,6 @@ async def dk_compare(
 SHORTLIST_KEYS = (
     "id",
     "title",
-    "image",
     "price",
     "price_before_discount",
     "discount_pct",
@@ -274,15 +256,12 @@ SHORTLIST_KEYS = (
 async def dk_shortlist(
     product_ids: Annotated[
         list[int],
-        Field(min_length=1, max_length=10, description="1-10 product ids, e.g. [20109389, 20110013]."),
+        Field(min_length=1, max_length=10, description="e.g. [20109389, 20110013]."),
     ],
 ) -> dict[str, Any]:
     """Re-price up to 10 products in one call: price, cheapest offer, stock, rating and 30-day low (Toman).
 
-    Use to refresh a watched list or check stock. `cheapest_offer` can be below `price` (the featured
-    offer). `low_30d` is the lowest price held two days in a row, `vs_30d_low_pct` today's price above
-    it (0 = at the low); `lowest_one_day_30d` is Digikala's figure, possibly a one-day dip.
-    For specs use dk_compare; for the daily curve dk_price_history.
+    `low_30d` is the lowest price held two days in a row, `vs_30d_low_pct` today's price above it.
     """
     # the history is only an extra: a failed chart leaves low_30d null instead of dropping the product
     found, charts = await asyncio.gather(
@@ -303,14 +282,13 @@ async def dk_shortlist(
         low = min((x for x in lows if x), default=None)
         rows.append(
             {
-                **{k: p[k] for k in SHORTLIST_KEYS},
+                **{k: p[k] for k in SHORTLIST_KEYS if k in p},
                 "cheapest_offer": offer.get("price"),
                 "cheapest_seller": offer.get("seller"),
                 "offers_count": p["offers_count"],
                 "low_30d": low,
-                "vs_30d_low_pct": round(100 * (p["price"] - low) / low) if p["price"] and low else None,
+                "vs_30d_low_pct": round(100 * (p["price"] - low) / low) if p.get("price") and low else None,
                 "lowest_one_day_30d": p["lowest_price_30d"],
-                "url": p["url"],
             }
         )
     return {"products": rows, "errors": errors}
@@ -320,9 +298,8 @@ async def dk_shortlist(
 async def dk_installments(product_id: ProductId) -> dict[str, Any]:
     """Get the Digipay credit-line offers for a product, in Toman.
 
-    A plan is a fixed credit line (credit_amount) repaid in `months` installments of monthly_repayment;
-    it is not sized to the product price, so never present it as "this product for X a month".
-    Needs Digipay approval. An unknown id gives no plans; check it with dk_product.
+    A plan is a fixed credit line repaid in `months` installments, not sized to the product price:
+    never present it as "this product for X a month".
     """
     data = (await fetch(f"/v1/product/{product_id}/digipay-credit/"))["data"]
     plans: dict[tuple[Any, ...], dict[str, Any]] = {}
@@ -350,12 +327,13 @@ def _cut(text: str | None, chars: int | None) -> str | None:
 def _offer(v: dict[str, Any]) -> dict[str, Any]:
     price, seller = v.get("price") or {}, v.get("seller") or {}
     shipping = v.get("shipment_methods") or {}
-    return {
+    discount = price.get("discount_percent") or 0
+    offer = {
         "variant_id": v.get("id"),
         "variant": " / ".join(t["value"].get("title") for t in v.get("themes") or [] if t.get("value")) or None,
         "price": toman(price.get("selling_price")),
-        "price_before_discount": toman(price.get("rrp_price")),
-        "discount_pct": price.get("discount_percent") or 0,
+        "price_before_discount": toman(price.get("rrp_price")) if discount else None,
+        "discount_pct": discount or None,
         "stock_left": price.get("marketable_stock"),
         "seller": seller.get("title"),
         "seller_code": seller.get("code"),
@@ -366,3 +344,4 @@ def _offer(v: dict[str, Any]) -> dict[str, Any]:
         "free_shipping": any((s.get("price") or {}).get("is_free") for s in shipping.get("providers") or []),
         "lead_time_days": v.get("lead_time"),
     }
+    return {k: x for k, x in offer.items() if x is not None}  # like cards: no nulls, no zero discount

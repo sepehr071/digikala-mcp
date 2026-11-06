@@ -29,7 +29,7 @@ Query = Annotated[
     Field(
         min_length=2,
         max_length=100,
-        description="Product name or words, Persian or English, e.g. 'گوشی سامسونگ' or 'airpods pro'.",
+        description="Persian or English words, e.g. 'گوشی سامسونگ'.",
     ),
 ]
 Sort = Annotated[
@@ -43,36 +43,34 @@ Sort = Annotated[
         "fastest_delivery",
         "buyers_pick",
     ],
-    Field(description="Order of the results."),
+    Field(),
 ]
-Page = Annotated[int, Field(ge=1, le=100, description="Page number, from 1 (20 products per page).")]
-MinPrice = Annotated[int | None, Field(ge=0, description="Lowest price in Toman, e.g. 10000000 for 10 million Toman.")]
-MaxPrice = Annotated[int | None, Field(ge=0, description="Highest price in Toman, e.g. 50000000.")]
+Page = Annotated[int, Field(ge=1, le=100)]
+MinPrice = Annotated[int | None, Field(ge=0)]  # Toman, as INSTRUCTIONS say
+MaxPrice = Annotated[int | None, Field(ge=0)]
 BrandIds = Annotated[
     list[int] | None,
-    Field(
-        max_length=5,
-        description="Brand ids from dk_product's brand_id or dk_brand_products' brand.id, e.g. [18] Samsung, [1662] Xiaomi.",
-    ),
+    Field(max_length=5, description="Brand ids (dk_product brand_id), e.g. [18] Samsung."),
 ]
-InStock = Annotated[bool, Field(description="Only products that can be bought now.")]
+InStock = Annotated[bool, Field()]
 Code = Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9_.'’-]{1,80}$")]  # a few real codes have _ . ' ’
 Attributes = Annotated[
     dict[int, Annotated[list[int], Field(max_length=20)]] | None,
     Field(
         max_length=10,
-        description="Feature filters from dk_filters: {attribute id: [value ids]}, e.g. {2226: [19239]}. Values OR, attributes AND.",
+        description="{attribute id: [value ids]} from dk_filters, e.g. {2226: [19239]}. Values OR, attributes AND.",
     ),
 ]
-Colors = Annotated[list[int] | None, Field(max_length=10, description="Color ids from dk_filters, e.g. [1].")]
-SellerType = Annotated[
-    Literal["digikala", "official", "trusted", "roosta"] | None,
-    Field(
-        description="Only offers from Digikala itself, official brand sellers, trusted sellers or rural (roosta) sellers."
-    ),
+Colors = Annotated[list[int] | None, Field(max_length=10, description="Color ids from dk_filters.")]
+SellerType = Annotated[Literal["digikala", "official", "trusted", "roosta"] | None, Field()]
+FastDelivery = Annotated[bool, Field(description="Jet delivery only.")]
+ReadyToShip = Annotated[bool, Field(description="In Digikala's warehouse only.")]
+# dk_category_products repeats dk_search's filters; short descriptions there save tokens on every request
+SameBrandIds = Annotated[list[int] | None, Field(max_length=5, description="As dk_search.")]
+SameAttributes = Annotated[
+    dict[int, Annotated[list[int], Field(max_length=20)]] | None, Field(max_length=10, description="As dk_search.")
 ]
-FastDelivery = Annotated[bool, Field(description="Only items with fast (Jet) delivery.")]
-ReadyToShip = Annotated[bool, Field(description="Only items already in Digikala's warehouse (ship sooner).")]
+SameColors = Annotated[list[int] | None, Field(max_length=10, description="As dk_search.")]
 
 
 @tool("Search products")
@@ -92,10 +90,8 @@ async def dk_search(
 ) -> dict[str, Any]:
     """Search products by name: price (Toman), discount, seller, rating, 20 per page.
 
-    Search also returns loosely related items: each product has `match` ('all', 'some' with
-    `missing_words`, or 'none'); prefer 'all'. Filter ids come from dk_filters(query=...).
-    sort=cheapest puts accessories first: use dk_find_cheapest for the cheapest real match.
-    Next: dk_product for every seller's offer.
+    Each product has `match` ('all', 'some' + `missing_words`, 'none'); prefer 'all'.
+    Filter ids: dk_filters(query=...).
     """
     params = {
         "q": query,
@@ -115,29 +111,25 @@ async def dk_search(
     if result["products"] and not result["matches"]["all"]:
         result["note"] = "No title on this page has every query word: these are loose matches. Try dk_suggest."
     if sort in ("cheapest", "most_expensive") and brand_ids and (min_price is not None or max_price is not None):
-        result["products"].sort(key=lambda c: c["price"] or 0, reverse=sort == "most_expensive")
+        result["products"].sort(key=lambda c: c.get("price") or 0, reverse=sort == "most_expensive")
     return result
 
 
 @tool("Find cheapest product")
 async def dk_find_cheapest(
     query: Query,
-    pages: Annotated[int, Field(ge=1, le=5, description="Relevance pages to scan, 20 products each.")] = 3,
+    pages: Annotated[int, Field(ge=1, le=5, description="Relevance pages to scan.")] = 3,
     min_price: Annotated[
         int | None,
-        Field(
-            ge=0,
-            description="Skip anything cheaper than this, in Toman. Default: a quarter of the median price of the top matches (ignoring max_price), which drops accessories.",
-        ),
+        Field(ge=0, description="Toman. Default: 1/4 of the top matches' median price (drops accessories)."),
     ] = None,
     max_price: MaxPrice = None,
-    limit: Annotated[int, Field(ge=1, le=60, description="Max products to return.")] = 10,
+    limit: Annotated[int, Field(ge=1, le=60)] = 10,
 ) -> dict[str, Any]:
     """Find the cheapest in-stock products that really match a query, sorted by price (Toman).
 
-    Scans the top relevant results, keeps titles with every query word (else any word, with a
-    `note`) and drops accessories. Use for "cheapest X"; then dk_product on the winner, as another
-    seller may sell it for less.
+    Keeps titles with every query word and drops accessories. Then dk_product on the winner:
+    another seller may be cheaper.
     """
     base = {"q": query, "has_selling_stock": 1}
     calls = [fetch("/v1/search/", {**base, **_prices(min_price, max_price), "page": n}) for n in range(1, pages + 1)]
@@ -165,28 +157,19 @@ PRIOR_WEIGHT = 20  # ratings a product needs before its own score outweighs the 
 
 @tool("Best picks for a budget")
 async def dk_best_for_budget(
-    max_price: Annotated[int, Field(ge=1, description="Budget in Toman, e.g. 20000000 for 20 million Toman.")],
-    query: Annotated[
-        str | None,
-        Field(min_length=2, max_length=100, description="What to buy, e.g. 'هدفون بی سیم' or 'گوشی سامسونگ'."),
-    ] = None,
-    category_code: Annotated[
-        Code | None, Field(description="Or a category code instead of a query, e.g. 'mobile-phone' (from dk_suggest).")
-    ] = None,
+    max_price: Annotated[int, Field(ge=1, description="Budget, Toman.")],
+    query: Annotated[str | None, Field(min_length=2, max_length=100, description="e.g. 'هدفون بی سیم'.")] = None,
+    category_code: Annotated[Code | None, Field(description="Instead of query, e.g. 'mobile-phone'.")] = None,
     min_price: Annotated[
-        int | None,
-        Field(
-            ge=0, description="Skip anything cheaper, in Toman. Default for a query: a floor that drops accessories."
-        ),
+        int | None, Field(ge=0, description="Toman. Default for a query: a floor that drops accessories.")
     ] = None,
-    min_ratings: Annotated[int, Field(ge=0, le=1000, description="Skip products with fewer ratings than this.")] = 5,
-    pages: Annotated[int, Field(ge=1, le=5, description="Result pages to scan, 20 products each.")] = 3,
-    limit: Annotated[int, Field(ge=1, le=30, description="Max picks to return.")] = 10,
+    min_ratings: Annotated[int, Field(ge=0, le=1000)] = 5,
+    pages: Annotated[int, Field(ge=1, le=5, description="Pages to scan.")] = 3,
+    limit: Annotated[int, Field(ge=1, le=30)] = 10,
 ) -> dict[str, Any]:
     """Rank the best-rated in-stock products within a budget (Toman) by a rating weighted by its count.
 
-    A 5.0 from 3 buyers does not beat a 4.6 from 900; ties go to the cheaper one. A query keeps only
-    titles with every word and drops accessories. Use for "best X under Y"; then dk_product, dk_reviews.
+    A 5.0 from 3 buyers does not beat a 4.6 from 900. Use for "best X under Y".
     """
     if not query and not category_code:
         raise ApiError("Pass a query (e.g. 'هدفون بی سیم') or a category_code (e.g. 'mobile-phone').")
@@ -198,7 +181,9 @@ async def dk_best_for_budget(
                 for n in range(1, pages + 1)
             )
         )
-        found = [c for b in bodies for c in map(card, b["data"].get("products") or []) if c["in_stock"] and c["price"]]
+        found = [
+            c for b in bodies for c in map(card, b["data"].get("products") or []) if c["in_stock"] and c.get("price")
+        ]
     else:
         base = {"q": query, "has_selling_stock": 1}
         calls = [fetch("/v1/search/", {**base, **budget, "page": n}) for n in range(1, pages + 1)]
@@ -211,7 +196,7 @@ async def dk_best_for_budget(
             floor = min(statistics.median(c["price"] for c in top[:5]) / 4, max_price / 2)
             found = [c for c in found if c["price"] >= floor]
     found = list({c["id"]: c for c in found if c["price"] <= max_price}.values())
-    rated = [c for c in found if c["rating"] and c["rating_count"] >= min_ratings]
+    rated = [c for c in found if c.get("rating") and c.get("rating_count", 0) >= min_ratings]
     mean = statistics.mean(c["rating"] for c in rated) if rated else 0
     for c in rated:
         n = c["rating_count"]
@@ -246,7 +231,12 @@ def _matches(query: str, bodies: list[Any]) -> tuple[list[dict[str, Any]], bool]
         for p in body["data"].get("products") or []:
             c = card(p)
             title = title_text(p)
-            if c["in_stock"] and c["price"] and c["id"] not in seen and (keep_accessories or ACCESSORY not in title):
+            if (
+                c["in_stock"]
+                and c.get("price")
+                and c["id"] not in seen
+                and (keep_accessories or ACCESSORY not in title)
+            ):
                 seen.add(c["id"])
                 cards.append((c, title))
     strict = [c for c, title in cards if all(w in title for w in words)]
@@ -267,12 +257,9 @@ def title_text(p: dict[str, Any]) -> str:
 
 @tool("Search suggestions")
 async def dk_suggest(
-    query: Annotated[str, Field(min_length=1, max_length=100, description="Partial text, e.g. 'samsung' or 'هدفون'.")],
+    query: Annotated[str, Field(min_length=1, max_length=100, description="Partial text, e.g. 'هدفون'.")],
 ) -> dict[str, Any]:
-    """Autocomplete a vague or misspelled query into keywords, categories and brands.
-
-    Next: dk_search with a keyword, or dk_category_products with a category code.
-    """
+    """Autocomplete a vague or misspelled query into keywords, categories and brands."""
     data = (await fetch("/v1/autocomplete/", {"q": query}))["data"]
     return {
         "keywords": [k.get("keyword") for k in data.get("auto_complete") or []],
@@ -298,27 +285,15 @@ FILTER_VALUES = 15  # phone storage, cameras, screens have 20-50 values; attribu
 
 @tool("Filter options")
 async def dk_filters(
-    category_code: Annotated[
-        Code | None, Field(description="Category code from dk_suggest or dk_categories, e.g. 'mobile-phone'.")
-    ] = None,
-    query: Annotated[
-        str | None,
-        Field(min_length=2, max_length=100, description="Search words instead of a category, e.g. 'هدفون بی سیم'."),
-    ] = None,
-    brand_code: Annotated[
-        Code | None, Field(description="With category_code: only this brand, e.g. 'samsung'.")
-    ] = None,
-    attribute_id: Annotated[
-        int | None,
-        Field(ge=1, description="Return only this attribute with all its values, e.g. 2251 (phone storage)."),
-    ] = None,
+    category_code: Annotated[Code | None, Field(description="e.g. 'mobile-phone'.")] = None,
+    query: Annotated[str | None, Field(min_length=2, max_length=100, description="Instead of a category.")] = None,
+    brand_code: Annotated[Code | None, Field(description="With category_code, e.g. 'samsung'.")] = None,
+    attribute_id: Annotated[int | None, Field(ge=1, description="List all values of this one attribute.")] = None,
 ) -> dict[str, Any]:
     """List the filters of a category or a search: attributes, colors, sellers, price range (Toman), brands.
 
-    Attributes give {value title: id}; one with over 15 values only has `value_count`: call again
-    with attribute_id. Colors are {title: id}; brands {code: id} (category only); categories
-    {code: title} (query only). Pass the ids to dk_category_products or dk_search
-    (attributes={attribute id: [value ids]}, colors, seller_type, brand_ids).
+    Maps are {title: id}; an attribute with over 15 values has only `value_count` (call again with
+    attribute_id). Pass the ids to dk_category_products or dk_search.
     """
     if category_code:
         path = f"/v1/categories/{category_code}/" + (f"brands/{brand_code}/" if brand_code else "") + "search/"
@@ -374,18 +349,14 @@ _tree: list[dict[str, Any]] | None = None
 async def dk_categories(
     query: Annotated[
         str | None,
-        Field(
-            min_length=2, max_length=100, description="Words in the category name or code, e.g. 'هدفون' or 'laptop'."
-        ),
+        Field(min_length=2, max_length=100, description="Persian name (finds more) or English code, e.g. 'لپ تاپ'."),
     ] = None,
-    parent_id: Annotated[int | None, Field(ge=1, description="List the sub-categories of this category id.")] = None,
-    limit: Annotated[int, Field(ge=1, le=100, description="Max categories to return.")] = 25,
+    parent_id: Annotated[int | None, Field(ge=1, description="List its sub-categories.")] = None,
+    limit: Annotated[int, Field(ge=1, le=100)] = 25,
 ) -> dict[str, Any]:
     """Find category codes for dk_category_products and main-category ids for dk_best_sellers.
 
-    query matches the Persian name or English code (Persian finds more: 'لپ تاپ' finds the laptop
-    leaf, 'laptop' does not); parent_id lists children; neither lists the main categories. A category
-    with subcategories mixes in accessories: browse its product leaf.
+    No arguments lists the main categories. A parent category mixes in accessories: browse its leaf.
     """
     global _tree
     if _tree is None:
@@ -417,19 +388,14 @@ async def dk_categories(
 
 @tool("Browse a category")
 async def dk_category_products(
-    category_code: Annotated[
-        Code, Field(description="Category code from dk_categories, dk_suggest or dk_product, e.g. 'mobile-phone'.")
-    ],
+    category_code: Annotated[Code, Field(description="e.g. 'mobile-phone'.")],
     sort: Sort = "relevance",
     min_price: MinPrice = None,
     max_price: MaxPrice = None,
-    brand_code: Annotated[
-        Code | None,
-        Field(description="Only this brand: its English slug, e.g. 'xiaomi' or 'lenovo' (dk_product's brand_code)."),
-    ] = None,
-    brand_ids: BrandIds = None,
-    attributes: Attributes = None,
-    colors: Colors = None,
+    brand_code: Annotated[Code | None, Field(description="e.g. 'xiaomi'.")] = None,
+    brand_ids: SameBrandIds = None,
+    attributes: SameAttributes = None,
+    colors: SameColors = None,
     seller_type: SellerType = None,
     fast_delivery: FastDelivery = False,
     ready_to_ship: ReadyToShip = False,
@@ -438,8 +404,7 @@ async def dk_category_products(
 ) -> dict[str, Any]:
     """List one category's products with sort and filters (price in Toman), strict order.
 
-    E.g. "cheapest laptops" (category 'notebook-netbook-ultrabook'), "best-selling Xiaomi phones"
-    (brand_code='xiaomi'). Feature ids come from dk_filters(category_code=...). No text query here.
+    No text query. Filter ids: dk_filters(category_code=...).
     """
     path = f"/v1/categories/{category_code}/" + (f"brands/{brand_code}/" if brand_code else "") + "search/"
     params = {
@@ -451,12 +416,7 @@ async def dk_category_products(
 
 @tool("Browse a brand")
 async def dk_brand_products(
-    brand_code: Annotated[
-        Code,
-        Field(
-            description="Brand code: usually the lowercase English brand name (as in digikala.com/brand/<code>/, or dk_product's brand_code), e.g. 'samsung' or 'xiaomi'."
-        ),
-    ],
+    brand_code: Annotated[Code, Field(description="Lowercase English name, e.g. 'samsung'.")],
     sort: Sort = "relevance",
     min_price: MinPrice = None,
     max_price: MaxPrice = None,
@@ -465,7 +425,7 @@ async def dk_brand_products(
 ) -> dict[str, Any]:
     """List a brand's products with sort and price filters (Toman), plus the brand id for brand_ids.
 
-    For one brand inside one category use dk_category_products(brand_code=...).
+    One brand in one category: dk_category_products(brand_code=...).
     """
     data = (
         await fetch(f"/v1/brands/{brand_code}/", listing_params(sort, min_price, max_price, None, in_stock_only, page))
@@ -483,7 +443,7 @@ async def dk_seller(
         str,
         Field(
             pattern=r"^[A-Za-z0-9]{3,12}$",
-            description="Seller code from dk_product offers or a product card, e.g. 'CGDG9'.",
+            description="dk_product offer seller_code, e.g. 'CGDG9'.",
         ),
     ],
     sort: Sort = "best_selling",
@@ -492,7 +452,7 @@ async def dk_seller(
 ) -> dict[str, Any]:
     """Get a seller's reputation (rating 0-5, on-time shipping, cancellations, returns) and products.
 
-    Use before recommending an unknown seller. Percentages are the share of good orders (100 = never late).
+    Percentages are the share of good orders (100 = never late).
     """
     data = (await fetch(f"/v1/sellers/{seller_code}/", listing_params(sort, None, None, None, in_stock_only, page)))[
         "data"
@@ -522,15 +482,11 @@ async def dk_seller(
 async def dk_deals(
     store: Annotated[
         Literal["digikala", "supermarket"],
-        Field(description="'digikala' for Incredible Offers, 'supermarket' for Digikala Fresh grocery deals."),
+        Field(description="'supermarket' = Fresh grocery deals."),
     ] = "digikala",
-    query: Annotated[
-        str | None,
-        Field(min_length=2, max_length=100, description="Optional words to narrow the deals, e.g. 'هدفون' or 'شیر'."),
-    ] = None,
+    query: Annotated[str | None, Field(min_length=2, max_length=100, description="Narrow the deals.")] = None,
     sort: Annotated[
-        Literal["biggest_discount", "cheapest", "most_expensive", "best_selling", "most_viewed", "newest"],
-        Field(description="Order of the deals."),
+        Literal["biggest_discount", "cheapest", "most_expensive", "best_selling", "most_viewed", "newest"], Field()
     ] = "biggest_discount",
     min_price: MinPrice = None,
     max_price: MaxPrice = None,
@@ -538,7 +494,7 @@ async def dk_deals(
 ) -> dict[str, Any]:
     """List today's Incredible Offers (flash deals), biggest discount first, in-stock only.
 
-    Each product has discount_pct, price_before_discount and deal_ends (Tehran time). store='supermarket' lists Fresh deals.
+    deal_ends is Tehran time.
     """
     params = {**listing_params(sort, min_price, max_price, None, True, page), "q": query or ""}
     path = "/fresh/v1/incredible-offers/products/" if store == "supermarket" else "/v1/incredible-offers/products/"
@@ -551,10 +507,10 @@ async def dk_best_sellers(
         int | None,
         Field(
             ge=1,
-            description="Main category id from dk_categories (no arguments) or this tool's `categories`, e.g. 1 for mobile. Leaf ids are rejected.",
+            description="Main category id (this tool's `categories`), e.g. 1 mobile. Leaf ids fail.",
         ),
     ] = None,
-    limit: Annotated[int, Field(ge=1, le=50, description="Max products to return.")] = 10,
+    limit: Annotated[int, Field(ge=1, le=50)] = 10,
 ) -> dict[str, Any]:
     """List current best sellers, overall or in one main category; also returns the main categories' ids for category_id."""
     try:
@@ -579,31 +535,24 @@ async def dk_best_sellers(
 async def dk_fresh_search(
     query: Annotated[
         str | None,
-        Field(
-            min_length=2,
-            max_length=100,
-            description="Grocery product, Persian works best, e.g. 'شیر کم چرب' or 'برنج'.",
-        ),
+        Field(min_length=2, max_length=100, description="Persian works best, e.g. 'شیر کم چرب'."),
     ] = None,
     category_code: Annotated[
         Code | None,
         Field(
-            description="Fresh category code instead of a query: groceries, dairy, snacks, protein-foods, breakfast, beverages, warm-drinks, fruits-and-vegetables, personal-hygiene, baby-and-mother, home-hygiene, dried-fruit-nuts, ready-made-canned-food, condiments, frozen-food, salts-and-pickles, or a sub-category code this tool returned."
+            description="Instead of query: groceries, dairy, snacks, protein-foods, breakfast, beverages, warm-drinks, fruits-and-vegetables, personal-hygiene, baby-and-mother, home-hygiene, dried-fruit-nuts, ready-made-canned-food, condiments, frozen-food, salts-and-pickles, or a returned sub-category."
         ),
     ] = None,
     sort: Annotated[
         Literal["relevance", "cheapest", "most_expensive", "best_selling", "most_viewed", "newest", "buyers_pick"],
-        Field(description="Order of the results."),
+        Field(),
     ] = "relevance",
     min_price: MinPrice = None,
     max_price: MaxPrice = None,
     in_stock_only: InStock = True,
     page: Page = 1,
 ) -> dict[str, Any]:
-    """Search or browse Digikala Fresh (supermarket). category_code beats query and also returns sub-categories.
-
-    For grocery discounts use dk_deals(store='supermarket').
-    """
+    """Search or browse Digikala Fresh (supermarket). category_code beats query and also returns sub-categories."""
     params = listing_params(sort, min_price, max_price, None, in_stock_only, page)
     if category_code:
         data = (await fetch(f"/fresh/v1/categories/{category_code}/search/", params))["data"]
@@ -672,27 +621,30 @@ def listing(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def card(p: dict[str, Any]) -> dict[str, Any]:
-    """Compact product card. Unsellable products have no default_variant ([] or null) and no price."""
+    """Compact product card. Unsellable products have no default_variant ([] or null) and no price.
+
+    Null fields, a zero discount and a zero rating count are left out (a listing repeats 20 cards);
+    the link is SITE/product/dkp-<id>/ (INSTRUCTIONS) and the photo is only in dk_product.
+    """
     v = p.get("default_variant") or {}
     price = v.get("price") or {}
     rating = p.get("rating") or {}
+    discount = price.get("discount_percent") or 0
     c = {
         "id": p.get("id"),
         "title": p.get("title_fa"),
         "brand": (p.get("data_layer") or {}).get("brand"),
         "price": toman(price.get("selling_price")),
-        "price_before_discount": toman(price.get("rrp_price")),
-        "discount_pct": price.get("discount_percent") or 0,
+        "price_before_discount": toman(price.get("rrp_price")) if discount else None,
+        "discount_pct": discount or None,
         "in_stock": p.get("status") == "marketable" and bool(price),
         "seller": (v.get("seller") or {}).get("title"),
         "rating": stars(rating.get("rate")),
-        "rating_count": rating.get("count") or 0,
-        "image": image_url((p.get("images") or {}).get("main")),
-        "url": product_url(p.get("id")),
+        "rating_count": rating.get("count") or None,
     }
     if price.get("is_incredible") and price.get("time"):  # only flash-deal cards have it
         c["deal_ends"] = price["time"]
-    return c
+    return {k: x for k, x in c.items() if x is not None}
 
 
 def image_url(img: dict[str, Any] | None) -> str | None:
@@ -708,10 +660,6 @@ def toman(rial: int | None) -> int | None:
 def stars(rate100: float | None) -> float | None:
     """Product and seller ratings are 0-100; the site shows rate / 20 on 0-5 (0 = not rated)."""
     return math.floor(rate100 / 2 + 0.5) / 10 if rate100 else None  # half-up like the site: 87 -> 4.4
-
-
-def product_url(product_id: Any) -> str:
-    return f"{SITE}/product/dkp-{product_id}/"
 
 
 def norm(text: str) -> str:

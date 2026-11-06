@@ -17,7 +17,7 @@ async def test_dk_product(client, api):
     assert p["category"] == {"id": 11, "code": "mobile-phone", "title": "گوشی موبایل"}
     assert p["lowest_price_30d"] == 28373600 and p["colors"] == ["سبز", "مشکی"]
     assert p["offers_count"] == 8
-    assert p["image"].startswith("https://") and len(p["images"]) == 4 and p["images"][0] != p["image"]
+    assert p["image"].startswith("https://") and "images" not in p
     # cheapest first, across colors and sellers
     assert [(o["variant_id"], o["price"]) for o in p["offers"]] == [
         (72287314, 42503600),
@@ -27,9 +27,7 @@ async def test_dk_product(client, api):
     assert p["offers"][1] == {
         "variant_id": 80919193,
         "variant": "سبز",
-        "price": 42918000,
-        "price_before_discount": 42918000,
-        "discount_pct": 0,
+        "price": 42918000,  # no discount: price_before_discount and discount_pct left out
         "stock_left": 2,
         "seller": "سپاهان همراه یاقوت",
         "seller_code": "CGXGH",
@@ -67,8 +65,7 @@ async def test_dk_product_falls_back_to_fresh(client, api):
     assert p["price"] == 28000 and p["category"]["code"] == "low-fat-milk"
     assert p["store"] == "supermarket" and p["url"] == "https://www.digikala.com/supermarket/product/4369031/"
     assert (
-        p["offers"][0]["ships_by"] == ["ارسال سریع سوپرمارکتی دیجی\u200cکالا"]
-        and p["offers"][0]["seller_rating"] is None
+        p["offers"][0]["ships_by"] == ["ارسال سریع سوپرمارکتی دیجی\u200cکالا"] and "seller_rating" not in p["offers"][0]
     )
     assert p["lowest_price_30d"] is None
 

@@ -23,7 +23,7 @@ async def text_size(client, name, args):
 async def test_dk_product(client):
     data = await call(client, "dk_product", PID)
     assert data["id"] == 20109389 and data["brand_code"] == "samsung" and data["brand_id"] == 18 and data["specs"]
-    offers = [o["price"] for o in data["offers"] if o["price"]]
+    offers = [o["price"] for o in data["offers"] if o.get("price")]
     assert offers and offers == sorted(offers) and offers[0] > 1000000
     assert await text_size(client, "dk_product", PID) < 15000
 
