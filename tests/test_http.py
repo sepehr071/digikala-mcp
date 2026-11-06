@@ -89,6 +89,27 @@ async def test_one_retry_on_5xx_but_not_on_4xx(client, api):
     assert sum(r.url.path == "/v1/best-selling/" for r in api.calls) == 1
 
 
+def test_for_agent_drops_urls_and_list_images():
+    from digikala_mcp.server import for_agent
+
+    data = {
+        "url": "u",
+        "image": "i",
+        "images": ["a"],
+        "products": [{"id": 1, "image": "i", "url": "u", "x": {"url": "u"}}],
+    }
+    assert for_agent(data) == {"image": "i", "products": [{"id": 1, "x": {}}]}
+
+
+async def test_python_callers_keep_image_and_url(api):
+    """Apps import the tool functions directly (chi-bekharim): only the MCP text is trimmed."""
+    from digikala_mcp.catalog import dk_search
+
+    api["/v1/search/"] = fixture("search.json")
+    p = (await dk_search("samsung a07"))["products"][0]
+    assert p["image"].startswith("https://") and p["url"] == f"https://www.digikala.com/product/dkp-{p['id']}/"
+
+
 async def test_jitter_skipped_only_for_a_lone_call(api, monkeypatch):
     """Bot protection: a call after QUIET_SECONDS of silence goes out at once; one right after waits the jitter."""
     monkeypatch.setattr(http, "JITTER", (0.3, 0.3))

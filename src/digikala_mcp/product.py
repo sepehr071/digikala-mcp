@@ -60,7 +60,7 @@ async def dk_product(
         "questions_count": p.get("questions_count"),
         "offers_count": len(offers),
         "offers": offers[:max_offers],
-        "image": image_url((p.get("images") or {}).get("main")),
+        "images": [u for u in map(image_url, (p.get("images") or {}).get("list") or []) if u][:4],
     }
     if store == "supermarket":  # where the main service's 301 points
         result["url"] = f"{SITE}/supermarket/product/{product_id}/"
@@ -243,6 +243,7 @@ async def dk_compare(
 SHORTLIST_KEYS = (
     "id",
     "title",
+    "image",
     "price",
     "price_before_discount",
     "discount_pct",
@@ -289,6 +290,7 @@ async def dk_shortlist(
                 "low_30d": low,
                 "vs_30d_low_pct": round(100 * (p["price"] - low) / low) if p.get("price") and low else None,
                 "lowest_one_day_30d": p["lowest_price_30d"],
+                "url": p["url"],
             }
         )
     return {"products": rows, "errors": errors}

@@ -302,7 +302,7 @@ async def test_dk_seller(client, api):
         "member_for": "6 سال و 2 ماه",
         "is_trusted": True,
         "is_official": False,
-        "url": "https://www.digikala.com/seller/CGDG9/",
+        # `url` is dropped from MCP output (pattern in INSTRUCTIONS); dk_seller() still returns it
     }
     assert data["total"] == 135 and data["products"][0]["price"] == 3820000
 

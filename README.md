@@ -179,7 +179,7 @@ Then just ask:
 ## Tools
 
 Product ids are the number in a `digikala.com/product/dkp-<id>/` link. Every list returns compact product cards:
-id, title, brand, price, discount, stock, seller and rating; null fields and zero discounts are left out.
+id, title, brand, price, discount, stock, seller, rating, a photo URL (`image`) and the product link.
 
 <details open>
 <summary><b>Find products</b> (12)</summary>
@@ -252,7 +252,7 @@ hosted server in between, no API key, and nothing about you is sent anywhere els
 - **Search always returns something**, even for nonsense words (Digikala's search is semantic). `dk_search` marks each result `match: all / some / none` (with the missing words), and `dk_find_cheapest` and `dk_best_for_budget` keep only titles that contain every query word.
 - **Filters by feature**: `dk_filters(category_code="mobile-phone")` lists ids like operating system → Android, then `dk_category_products(attributes={2226: [19239]})` filters on them.
 - **The 30-day low ignores one-day dips.** `dk_shortlist` compares today's price with the lowest price that held on two days in a row (`low_30d`), because Digikala's own 30-day low (`lowest_one_day_30d`, `dk_product`'s `lowest_price_30d`) can be a single day of one color. `dk_price_history` gives both per color.
-- **Photos**: `dk_product` carries one `image` (listing cards have none), an absolute https URL taken from the API as-is. It ends in `?x-oss-process=image/resize,m_lfit,h_300,w_300/quality,q_80`, so it is a 300 px JPEG; drop that suffix for the original size.
+- **Photos**: cards carry `image`, `dk_product` an `images` list (max 4), both absolute https URLs taken from the API as-is. They end in `?x-oss-process=image/resize,m_lfit,h_300,w_300/quality,q_80`, so they are 300 px JPEGs; drop that suffix for the original size. Over MCP, agents get only `dk_product`'s `image` (no `url`, `images` or card photos); Python callers importing the tool functions get every field.
 - **Prices move several times an hour** on popular listings with many sellers; re-check right before buying.
 - **Answers are cached for 2 minutes**, so an agent repeating a call doesn't hit Digikala again; prices can lag the site by that much. A timeout, 5xx or 429 is retried up to twice with backoff.
 - **Groceries** come from the supermarket store: `dk_product` shows its price, which can differ from the main-store price in search results.

@@ -623,8 +623,8 @@ def listing(data: dict[str, Any]) -> dict[str, Any]:
 def card(p: dict[str, Any]) -> dict[str, Any]:
     """Compact product card. Unsellable products have no default_variant ([] or null) and no price.
 
-    Null fields, a zero discount and a zero rating count are left out (a listing repeats 20 cards);
-    the link is SITE/product/dkp-<id>/ (INSTRUCTIONS) and the photo is only in dk_product.
+    Null fields, a zero discount and a zero rating count are left out (a listing repeats 20 cards).
+    server.compact() also drops `url` and list items' `image` for agents; Python callers keep them.
     """
     v = p.get("default_variant") or {}
     price = v.get("price") or {}
@@ -641,6 +641,8 @@ def card(p: dict[str, Any]) -> dict[str, Any]:
         "seller": (v.get("seller") or {}).get("title"),
         "rating": stars(rating.get("rate")),
         "rating_count": rating.get("count") or None,
+        "image": image_url((p.get("images") or {}).get("main")),
+        "url": product_url(p.get("id")),
     }
     if price.get("is_incredible") and price.get("time"):  # only flash-deal cards have it
         c["deal_ends"] = price["time"]
@@ -660,6 +662,10 @@ def toman(rial: int | None) -> int | None:
 def stars(rate100: float | None) -> float | None:
     """Product and seller ratings are 0-100; the site shows rate / 20 on 0-5 (0 = not rated)."""
     return math.floor(rate100 / 2 + 0.5) / 10 if rate100 else None  # half-up like the site: 87 -> 4.4
+
+
+def product_url(product_id: Any) -> str:
+    return f"{SITE}/product/dkp-{product_id}/"
 
 
 def norm(text: str) -> str:
