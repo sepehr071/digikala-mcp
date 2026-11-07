@@ -28,7 +28,7 @@ dependencies = [
 
 [project.optional-dependencies]
 # Only used to clear a bot-check page; run `patchright install chromium` after installing.
-browser = ["patchright==1.63.0"]
+browser = ["patchright==1.64.3"]
 
 [project.urls]
 Homepage = "https://github.com/sepehr071/digikala-mcp"
