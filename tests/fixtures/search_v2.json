@@ -1,0 +1,424 @@
+{
+ "status": 200,
+ "data": {
+  "widgets": [
+   {
+    "type": "vertical_product_listing",
+    "data": {
+     "advertisement": {},
+     "filters": {
+      "price": {
+       "title": "محدوده قیمت",
+       "options": {
+        "min": 100000,
+        "max": 6681500000
+       },
+       "type": "slider"
+      },
+      "brands": {
+       "type": "checkbox",
+       "title": "برند",
+       "top_options": [],
+       "options": [
+        {
+         "id": 50078,
+         "code": "aldo-tc",
+         "title_fa": "آلدو",
+         "title_en": "aldo"
+        },
+        {
+         "id": 80,
+         "code": "alcatel",
+         "title_fa": "آلکاتل",
+         "title_en": "Alcatel"
+        }
+       ]
+      },
+      "color_palettes": {
+       "type": "checkbox",
+       "title": "رنگ",
+       "options": [
+        {
+         "id": 12,
+         "title": "آبی"
+        },
+        {
+         "id": 2,
+         "title": "بنفش"
+        }
+       ]
+      },
+      "attribute_2251": {
+       "title": "حافظه داخلی",
+       "options": [
+        {
+         "id": 19515,
+         "title_fa": "1 ترابایت",
+         "title_en": "1-TB"
+        },
+        {
+         "id": 19517,
+         "title_fa": "1 مگابایت",
+         "title_en": "One-megabyte"
+        },
+        {
+         "id": 19461,
+         "title_fa": "128 مگابایت",
+         "title_en": "128-MB"
+        },
+        {
+         "id": 19460,
+         "title_fa": "128 گیگابایت",
+         "title_en": "128-GB"
+        },
+        {
+         "id": 19464,
+         "title_fa": "16 مگابایت",
+         "title_en": "16-MB"
+        },
+        {
+         "id": 19463,
+         "title_fa": "16 گیگابایت",
+         "title_en": "16-GB"
+        },
+        {
+         "id": 38779,
+         "title_fa": "24 مگابایت",
+         "title_en": "24-MB"
+        },
+        {
+         "id": 19476,
+         "title_fa": "256 گیگابایت",
+         "title_en": "256-GB"
+        },
+        {
+         "id": 19482,
+         "title_fa": "32 مگابایت",
+         "title_en": "32-MB"
+        },
+        {
+         "id": 19508,
+         "title_fa": "4 مگابایت",
+         "title_en": "4-MB"
+        },
+        {
+         "id": 19497,
+         "title_fa": "512 گیگابایت",
+         "title_en": "512-GB"
+        },
+        {
+         "id": 19501,
+         "title_fa": "64 مگابایت",
+         "title_en": "64-MB"
+        },
+        {
+         "id": 19500,
+         "title_fa": "64 گیگابایت",
+         "title_en": "64-GB"
+        },
+        {
+         "id": 19514,
+         "title_fa": "8 مگابایت",
+         "title_en": "8-MB"
+        }
+       ],
+       "top_options": [],
+       "type": "checkbox"
+      },
+      "attribute_2226": {
+       "title": "سیستم عامل",
+       "options": [
+        {
+         "id": 19239,
+         "title_fa": "Android",
+         "title_en": "Android"
+        },
+        {
+         "id": 19254,
+         "title_fa": "iOS",
+         "title_en": "iOS"
+        },
+        {
+         "id": 19289,
+         "title_fa": "بدون سیستم عامل",
+         "title_en": "without-operating-system"
+        }
+       ],
+       "top_options": [],
+       "type": "checkbox"
+      },
+      "seller_types": {
+       "type": "checkbox",
+       "title": "نوع فروشنده",
+       "options": [
+        {
+         "id": "official",
+         "title": "فروشنده رسمی"
+        },
+        {
+         "id": "trusted",
+         "title": "فروشنده برگزیده"
+        },
+        {
+         "id": "digikala",
+         "title": "دیجی\u200cکالا"
+        },
+        {
+         "id": "roosta",
+         "title": "کسب و کارهای بومی"
+        }
+       ]
+      },
+      "shipment_methods": {
+       "type": "switch-box",
+       "options": [
+        {
+         "key": "nearby_seller_shipment"
+        },
+        {
+         "key": "has_jet_delivery"
+        },
+        {
+         "key": "jet_sbs_city_ids"
+        }
+       ]
+      },
+      "categories": {
+       "title": "دسته\u200cبندی",
+       "options": [
+        {
+         "id": 6044,
+         "code": "doll-house",
+         "title_fa": "آشنایی با فنون"
+        },
+        {
+         "id": 6484,
+         "code": "brush-and-makeup-accesories",
+         "title_fa": "ابزار آرایش صورت"
+        },
+        {
+         "id": 11020,
+         "code": "stabilizer-gimbal",
+         "title_fa": "استابیلایزر و گیمبال"
+        }
+       ],
+       "type": "category_list"
+      }
+     },
+     "pager": {
+      "current_page": 1,
+      "total_items": 958,
+      "total_pages": 48,
+      "total_slots": 20
+     },
+     "sort_options": [
+      {
+       "id": 22,
+       "title_fa": "مرتبط\u200cترین"
+      },
+      {
+       "id": 4,
+       "title_fa": "پربازدیدترین"
+      }
+     ],
+     "widgets": [
+      {
+       "type": "product",
+       "size": 1,
+       "data": {
+        "id": 14794189,
+        "title_fa": "گوشی موبایل ریلمی مدل Note 50 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت",
+        "title_en": "Realme Note 50 Dual SIM Storage128GB and 4GB RAM Mobile Phone",
+        "status": "marketable",
+        "rating": {
+         "rate": 84.53846153846155,
+         "count": 780
+        },
+        "data_layer": {
+         "brand": "ریلمی"
+        },
+        "default_variant": {
+         "price": {
+          "selling_price": 414599900,
+          "rrp_price": 414599900,
+          "order_limit": 1,
+          "is_incredible": false,
+          "is_promotion": false,
+          "is_locked_for_digiplus": false,
+          "bnpl_active": false,
+          "marketable_stock": 1,
+          "min_order_limit": 1
+         },
+         "seller": {
+          "id": 694518,
+          "title": "رایانه موبایل ایران",
+          "code": "DEJKN",
+          "url": "/seller/DEJKN/",
+          "rating": {
+           "total_rate": 88,
+           "total_count": 153,
+           "commitment": 0,
+           "no_return": 0,
+           "on_time_shipping": 0
+          },
+          "properties": {
+           "is_trusted": false,
+           "is_official": false,
+           "is_roosta": false,
+           "is_new": false
+          },
+          "stars": null,
+          "grade": {
+           "label": "بدون عملکرد",
+           "color": "#81858B"
+          },
+          "registration_date": "",
+          "logo": null
+         }
+        },
+        "images": {
+         "main": {
+          "url": [
+           "https://dkstatics-public.digikala.com/digikala-products/1ec4081e00e6e50316a6c356d7d7cddee894c15f_1731491675.jpg?x-oss-process=image/resize,m_lfit,h_600,w_600/quality,q_90"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "type": "product",
+       "size": 1,
+       "data": {
+        "id": 21679993,
+        "title_fa": "گوشی موبایل وکال مدل F2 دو سیم\u200cکارت ظرفیت 32 مگابایت و رم 32 مگابایت",
+        "title_en": "Vocal F2 Dual SIM Storage 32MB And RAM 32MB",
+        "status": "marketable",
+        "rating": {
+         "rate": 82.81967213114754,
+         "count": 305
+        },
+        "data_layer": {
+         "brand": "وکال"
+        },
+        "default_variant": {
+         "price": {
+          "selling_price": 22600000,
+          "rrp_price": 22600000,
+          "order_limit": 1,
+          "is_incredible": false,
+          "is_promotion": false,
+          "is_locked_for_digiplus": false,
+          "bnpl_active": false,
+          "min_order_limit": 1
+         },
+         "seller": {
+          "id": 389375,
+          "title": "اسمارت تکنولوژی قشم",
+          "code": "CGDG9",
+          "url": "/seller/CGDG9/",
+          "rating": {
+           "total_rate": 87,
+           "total_count": 84204,
+           "commitment": 0,
+           "no_return": 0,
+           "on_time_shipping": 0
+          },
+          "properties": {
+           "is_trusted": true,
+           "is_official": false,
+           "is_roosta": false,
+           "is_new": false
+          },
+          "stars": null,
+          "grade": {
+           "label": "بدون عملکرد",
+           "color": "#81858B"
+          },
+          "registration_date": "",
+          "logo": "https://dkstatics-public.digikala.com/digikala-marketplace-seller-logo/22302a2fcf4c39804cd6a61581cd07dcd931f280_1790425846.jpg"
+         }
+        },
+        "images": {
+         "main": {
+          "url": [
+           "https://dkstatics-public.digikala.com/digikala-products/cd6059f68bb0aae63984c080b67b533cc10847dd_1776674954.jpg?x-oss-process=image/resize,m_lfit,h_600,w_600/quality,q_90"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "type": "product",
+       "size": 1,
+       "data": {
+        "id": 21660239,
+        "title_fa": "گوشی موبایل سامسونگ مدل Galaxy A57 دو سیم\u200cکارت ظرفیت 256 گیگابایت و رم 8 گیگابایت - ویتنام",
+        "title_en": "Samsung Galaxy A57 Dual SIM Storage 256GB And RAM 8GB Mobile Phone  - Vietnam",
+        "status": "marketable",
+        "rating": {
+         "rate": 89.34306569343066,
+         "count": 411
+        },
+        "data_layer": {
+         "brand": "سامسونگ"
+        },
+        "default_variant": {
+         "price": {
+          "selling_price": 1501129000,
+          "rrp_price": 1547555000,
+          "order_limit": 1,
+          "is_incredible": false,
+          "is_promotion": true,
+          "is_locked_for_digiplus": false,
+          "bnpl_active": false,
+          "discount_percent": 3,
+          "min_order_limit": 1,
+          "badge": {
+           "title": "فروش ویژه"
+          },
+          "discount": 3,
+          "is_selling_and_sales": true,
+          "show_discount_badge": true
+         },
+         "seller": {
+          "id": 1,
+          "title": "دیجی\u200cکالا",
+          "code": "5A52N",
+          "url": "/seller/5A52N/",
+          "rating": {
+           "total_rate": 0,
+           "total_count": 0,
+           "commitment": 0,
+           "no_return": 0,
+           "on_time_shipping": 0
+          },
+          "properties": {
+           "is_trusted": false,
+           "is_official": false,
+           "is_roosta": false,
+           "is_new": false
+          },
+          "stars": null,
+          "grade": {
+           "label": "بدون عملکرد",
+           "color": "#81858B"
+          },
+          "registration_date": "",
+          "logo": "https://dkstatics-public.digikala.com/digikala-marketplace-seller-logo/002e77bfa27829e04cf9c78520c6e7c3cd3ad74d_1791965106.png"
+         }
+        },
+        "images": {
+         "main": {
+          "url": [
+           "https://dkstatics-public.digikala.com/digikala-products/3784ab9b894f5dfdc10d64cd3704e532d72b0f0e_1790687841.jpg?x-oss-process=image/resize,m_lfit,h_600,w_600/quality,q_90"
+          ]
+         }
+        }
+       }
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

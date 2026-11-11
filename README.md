@@ -189,7 +189,7 @@ id, title, brand, price, discount, stock, seller, rating, a photo URL (`image`) 
 | `dk_search` | Search by words with sort, price, brand, feature, color and seller filters; flags loose title matches |
 | `dk_find_cheapest` | Cheapest in-stock real matches for a query, accessories dropped, one list |
 | `dk_best_for_budget` | Best-rated real matches under a budget, rating weighted by number of ratings |
-| `dk_suggest` | Autocomplete: better keywords, category codes and brand ids |
+| `dk_suggest` | Autocomplete: better keywords and category codes |
 | `dk_filters` | Filter options of a category or search: features (OS, storage, ...), colors, brands, sellers, price range |
 | `dk_categories` | Find category codes and main-category ids |
 | `dk_category_products` | Browse a category with sort and the same filters, optionally one brand |

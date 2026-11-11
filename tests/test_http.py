@@ -33,7 +33,7 @@ async def test_cdn_cookie_challenge_is_followed(client, api):
             )
         return httpx.Response(200, json=fixture("autocomplete.json"))
 
-    api["/v1/autocomplete/"] = challenge
+    api["/discovery/api/v2/autocomplete"] = challenge
     result = await client.call_tool("dk_suggest", {"query": "samsung"})
     assert not result.is_error
     assert len(api.calls) == 2
@@ -41,7 +41,7 @@ async def test_cdn_cookie_challenge_is_followed(client, api):
 
 
 async def test_body_status_is_authoritative(client, api):
-    api["/v1/autocomplete/"] = {"status": 401}
+    api["/discovery/api/v2/autocomplete"] = {"status": 401}
     result = await client.call_tool("dk_suggest", {"query": "samsung"})
     assert result.is_error and "status 401" in result.content[0].text
 
@@ -104,7 +104,9 @@ async def test_jitter_skipped_only_for_a_lone_call(api, monkeypatch):
 
 
 async def test_redirect_to_another_host_is_refused(client, api):
-    api["/v1/autocomplete/"] = lambda r: httpx.Response(307, headers={"Location": "https://evil.example/x"})
+    api["/discovery/api/v2/autocomplete"] = lambda r: httpx.Response(
+        307, headers={"Location": "https://evil.example/x"}
+    )
     result = await client.call_tool("dk_suggest", {"query": "samsung"})
     assert result.is_error and "another host" in result.content[0].text
     assert all(r.url.host == "api.digikala.com" for r in api.calls)
@@ -112,7 +114,7 @@ async def test_redirect_to_another_host_is_refused(client, api):
 
 async def test_wire_format_is_one_text_block_and_no_output_schema(api):
     """The real SDK client, without conftest's patch: one compact TextContent, no structuredContent, no outputSchema."""
-    api["/v1/autocomplete/"] = fixture("autocomplete.json")
+    api["/discovery/api/v2/autocomplete"] = fixture("autocomplete.json")
     async with Client(mcp, raise_exceptions=True) as c:
         assert all(t.output_schema is None for t in (await c.list_tools()).tools)
         result = await c.call_tool("dk_suggest", {"query": "samsung"})
@@ -221,3 +223,14 @@ async def test_retry_after_is_honoured_and_capped(monkeypatch, client, api):
     api["/v1/best-selling/"] = lambda r: httpx.Response(429, json={"status": 429})
     assert (await client.call_tool("dk_best_sellers", {})).is_error
     assert sum(r.url.path == "/v1/best-selling/" for r in api.calls) == 3  # gives up after MAX_RETRIES
+
+
+async def test_a_call_that_outlives_the_budget_gets_a_clear_error(client, monkeypatch):
+    async def slow(request):
+        await asyncio.sleep(5)
+        return httpx.Response(200, json={"status": 200, "data": {}})
+
+    monkeypatch.setattr(http, "CALL_BUDGET", 0.2)
+    http.set_transport(httpx.MockTransport(slow))
+    result = await client.call_tool("dk_suggest", {"query": "samsung"})
+    assert result.is_error and "did not answer within 0.2 s" in result.content[0].text

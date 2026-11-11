@@ -1,6 +1,6 @@
 import httpx
 import pytest
-from conftest import fixture
+from conftest import SEARCH, fixture, v2
 
 from digikala_mcp import catalog
 
@@ -8,7 +8,7 @@ pytestmark = pytest.mark.anyio
 
 
 async def test_dk_search(client, api):
-    api["/v1/search/"] = fixture("search.json")
+    api[SEARCH] = v2(fixture("search.json"))
     args = {"query": "samsung a07", "sort": "cheapest", "min_price": 1000000, "max_price": 60000000, "brand_ids": [18]}
     data = (await client.call_tool("dk_search", args)).structured_content
     assert data["total"] == 828 and data["total_pages"] == 42
@@ -43,13 +43,13 @@ async def test_dk_search(client, api):
 
 
 async def test_dk_search_can_include_out_of_stock(client, api):
-    api["/v1/search/"] = fixture("search.json")
+    api[SEARCH] = v2(fixture("search.json"))
     await client.call_tool("dk_search", {"query": "samsung", "in_stock_only": False})
     assert "has_selling_stock" not in api.calls[0].url.params
 
 
 async def test_dk_find_cheapest(client, api):
-    api["/v1/search/"] = fixture("search.json")
+    api[SEARCH] = v2(fixture("search.json"))
     data = (await client.call_tool("dk_find_cheapest", {"query": "samsung a07", "pages": 2})).structured_content
     # "مناسب برای" cases are dropped; median of the top 5 phones (47,500,000) / 4; the repeated page adds nothing
     assert data["price_floor"] == 11875000 and data["scanned"] == 7 and "note" not in data
@@ -67,7 +67,7 @@ async def test_dk_find_cheapest(client, api):
 
 
 async def test_dk_find_cheapest_drops_titles_without_query_words(client, api):
-    api["/v1/search/"] = fixture("search.json")
+    api[SEARCH] = v2(fixture("search.json"))
     data = (await client.call_tool("dk_find_cheapest", {"query": "zzqxqzzqxq", "pages": 1})).structured_content
     assert data["products"] == [] and data["scanned"] == 0 and "dk_suggest" in data["note"]
     # Persian digits and Latin case are normalised; the English title counts too
@@ -78,7 +78,7 @@ async def test_dk_find_cheapest_drops_titles_without_query_words(client, api):
 async def test_dk_find_cheapest_needs_every_query_word(client, api):
     body = fixture("search.json")
     body["data"]["products"][0].update(title_fa="گوشی موبایل شیائومی مدل Redmi A3", title_en="")
-    api["/v1/search/"] = body
+    api[SEARCH] = v2(body)
     data = (await client.call_tool("dk_find_cheapest", {"query": "گوشی سامسونگ", "pages": 1})).structured_content
     assert 20109389 not in [p["id"] for p in data["products"]] and data["scanned"] == 6 and "note" not in data
     # nothing has every word: fall back to any word, and say so
@@ -95,10 +95,10 @@ async def test_dk_find_cheapest_floor_ignores_max_price(client, api):
             body = fixture("search.json")
             body["data"]["products"] = body["data"]["products"][7:]
             body["data"]["products"][0]["title_fa"] = "کیف کلاسوری Samsung Galaxy A07"  # no "suitable for"
-            return httpx.Response(200, json=body)
-        return httpx.Response(200, json=fixture("search.json"))
+            return httpx.Response(200, json=v2(body))
+        return httpx.Response(200, json=v2(fixture("search.json")))
 
-    api["/v1/search/"] = search
+    api[SEARCH] = search
     data = (
         await client.call_tool("dk_find_cheapest", {"query": "samsung a07", "pages": 1, "max_price": 1000000})
     ).structured_content
@@ -108,7 +108,7 @@ async def test_dk_find_cheapest_floor_ignores_max_price(client, api):
 
 
 async def test_dk_find_cheapest_with_min_price(client, api):
-    api["/v1/search/"] = fixture("search.json")
+    api[SEARCH] = v2(fixture("search.json"))
     data = (
         await client.call_tool(
             "dk_find_cheapest", {"query": "samsung a07", "pages": 1, "min_price": 300000, "limit": 2}
@@ -123,11 +123,19 @@ async def test_dk_find_cheapest_with_min_price(client, api):
 
 
 async def test_dk_suggest(client, api):
-    api["/v1/autocomplete/"] = fixture("autocomplete.json")
-    data = (await client.call_tool("dk_suggest", {"query": "samsung"})).structured_content
-    assert "samsung a07" in data["keywords"]
-    assert data["categories"][0]["code"] == "mobile-phone"
-    assert data["brands"] == [{"id": 18, "title": "سامسونگ", "title_en": "Samsung"}]
+    api["/discovery/api/v2/autocomplete"] = fixture("autocomplete.json")
+    data = (await client.call_tool("dk_suggest", {"query": "موبایل سامسونگ"})).structured_content
+    assert data["keywords"][2] == "موبایل سامسونگ a17" and len(data["keywords"]) == 4
+    assert data["categories"][0] == {"keyword": "موبایل سامسونگ", "code": "mobile-phone", "title": "گوشی موبایل"}
+    assert len(data["categories"]) == 2 and len(data["trending"]) == 2
+
+
+async def test_dk_search_reads_the_v2_listing_widget(client, api):
+    api[SEARCH] = fixture("search_v2.json")
+    data = (await client.call_tool("dk_search", {"query": "موبایل", "in_stock_only": False})).structured_content
+    assert (data["total"], data["total_pages"]) == (958, 48)
+    assert [p["id"] for p in data["products"]] == [14794189, 21679993, 21660239]
+    assert data["products"][0]["price"] == 41459990 and data["products"][0]["image"].startswith("https://")
 
 
 async def test_dk_categories(client, api):
@@ -215,12 +223,16 @@ async def test_dk_filters_one_attribute_and_cap(client, api, monkeypatch):
 
 
 async def test_dk_filters_for_a_query(client, api):
-    api["/v1/search/"] = fixture("search_filters.json")
-    data = (await client.call_tool("dk_filters", {"query": "هدفون بی سیم"})).structured_content
-    assert list(data["categories"]) == ["headphone", "telephone-headset", "monitor-headphones"]
+    api[SEARCH] = fixture("search_v2.json")
+    data = (await client.call_tool("dk_filters", {"query": "موبایل"})).structured_content
+    assert list(data["categories"]) == ["doll-house", "brush-and-makeup-accesories", "stabilizer-gimbal"]
     assert "brands" not in data  # the search's brand facet is not the query's brands
     assert data["seller_types"] == ["official", "trusted", "digikala", "roosta"]
-    assert api.calls[0].url.params["q"] == "هدفون بی سیم"
+    assert data["total"] == 958 and data["fast_delivery_available"]
+    # v2 lists attributes as attribute_<id> keys
+    assert next(a for a in data["attributes"] if a["id"] == 2251)["values"]["256 گیگابایت"] == 19476
+    assert next(a for a in data["attributes"] if a["id"] == 2226)["values"]["Android"] == 19239
+    assert api.calls[0].url.params["q"] == "موبایل"
 
 
 async def test_dk_filters_needs_a_category_or_query(client, api):
@@ -229,7 +241,7 @@ async def test_dk_filters_needs_a_category_or_query(client, api):
 
 
 async def test_dk_best_for_budget(client, api):
-    api["/v1/search/"] = fixture("budget_search.json")
+    api[SEARCH] = v2(fixture("budget_search.json"))
     data = (
         await client.call_tool("dk_best_for_budget", {"query": "هدفون بی سیم", "max_price": 5000000})
     ).structured_content
@@ -247,7 +259,7 @@ async def test_dk_best_for_budget(client, api):
 
 
 async def test_dk_best_for_budget_min_ratings_and_empty(client, api):
-    api["/v1/search/"] = fixture("budget_search.json")
+    api[SEARCH] = v2(fixture("budget_search.json"))
     args = {"query": "هدفون بی سیم", "max_price": 5000000, "min_ratings": 100}
     data = (await client.call_tool("dk_best_for_budget", args)).structured_content
     assert data["skipped_few_ratings"] == 2 and len(data["picks"]) == 4  # 65 and 68 ratings dropped
@@ -264,7 +276,7 @@ async def test_dk_best_for_budget_by_category(client, api):
 
 
 async def test_fetch_reuses_a_recent_answer(client, api):
-    api["/v1/search/"] = fixture("search.json")
+    api[SEARCH] = v2(fixture("search.json"))
     for _ in range(2):
         await client.call_tool("dk_search", {"query": "samsung a07"})
     assert len(api.calls) == 1
@@ -386,3 +398,23 @@ async def test_dk_fresh_search(client, api):
 async def test_bad_input_rejected_before_any_call(client, api, name, args):
     result = await client.call_tool(name, args)
     assert result.is_error and not api.calls
+
+
+async def test_dk_categories_cut_by_the_budget_still_loads_the_tree(client, monkeypatch):
+    import asyncio
+
+    from digikala_mcp import http
+
+    calls = []
+
+    async def slow_tree(request):
+        calls.append(request)
+        await asyncio.sleep(0.3)
+        return httpx.Response(200, json=fixture("category_tree.json"))
+
+    monkeypatch.setattr(http, "CALL_BUDGET", 0.1)
+    http.set_transport(httpx.MockTransport(slow_tree))
+    assert (await client.call_tool("dk_categories", {"query": "هدفون"})).is_error
+    await asyncio.sleep(0.4)  # the shielded download finishes in the background
+    found = (await client.call_tool("dk_categories", {"query": "هدفون"})).structured_content
+    assert {c["code"] for c in found["categories"]} == {"headphone", "monitor-headphones"} and len(calls) == 1

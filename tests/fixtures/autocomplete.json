@@ -1,93 +1,47 @@
 {
  "status": 200,
  "data": {
-  "categories": [
-   {
-    "keyword": "samsung s24",
-    "category": {
-     "id": 11,
-     "title_fa": "گوشی موبایل",
-     "title_en": "گوشی موبایل",
-     "code": "mobile-phone"
-    }
-   },
-   {
-    "keyword": "samsung s",
-    "category": {
-     "id": 11,
-     "title_fa": "گوشی موبایل",
-     "title_en": "گوشی موبایل",
-     "code": "mobile-phone"
-    }
-   }
-  ],
   "auto_complete": [
    {
-    "keyword": "samsung a17"
+    "type": "category",
+    "id": 11,
+    "title": "موبایل سامسونگ",
+    "category_title": "گوشی موبایل",
+    "url": {
+     "url": "/search/category-mobile-phone/?q=%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84+%D8%B3%D8%A7%D9%85%D8%B3%D9%88%D9%86%DA%AF"
+    }
    },
    {
-    "keyword": "samsung a07"
+    "type": "category",
+    "id": 11,
+    "title": "موبایل سامسونگ a56",
+    "category_title": "گوشی موبایل",
+    "url": {
+     "url": "/search/category-mobile-phone/?q=%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84+%D8%B3%D8%A7%D9%85%D8%B3%D9%88%D9%86%DA%AF+a56"
+    }
    },
    {
-    "keyword": "samsung s25 fe"
+    "type": "query",
+    "title": "موبایل سامسونگ a17",
+    "url": {
+     "url": "/search/?q=%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84+%D8%B3%D8%A7%D9%85%D8%B3%D9%88%D9%86%DA%AF+a17"
+    }
    },
    {
-    "keyword": "samsung s25"
-   },
-   {
-    "keyword": "samsung a55"
-   },
-   {
-    "keyword": "samsung a56"
-   }
-  ],
-  "advance_links": [
-   {
-    "keyword": "سامسونگ",
-    "brand": {
-     "id": 18,
-     "title_fa": "سامسونگ",
-     "title_en": "Samsung"
+    "type": "query",
+    "title": "موبایل سامسونگ s26",
+    "url": {
+     "url": "/search/?q=%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84+%D8%B3%D8%A7%D9%85%D8%B3%D9%88%D9%86%DA%AF+s26"
     }
    }
   ],
   "trends": [
    {
-    "keyword": "ساعت مچی",
-    "url": {
-     "base": null,
-     "uri": "/search/?q=%D8%B3%D8%A7%D8%B9%D8%AA+%D9%85%DA%86%DB%8C"
-    }
+    "keyword": "ساعت مچی زنانه"
    },
    {
-    "keyword": "ساعت هوشمند",
-    "url": {
-     "base": null,
-     "uri": "/search/?q=%D8%B3%D8%A7%D8%B9%D8%AA+%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF"
-    }
-   },
-   {
-    "keyword": "پی اس فایو",
-    "url": {
-     "base": null,
-     "uri": "/search/?q=%D9%BE%DB%8C+%D8%A7%D8%B3+%D9%81%D8%A7%DB%8C%D9%88"
-    }
-   },
-   {
-    "keyword": "سکه پارسیان",
-    "url": {
-     "base": null,
-     "uri": "/search/?q=%D8%B3%DA%A9%D9%87+%D9%BE%D8%A7%D8%B1%D8%B3%DB%8C%D8%A7%D9%86"
-    }
-   },
-   {
-    "keyword": "ساعت مردانه",
-    "url": {
-     "base": null,
-     "uri": "/search/?q=%D8%B3%D8%A7%D8%B9%D8%AA+%D9%85%D8%B1%D8%AF%D8%A7%D9%86%D9%87"
-    }
+    "keyword": "عروسک "
    }
-  ],
-  "promotion_banner": []
+  ]
  }
 }

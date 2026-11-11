@@ -1,5 +1,6 @@
 """MCP server entry point: registers every read-only Digikala tool."""
 
+import asyncio
 import functools
 import inspect
 import json
@@ -8,7 +9,7 @@ import logging
 from mcp.server import MCPServer
 from mcp.types import ToolAnnotations
 
-from . import __version__, catalog, product, services  # noqa: F401  (imports register the tools)
+from . import __version__, catalog, http, product, services  # noqa: F401  (imports register the tools)
 from .registry import TOOLS
 
 INSTRUCTIONS = """\
@@ -44,11 +45,28 @@ mcp = MCPServer(
 
 
 def compact(fn):
-    """Return the tool result as one compact JSON text block (the SDK default sends it twice, indented)."""
+    """Return the tool result as one compact JSON text block (the SDK default sends it twice, indented).
+
+    The whole call gets http.CALL_BUDGET seconds, then fails with a clear message instead of hanging.
+    """
 
     @functools.wraps(fn)
     async def run(*args, **kwargs):
-        return json.dumps(await fn(*args, **kwargs), ensure_ascii=False, separators=(",", ":"))
+        task = asyncio.ensure_future(fn(*args, **kwargs))
+        try:
+            done, _ = await asyncio.wait({task}, timeout=http.CALL_BUDGET)
+        except asyncio.CancelledError:
+            task.cancel()
+            raise
+        if not done:
+            # left running (asyncio.wait does not wait for a cancel): its downloads fill the cache, so a retry is fast
+            task.add_done_callback(lambda t: t.cancelled() or t.exception())
+            raise http.ApiError(
+                f"api.digikala.com did not answer within {http.CALL_BUDGET:g} s (slow network). Try again in a "
+                "moment; fewer pages or products per call are faster."
+            )
+        out = task.result()
+        return json.dumps(out, ensure_ascii=False, separators=(",", ":"))
 
     return run
 

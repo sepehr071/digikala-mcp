@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import math
+import re
 import statistics
 from typing import Annotated, Any, Literal
 
@@ -98,7 +99,7 @@ async def dk_search(
         **listing_params(sort, min_price, max_price, brand_ids, in_stock_only, page),
         **filter_params(attributes, colors, seller_type, fast_delivery, ready_to_ship),
     }
-    data = (await fetch("/v1/search/", params))["data"]
+    data = await search(params)
     # the brand/category facets are not left in: they list low-id brands and unrelated categories, not the query's
     result = listing(data)
     words = query_words(query)
@@ -132,9 +133,9 @@ async def dk_find_cheapest(
     another seller may be cheaper.
     """
     base = {"q": query, "has_selling_stock": 1}
-    calls = [fetch("/v1/search/", {**base, **_prices(min_price, max_price), "page": n}) for n in range(1, pages + 1)]
+    calls = [search({**base, **_prices(min_price, max_price), "page": n}) for n in range(1, pages + 1)]
     if min_price is None and max_price is not None:
-        calls.append(fetch("/v1/search/", {**base, "page": 1}))  # unfiltered, so the floor sees the real items
+        calls.append(search({**base, "page": 1}))  # unfiltered, so the floor sees the real items
     bodies = await asyncio.gather(*calls)
     found, loose = _matches(query, bodies[:pages])
     floor = min_price
@@ -186,9 +187,9 @@ async def dk_best_for_budget(
         ]
     else:
         base = {"q": query, "has_selling_stock": 1}
-        calls = [fetch("/v1/search/", {**base, **budget, "page": n}) for n in range(1, pages + 1)]
+        calls = [search({**base, **budget, "page": n}) for n in range(1, pages + 1)]
         if min_price is None:
-            calls.append(fetch("/v1/search/", {**base, "page": 1}))  # unfiltered, to see what the real items cost
+            calls.append(search({**base, "page": 1}))  # unfiltered, to see what the real items cost
         bodies = await asyncio.gather(*calls)
         found = _matches(query, bodies[:pages])[0]
         if min_price is None and (top := _matches(query, bodies[pages:])[0]):
@@ -219,7 +220,7 @@ async def dk_best_for_budget(
 ACCESSORY = "مناسب برای"  # "suitable for": Digikala's accessory titles say what they fit
 
 
-def _matches(query: str, bodies: list[Any]) -> tuple[list[dict[str, Any]], bool]:
+def _matches(query: str, pages: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], bool]:
     """In-stock cards whose title has every query word, else any query word (loose=True), in relevance order.
 
     Semantic search answers even nonsense with unrelated items, so titles are checked here.
@@ -227,8 +228,8 @@ def _matches(query: str, bodies: list[Any]) -> tuple[list[dict[str, Any]], bool]
     words = query_words(query)
     keep_accessories = ACCESSORY in norm(query)
     cards, seen = [], set()
-    for body in bodies:
-        for p in body["data"].get("products") or []:
+    for data in pages:
+        for p in data.get("products") or []:
             c = card(p)
             title = title_text(p)
             if (
@@ -259,22 +260,21 @@ def title_text(p: dict[str, Any]) -> str:
 async def dk_suggest(
     query: Annotated[str, Field(min_length=1, max_length=100, description="Partial text, e.g. 'هدفون'.")],
 ) -> dict[str, Any]:
-    """Autocomplete a vague or misspelled query into keywords, categories and brands."""
-    data = (await fetch("/v1/autocomplete/", {"q": query}))["data"]
+    """Autocomplete a vague or misspelled query into keywords and categories."""
+    # /v1/autocomplete/ answers {"status": 404} since 2026-11-11; v2 has no brand links any more
+    data = (await fetch("/discovery/api/v2/autocomplete", {"q": query}))["data"]
+    items = data.get("auto_complete") or []
     return {
-        "keywords": [k.get("keyword") for k in data.get("auto_complete") or []],
+        "keywords": [k.get("title") for k in items],
         "categories": [
             {
-                "keyword": c.get("keyword"),
-                "code": (c.get("category") or {}).get("code"),
-                "title": (c.get("category") or {}).get("title_fa"),
+                "keyword": k.get("title"),
+                "code": m and m[1],
+                "title": k.get("category_title"),
             }
-            for c in data.get("categories") or []
-        ],
-        "brands": [
-            {"id": b["brand"].get("id"), "title": b["brand"].get("title_fa"), "title_en": b["brand"].get("title_en")}
-            for b in data.get("advance_links") or []
-            if b.get("brand")
+            for k in items
+            if k.get("type") == "category"
+            for m in [re.search(r"/search/category-([^/?]+)/", (k.get("url") or {}).get("url") or "")]
         ],
         "trending": [t.get("keyword") for t in data.get("trends") or []],
     }
@@ -299,7 +299,7 @@ async def dk_filters(
         path = f"/v1/categories/{category_code}/" + (f"brands/{brand_code}/" if brand_code else "") + "search/"
         data = (await fetch(path, {"page": 1}))["data"]
     elif query:
-        data = (await fetch("/v1/search/", {"q": query, "page": 1}))["data"]
+        data = await search({"q": query, "page": 1})
     else:
         raise ApiError("Pass a category_code (e.g. 'mobile-phone') or a query (e.g. 'هدفون بی سیم').")
     f = data.get("filters") or {}
@@ -331,7 +331,9 @@ async def dk_filters(
         ],
         "colors": {c.get("title"): c.get("id") for c in options("color_palettes")},
         "seller_types": [s.get("id") for s in options("seller_types")],
-        "fast_delivery_available": "has_jet_shipment_by_seller_or_digikala" in f,
+        # text search lists it under shipment_methods; the old has_jet_shipment_by_seller_or_digikala param still works
+        "fast_delivery_available": "has_jet_shipment_by_seller_or_digikala" in f
+        or any(o.get("key") == "has_jet_delivery" for o in options("shipment_methods")),
     }
     if category_code and not brand_code:
         result["brands"] = {
@@ -566,6 +568,26 @@ async def dk_fresh_search(
     # a query that hits nothing still lists every Fresh category, so only browsing returns them
     subs = (((data.get("filters") or {}).get("categories") or {}).get("options") or []) if category_code else []
     return {**result, "subcategories": [{"code": c.get("code"), "title": c.get("title_fa")} for c in subs]}
+
+
+async def search(params: dict[str, Any]) -> dict[str, Any]:
+    """Text search as the old /v1/search/ `data`: products, pager, filters (attribute facets as `attributes`).
+
+    /v1/search/ answers {"status": 404} since 2026-11-11. The site's v2 search takes the same query params but nests
+    the listing in a 'vertical_product_listing' widget whose items are 'product' widgets (sponsored ones sit apart).
+    """
+    body = await fetch("/discovery/api/v2/search", params)
+    w = next(
+        (w.get("data") or {} for w in body["data"].get("widgets") or [] if w.get("type") == "vertical_product_listing"),
+        {},
+    )
+    f = w.get("filters") or {}
+    attrs = [{**v, "id": int(k[10:])} for k, v in f.items() if k.startswith("attribute_") and k[10:].isdigit()]
+    return {
+        "pager": w.get("pager"),
+        "products": [x.get("data") or {} for x in w.get("widgets") or [] if x.get("type") == "product"],
+        "filters": {**f, "attributes": {"options": attrs}},
+    }
 
 
 def listing_params(

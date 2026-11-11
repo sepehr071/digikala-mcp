@@ -45,6 +45,11 @@ MAX_RETRY_WAIT = 10  # cap for Retry-After and backoff, seconds
 CACHE_SECONDS = 120
 CACHE_SIZE = 300
 RETRY_DELAY = 0.5
+# Hosted routers cut a tool call at 20 s: a whole call gets CALL_BUDGET seconds (server.compact), each upstream attempt
+# REQUEST_TIMEOUT, so a stalled request still leaves room for one retry and the caller gets a clear message, not a hang.
+CALL_BUDGET = 15.0
+# curl_cffi (stream mode) gives up after connect + read = 9 s without any data; a slow but flowing body is not cut
+REQUEST_TIMEOUT = httpx.Timeout(5, connect=4)
 
 _transport: httpx.AsyncBaseTransport | None = None
 _client: httpx.AsyncClient | None = None
@@ -123,7 +128,7 @@ def _next_proxy(client: httpx.AsyncClient) -> None:
 
 
 async def _close_later(client: httpx.AsyncClient) -> None:
-    await asyncio.sleep(30)  # longer than the 20 s request timeout
+    await asyncio.sleep(30)  # longer than any request (CALL_BUDGET)
     await client.aclose()
 
 
@@ -145,7 +150,7 @@ def _get_client() -> tuple[httpx.AsyncClient, asyncio.Semaphore]:
                 max_connections=2 * MAX_CONCURRENCY,
             ),
             headers=HEADERS,
-            timeout=20,
+            timeout=REQUEST_TIMEOUT,
             limits=httpx.Limits(max_connections=2 * MAX_CONCURRENCY),
             follow_redirects=True,
             event_hooks={"response": [_same_host]},
@@ -290,7 +295,7 @@ def _status_message(code: int, host: str, detail: str) -> str:
     if code == 403:
         return (
             f"{host} refused the request (HTTP 403). Digikala answers 403 for an unknown category or brand "
-            "code: check it with dk_categories, dk_suggest or dk_product's brand_code. If every dk_ tool fails "
+            "code: check it with dk_categories, dk_filters or dk_product's brand_code. If every dk_ tool fails "
             "this way, your IP is blocked: turn off VPN/proxy, or set DIGIKALA_MCP_PROXY to a proxy with an Iranian IP."
         )
     if code == 404:

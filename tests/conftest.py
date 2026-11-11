@@ -24,6 +24,17 @@ def assert_images(data, tool=""):
     return here + sum(assert_images(v, tool) for v in data.values())
 
 
+SEARCH = "/discovery/api/v2/search"
+
+
+def v2(body):
+    """Wrap an old /v1/search/ fixture body in the v2 search envelope (search_v2.json is a real one)."""
+    d = body["data"]
+    items = [{"type": "product", "data": p} for p in d.get("products") or []]
+    listing = {"type": "vertical_product_listing", "data": {**d, "widgets": items}}
+    return {"status": 200, "data": {"widgets": [listing]}}
+
+
 def fixture(name: str):
     return json.loads((FIXTURES / name).read_text(encoding="utf-8"))
 
