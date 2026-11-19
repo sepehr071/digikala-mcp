@@ -25,6 +25,129 @@ SORTS = {
     "biggest_discount": 26,  # deal lists only
 }
 
+# --- Fallbacks for the /v1 endpoints Digikala retired ~2026-11-11 -----------------
+# GET /v1/category-tree/, /v1/incredible-offers/products/,
+# /v1/categories/<code>/search/ and /v1/sellers/<code>/ all answer
+# {"status": 404} now (verified live 2026-11-19: 19 of 23 tools work, the 6
+# that hit those paths do not). The live site search
+# /discovery/api/v2/search still works and takes the same query params plus a
+# categories[0]=<id> filter and sort=26 (biggest discount), so the tools below
+# are re-implemented on top of it instead of the dead paths. No login, cart or
+# checkout is added: this server stays read-only by design.
+
+# Persian words Digikala product titles spell in Latin, plus generic words to drop.
+FA_EN = {
+    "آیفون": "iPhone",
+    "اپل": "Apple",
+    "سامسونگ": "Samsung",
+    "شیائومی": "Xiaomi",
+    "هواوی": "Huawei",
+    "هوآوی": "Huawei",
+    "نوکیا": "Nokia",
+    "ریلمی": "Realme",
+    "آنر": "Honor",
+    "گوگل": "Google",
+    "پیکسل": "Pixel",
+    "ایسوس": "Asus",
+    "لنوو": "Lenovo",
+    "دل": "Dell",
+    "اچپی": "HP",
+    "ایسر": "Acer",
+    "الجی": "LG",
+    "سونی": "Sony",
+    "ناتینگ": "Nothing",
+    "وانپلاس": "OnePlus",
+    "موتورولا": "Motorola",
+    "پوکو": "Poco",
+    "ردمی": "Redmi",
+    "گلکسی": "Galaxy",
+    "اولترا": "Ultra",
+    "پرو": "Pro",
+    "مکس": "Max",
+    "پلاس": "Plus",
+    "ایرپاد": "AirPods",
+    "آیپد": "iPad",
+    "مکبوک": "MacBook",
+    "سرفیس": "Surface",
+    "مایکروسافت": "Microsoft",
+    "جیبیال": "JBL",
+    "بوز": "Bose",
+    "انکر": "Anker",
+    "بیسوس": "Baseus",
+}
+
+
+def translate_query(query: str) -> str:
+    """Persian query -> the words Digikala product titles actually use.
+
+    Only brand/model words are translated to Latin: real titles say
+    "iPhone 16", never "آیفون", so a Persian query only strict-matches
+    mockups/accessories whose titles literally contain "آیفون". Generic
+    words (گوشی, هدفون, بی سیم, ...) stay Persian: they do appear in real
+    titles, and dropping them would lose specificity ("هدفون بی سیم" must
+    not become just "headphone").
+    """
+    return " ".join(FA_EN.get(w, w) for w in norm(query).split()).strip() or query
+
+
+async def _facet_options(query: str, key: str) -> list[dict[str, Any]]:
+    """One v2 search facet (e.g. "categories", "brands") for a query."""
+    data = await search({"q": query, "page": 1})
+    return ((data.get("filters") or {}).get(key) or {}).get("options") or []
+
+
+async def _category_id_for_code(code: str) -> tuple[int | None, str | None]:
+    """Numeric id + Persian title for a category code, from the v2 search facet.
+
+    The old /v1/category-tree/ is gone, so the id is read off the live search
+    facet instead. The code itself is a usable search hint: the facet for
+    q="mobile-phone" lists that category.
+    """
+    for hint in (code, code.replace("-", " ")):
+        for opt in await _facet_options(hint, "categories"):
+            if opt.get("code") == code:
+                return opt.get("id"), opt.get("title_fa")
+    try:
+        sug = await dk_suggest(code)
+    except ApiError:
+        return None, None
+    for c in sug.get("categories") or []:
+        if c.get("code") == code:
+            for opt in await _facet_options(c.get("keyword") or code, "categories"):
+                if opt.get("code") == code:
+                    return opt.get("id"), opt.get("title_fa")
+    return None, None
+
+
+async def _brand_id_for_code(code: str, category_id: int | None = None) -> int | None:
+    """Brand id for a brand code, from the v2 search brands facet."""
+    params: dict[str, Any] = {"q": code.replace("-", " "), "page": 1}
+    if category_id:
+        params["categories[0]"] = category_id
+    data = await search(params)
+    for opt in ((data.get("filters") or {}).get("brands") or {}).get("options") or []:
+        if opt.get("code") == code:
+            return opt.get("id")
+    return None
+
+
+async def _main_categories() -> list[dict[str, Any]]:
+    """Main categories (id/code/title) from /v1/best-selling/, which is still alive."""
+    data = await dk_best_sellers()
+    return data.get("categories") or []
+
+
+async def _verify_category(query: str, cat_id: int) -> int:
+    """Products matching `query` inside category `cat_id` (0 = unverified/empty)."""
+    try:
+        return (
+            listing(await search({"q": query, "page": 1, "sort": 22, "has_selling_stock": 1, "categories[0]": cat_id}))
+            or {}
+        ).get("total") or 0
+    except ApiError:
+        return 0
+
+
 Query = Annotated[
     str,
     Field(
@@ -132,20 +255,29 @@ async def dk_find_cheapest(
     Keeps titles with every query word and drops accessories. Then dk_product on the winner:
     another seller may be cheaper.
     """
-    base = {"q": query, "has_selling_stock": 1}
+    # Real titles use Latin brand words ("iPhone"), never Persian ("آیفون"): search the
+    # translated query or a Persian one only strict-matches mockups/accessories.
+    translated = translate_query(query)
+    base = {"q": translated, "has_selling_stock": 1}
     calls = [search({**base, **_prices(min_price, max_price), "page": n}) for n in range(1, pages + 1)]
     if min_price is None and max_price is not None:
         calls.append(search({**base, "page": 1}))  # unfiltered, so the floor sees the real items
     bodies = await asyncio.gather(*calls)
-    found, loose = _matches(query, bodies[:pages])
+    found, loose = _matches(translated, bodies[:pages])
     floor = min_price
     if floor is None:
-        top = _matches(query, bodies[pages:])[0] if len(bodies) > pages else found
+        top = _matches(translated, bodies[pages:])[0] if len(bodies) > pages else found
         if top:
             # ponytail: crude accessory filter; a category-aware filter would need one more call per query.
             floor = int(statistics.median(c["price"] for c in top[:5]) / 4)
     offers = sorted((c for c in found if c["price"] >= (floor or 0)), key=lambda c: c["price"])
-    result: dict[str, Any] = {"price_floor": floor, "scanned": len(found), "products": offers[:limit]}
+    result: dict[str, Any] = {
+        "price_floor": floor,
+        "scanned": len(found),
+        "products": offers[:limit],
+    }
+    if translated != norm(query):
+        result["translated_query"] = translated
     if not offers:
         result["note"] = "No matching product in this price range; try dk_suggest for better words, or another range."
     elif loose:
@@ -176,15 +308,21 @@ async def dk_best_for_budget(
         raise ApiError("Pass a query (e.g. 'هدفون بی سیم') or a category_code (e.g. 'mobile-phone').")
     budget = _prices(min_price, max_price)
     if category_code:
+        # /v1/categories/<code>/search/ is retired (404): browse via the v2 search
+        # with a categories[0]=<id> filter instead.
+        cat_id, _ = await _category_id_for_code(category_code)
+        if cat_id is None:
+            raise ApiError(
+                f"Category '{category_code}' could not be resolved: the category tree "
+                "endpoint is retired. Pass a query instead, or check the code with dk_categories()."
+            )
         bodies = await asyncio.gather(
             *(
-                fetch(f"/v1/categories/{category_code}/search/", {**budget, "has_selling_stock": 1, "page": n})
+                search({**budget, "has_selling_stock": 1, "page": n, "categories[0]": cat_id})
                 for n in range(1, pages + 1)
             )
         )
-        found = [
-            c for b in bodies for c in map(card, b["data"].get("products") or []) if c["in_stock"] and c.get("price")
-        ]
+        found = [c for b in bodies for c in map(card, b.get("products") or []) if c["in_stock"] and c.get("price")]
     else:
         base = {"q": query, "has_selling_stock": 1}
         calls = [search({**base, **budget, "page": n}) for n in range(1, pages + 1)]
@@ -296,8 +434,21 @@ async def dk_filters(
     attribute_id). Pass the ids to dk_category_products or dk_search.
     """
     if category_code:
-        path = f"/v1/categories/{category_code}/" + (f"brands/{brand_code}/" if brand_code else "") + "search/"
-        data = (await fetch(path, {"page": 1}))["data"]
+        # /v1/categories/<code>/search/ is retired (404): the v2 search returns the
+        # same filters for a categories[0]=<id> search.
+        cat_id, _ = await _category_id_for_code(category_code)
+        if cat_id is None:
+            raise ApiError(
+                f"Category '{category_code}' could not be resolved: the category tree "
+                "endpoint is retired. Pass a query instead, or check the code with dk_categories()."
+            )
+        params: dict[str, Any] = {"categories[0]": cat_id, "page": 1}
+        if brand_code:
+            brand_id = await _brand_id_for_code(brand_code, cat_id)
+            if brand_id is None:
+                raise ApiError(f"No brand '{brand_code}' in category '{category_code}'.")
+            params["brands[0]"] = brand_id
+        data = await search(params)
     elif query:
         data = await search({"q": query, "page": 1})
     else:
@@ -344,7 +495,50 @@ async def dk_filters(
     return result
 
 
-_tree: list[dict[str, Any]] | None = None
+_main_categories_cache: list[dict[str, Any]] | None = None
+
+
+async def _resolve_leaf_category(query: str) -> list[dict[str, Any]]:
+    """A Persian query -> verified leaf categories, via dk_suggest + the v2 facet.
+
+    A candidate only counts if a categories[0]=<id> search for the query
+    returns products. Parent categories are not resolvable any more (no
+    product sits directly in a parent category, so no live endpoint returns
+    their ids); the best verified leaf is returned instead.
+    """
+    try:
+        sug = await dk_suggest(query)
+        sug_cats = [c for c in sug.get("categories") or [] if c.get("code")]
+    except ApiError:
+        sug_cats = []
+    qn = norm(query)
+    exact = [c for c in sug_cats if norm(c.get("keyword") or "") == qn]
+    ordered = exact or sug_cats
+    facet = await _facet_options(query, "categories")
+    out, seen = [], set()
+    for c in ordered:
+        code = c.get("code")
+        if not code or code in seen:
+            continue
+        seen.add(code)
+        opt = next((o for o in facet if o.get("code") == code), None)
+        if opt is None:
+            continue
+        total = await _verify_category(query, opt["id"])
+        if total:
+            out.append(
+                {
+                    "id": opt["id"],
+                    "code": code,
+                    "title": opt.get("title_fa"),
+                    "parent_id": None,
+                    "subcategories": 0,
+                    "verified_total": total,
+                }
+            )
+        if len(out) >= 4:
+            break
+    return out
 
 
 @tool("Find categories")
@@ -358,33 +552,30 @@ async def dk_categories(
 ) -> dict[str, Any]:
     """Find category codes for dk_category_products and main-category ids for dk_best_sellers.
 
-    No arguments lists the main categories. A parent category mixes in accessories: browse its leaf.
+    No arguments lists the main categories (from /v1/best-selling/, alive).
+    A query resolves to verified leaf categories. Listing a parent's
+    sub-categories is no longer possible: GET /v1/category-tree/ was retired
+    by Digikala ~2026-11-11 and answers 404.
     """
-    global _tree
-    if _tree is None:
-        # 1.7 MB for ~3200 categories; it barely changes, so load it once per process (not kept in the fetch cache).
-        body = await fetch("/v1/category-tree/", cache=False)
-        _tree = [
-            {
-                "id": c["category"]["id"],
-                "code": c["category"].get("code"),
-                "title": c["category"].get("title_fa"),
-                "parent_id": c.get("parent_id"),
-            }
-            for c in body["data"]["categories"]
-        ]
-    children: dict[int, int] = {}
-    for c in _tree:
-        if c["parent_id"]:
-            children[c["parent_id"]] = children.get(c["parent_id"], 0) + 1
+    global _main_categories_cache
     if query:
-        q = norm(query)
-        found = [c for c in _tree if q in norm(c["title"] or "") or q in (c["code"] or "")]
-    else:
-        found = [c for c in _tree if c["parent_id"] == parent_id]
+        found = await _resolve_leaf_category(query)
+        return {"categories": found[:limit], "found": len(found)}
+    if parent_id is not None:
+        return {
+            "categories": [],
+            "found": 0,
+            "note": (
+                "Sub-category listing needs the retired /v1/category-tree/ (404). "
+                "Use dk_categories(query='<Persian name>') to resolve a leaf category instead."
+            ),
+        }
+    if _main_categories_cache is None:
+        _main_categories_cache = await _main_categories()
     return {
-        "categories": [{**c, "subcategories": children.get(c["id"], 0)} for c in found[:limit]],
-        "found": len(found),
+        "categories": [{**c, "parent_id": None, "subcategories": 0} for c in _main_categories_cache][:limit],
+        "found": len(_main_categories_cache),
+        "note": "Main categories only; sub-category counts are unavailable since /v1/category-tree/ retired.",
     }
 
 
@@ -408,12 +599,25 @@ async def dk_category_products(
 
     No text query. Filter ids: dk_filters(category_code=...).
     """
-    path = f"/v1/categories/{category_code}/" + (f"brands/{brand_code}/" if brand_code else "") + "search/"
-    params = {
+    # /v1/categories/<code>/search/ is retired (404): browse via the v2 search
+    # with a categories[0]=<id> filter instead.
+    cat_id, _ = await _category_id_for_code(category_code)
+    if cat_id is None:
+        raise ApiError(
+            f"Category '{category_code}' could not be resolved: the category tree "
+            "endpoint is retired. Check the code with dk_categories() or use dk_search()."
+        )
+    params: dict[str, Any] = {
+        "categories[0]": cat_id,
         **listing_params(sort, min_price, max_price, brand_ids, in_stock_only, page),
         **filter_params(attributes, colors, seller_type, fast_delivery, ready_to_ship),
     }
-    return listing((await fetch(path, params))["data"])
+    if brand_code:
+        brand_id = await _brand_id_for_code(brand_code, cat_id)
+        if brand_id is None:
+            raise ApiError(f"No brand '{brand_code}' in category '{category_code}'.")
+        params["brands[0]"] = brand_id
+    return listing(await search(params))
 
 
 @tool("Browse a brand")
@@ -454,29 +658,51 @@ async def dk_seller(
 ) -> dict[str, Any]:
     """Get a seller's reputation (rating 0-5, on-time shipping, cancellations, returns) and products.
 
-    Percentages are the share of good orders (100 = never late).
+    Unavailable: Digikala retired GET /v1/sellers/<code>/ ~2026-11-11 (HTTP 404)
+    and no working seller endpoint exists. Use dk_seller_on_product(product_id=...)
+    for the seller titles, codes and ratings on one product's offers instead.
     """
-    data = (await fetch(f"/v1/sellers/{seller_code}/", listing_params(sort, None, None, None, in_stock_only, page)))[
-        "data"
-    ]
-    s = data.get("seller") or {}
-    rating, stats, props = s.get("rating") or {}, s.get("statistics") or {}, s.get("properties") or {}
+    raise ApiError(
+        "dk_seller is unavailable: Digikala retired GET /v1/sellers/<code>/ (~2026-11-11, "
+        "HTTP 404) and no working seller endpoint exists. Use "
+        "dk_seller_on_product(product_id=...) for the seller titles, codes and ratings "
+        "on one product's offers, or dk_product for all offers.",
+        404,
+    )
+
+
+@tool("Sellers on one product")
+async def dk_seller_on_product(
+    product_id: Annotated[int, Field(ge=1, le=10**9, description="The number in a dkp-<id> link.")],
+) -> dict[str, Any]:
+    """Seller titles, codes and ratings as seen on one product's offers.
+
+    The only seller data left after /v1/sellers/ retired: dk_product still
+    returns every offer's seller. Full profiles (on-time shipping,
+    cancellations, returns, member-since) no longer exist anywhere.
+    """
+    from .product import dk_product  # local import: product.py imports this module
+
+    p = await dk_product(product_id, max_offers=15, include_specs=False)
+    # Offers are flat: "seller" is the title, plus "seller_code"/"seller_rating".
+    sellers: dict[str, dict[str, Any]] = {}
+    for o in p.get("offers") or []:
+        code = o.get("seller_code")
+        if code and code not in sellers:
+            sellers[code] = {
+                "code": code,
+                "title": o.get("seller"),
+                "rating": o.get("seller_rating"),
+                "url": f"{SITE}/seller/{code}/",
+            }
     return {
-        "seller": {
-            "code": s.get("code"),
-            "title": s.get("title"),
-            "rating": stars(rating.get("total_rate")),
-            "rating_count": rating.get("total_count"),
-            "grade": (s.get("grade") or {}).get("label"),
-            "on_time_shipping_pct": stats.get("ship_on_time"),
-            "no_cancellation_pct": stats.get("cancellation"),
-            "no_return_pct": stats.get("return"),
-            "member_for": s.get("registration_date"),
-            "is_trusted": props.get("is_trusted"),
-            "is_official": props.get("is_official"),
-            "url": f"{SITE}/seller/{s.get('code') or seller_code}/",
-        },
-        **listing(data),
+        "product": {"id": p["id"], "title": p["title"], "price": p["price"], "url": p["url"]},
+        "sellers": list(sellers.values()),
+        "offers": p.get("offers") or [],
+        "note": (
+            "Full seller profiles are unavailable: GET /v1/sellers/<code>/ is dead (404). "
+            "These per-offer seller titles, codes and ratings come from dk_product."
+        ),
     }
 
 
@@ -494,13 +720,25 @@ async def dk_deals(
     max_price: MaxPrice = None,
     page: Page = 1,
 ) -> dict[str, Any]:
-    """List today's Incredible Offers (flash deals), biggest discount first, in-stock only.
+    """List today's biggest discounts, biggest discount first, in-stock only.
 
-    deal_ends is Tehran time.
+    Main store: the timed Incredible Offers endpoint retired ~2026-11-11, so
+    these are the biggest discounts right now, not a flash-deal list, and
+    deal_ends is unavailable. Supermarket (Fresh) flash deals still work.
     """
     params = {**listing_params(sort, min_price, max_price, None, True, page), "q": query or ""}
-    path = "/fresh/v1/incredible-offers/products/" if store == "supermarket" else "/v1/incredible-offers/products/"
-    return listing((await fetch(path, params))["data"])
+    if store == "supermarket":
+        return listing((await fetch("/fresh/v1/incredible-offers/products/", params))["data"])
+    # /v1/incredible-offers/products/ is retired (404): biggest discounts via the
+    # v2 search (sort=26) instead. These are the biggest discounts right now, not
+    # the timed flash-deal list, so no deal_ends times are available any more.
+    result = listing(await search(params))
+    result["note"] = (
+        "Biggest discounts right now, biggest first (v2 search sort=26). This is NOT "
+        "the timed Incredible Offers list: that endpoint retired ~2026-11-11 and "
+        "returns 404, so no deal_ends times exist for the main store."
+    )
+    return result
 
 
 @tool("Best sellers")
@@ -583,10 +821,15 @@ async def search(params: dict[str, Any]) -> dict[str, Any]:
     )
     f = w.get("filters") or {}
     attrs = [{**v, "id": int(k[10:])} for k, v in f.items() if k.startswith("attribute_") and k[10:].isdigit()]
+    if attrs:
+        # v2 lists attributes as attribute_<id> keys; normalise them to the
+        # {"options": [...]} shape dk_filters reads. A body that already
+        # carries an "attributes" facet (e.g. a category listing) is left alone.
+        f = {**f, "attributes": {"options": attrs}}
     return {
         "pager": w.get("pager"),
         "products": [x.get("data") or {} for x in w.get("widgets") or [] if x.get("type") == "product"],
-        "filters": {**f, "attributes": {"options": attrs}},
+        "filters": f,
     }
 
 

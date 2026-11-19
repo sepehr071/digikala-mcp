@@ -32,7 +32,7 @@ check a product's price history, read reviews and Q&A, and catch today's Incredi
 - **Install:** `uvx digikala-mcp` or `claude mcp add digikala -- uvx digikala-mcp`. Transport: stdio. Needs [uv](https://docs.astral.sh/uv/getting-started/installation/) (Python 3.10+).
 - **Auth:** none, no API key or account. Optional `DIGIKALA_MCP_PROXY` (HTTP proxy, or a comma-separated list, e.g. with an Iranian exit if Digikala blocks yours).
 - **Access:** read-only. No login, cart, checkout or payment, so no confirmation is needed before calling any tool.
-- **Tools:** 23, all prefixed `dk_`. Start with `dk_find_cheapest`, `dk_search`, `dk_best_for_budget`, `dk_deals`.
+- **Tools:** 24, all prefixed `dk_`. Start with `dk_find_cheapest`, `dk_search`, `dk_best_for_budget`, `dk_deals`.
   Typical sequence: `dk_find_cheapest` -> `dk_product` -> `dk_price_history`.
 - **Use when:** finding, comparing or judging prices of products and sellers on Digikala, including the Fresh supermarket.
 - **Do not use when:** the user wants to buy, or needs shipping cost (only calculated at checkout) or anything behind a login.
@@ -182,20 +182,21 @@ Product ids are the number in a `digikala.com/product/dkp-<id>/` link. Every lis
 id, title, brand, price, discount, stock, seller, rating, a photo URL (`image`) and the product link.
 
 <details open>
-<summary><b>Find products</b> (12)</summary>
+<summary><b>Find products</b> (13)</summary>
 
 | Tool | What it does |
 |---|---|
 | `dk_search` | Search by words with sort, price, brand, feature, color and seller filters; flags loose title matches |
-| `dk_find_cheapest` | Cheapest in-stock real matches for a query, accessories dropped, one list |
+| `dk_find_cheapest` | Cheapest in-stock real matches for a query, accessories dropped, one list (Persian brand words are searched in Latin: real titles say `iPhone`, never `آیفون`) |
 | `dk_best_for_budget` | Best-rated real matches under a budget, rating weighted by number of ratings |
 | `dk_suggest` | Autocomplete: better keywords and category codes |
 | `dk_filters` | Filter options of a category or search: features (OS, storage, ...), colors, brands, sellers, price range |
-| `dk_categories` | Find category codes and main-category ids |
-| `dk_category_products` | Browse a category with sort and the same filters, optionally one brand |
+| `dk_categories` | Find category codes and main-category ids (main list + verified leaves; sub-category listing retired with /v1/category-tree/) |
+| `dk_category_products` | Browse a category with sort and the same filters, optionally one brand (via the v2 search since /v1/categories/ retired) |
 | `dk_brand_products` | Browse a brand's products |
-| `dk_seller` | A seller's rating, on-time shipping, cancellations, returns and products |
-| `dk_deals` | Incredible Offers or supermarket deals, biggest discount first |
+| `dk_seller` | Retired with /v1/sellers/: fails fast and points at `dk_seller_on_product` |
+| `dk_seller_on_product` | Seller titles, codes and ratings as seen on one product's offers (the only seller data left) |
+| `dk_deals` | Biggest discounts, biggest discount first (main store: v2 search, no timed flash list since /v1/incredible-offers/ retired; supermarket deals unchanged) |
 | `dk_best_sellers` | Current best sellers, overall or per main category |
 | `dk_fresh_search` | Search or browse Digikala Fresh, the supermarket |
 </details>
@@ -225,7 +226,7 @@ id, title, brand, price, discount, stock, seller, rating, a photo URL (`image`) 
 | `dk_location` | Address → coordinates, or coordinates → address with Digikala city/province ids |
 </details>
 
-All 23 tools are annotated `readOnlyHint: true` and return compact structured JSON, so they don't flood the agent's context.
+All 24 tools are annotated `readOnlyHint: true` and return compact structured JSON, so they don't flood the agent's context.
 
 ## Good to know
 
@@ -237,6 +238,13 @@ All 23 tools are annotated `readOnlyHint: true` and return compact structured JS
 - **Filters by feature**: `dk_filters(category_code="mobile-phone")` lists ids like operating system → Android, then `dk_category_products(attributes={2226: [19239]})` filters on them.
 - **The 30-day low ignores one-day dips.** `dk_shortlist` compares today's price with the lowest price that held on two days in a row (`low_30d`), because Digikala's own 30-day low (`lowest_one_day_30d`, `dk_product`'s `lowest_price_30d`) can be a single day of one color. `dk_price_history` gives both per color.
 - **Photos**: cards carry `image`, `dk_product` an `images` list (max 4), both absolute https URLs taken from the API as-is. They end in `?x-oss-process=image/resize,m_lfit,h_300,w_300/quality,q_80`, so they are 300 px JPEGs; drop that suffix for the original size.
+- **Retired /v1 endpoints (Digikala, ~2026-11-11).** `GET /v1/category-tree/`, `/v1/incredible-offers/products/`,
+  `/v1/categories/<code>/search/` and `/v1/sellers/<code>/` all answer `{"status": 404}` now, so 6 tools broke at once.
+  They are re-implemented on the live v2 search instead: categories come from `/v1/best-selling/` (main list) plus
+  `dk_suggest` + the search facet (verified leaves, e.g. mobile-phone id 11); category browsing and category filters
+  use a `categories[0]=<id>` search; deals are the biggest discounts (`sort=26`), not the timed flash list, so no
+  `deal_ends` for the main store; `dk_seller` has no replacement endpoint at all, only `dk_seller_on_product`.
+  Verified live 2026-11-19: `گوشی آیفون` -> iPhone 15 CH 283,700,000 Toman, site-wide top discounts 91% / 90% / 90%.
 - **Prices move several times an hour** on popular listings with many sellers; re-check right before buying.
 - **Answers are cached for 2 minutes**, so an agent repeating a call doesn't hit Digikala again; prices can lag the site by that much. A timeout, 5xx or 429 is retried up to twice with backoff.
 - **Groceries** come from the supermarket store: `dk_product` shows its price, which can differ from the main-store price in search results.

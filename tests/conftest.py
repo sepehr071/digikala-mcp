@@ -50,10 +50,10 @@ def fresh_http_client(monkeypatch):
     monkeypatch.setattr(http, "RETRY_DELAY", 0)
     monkeypatch.setattr(http, "JITTER", (0, 0))
     http.set_transport(None)
-    catalog._tree = None
+    catalog._main_categories_cache = None
     yield
     http.set_transport(None)
-    catalog._tree = None
+    catalog._main_categories_cache = None
 
 
 @pytest.fixture

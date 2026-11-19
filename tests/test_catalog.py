@@ -139,27 +139,37 @@ async def test_dk_search_reads_the_v2_listing_widget(client, api):
 
 
 async def test_dk_categories(client, api):
-    api["/v1/category-tree/"] = fixture("category_tree.json")
-    found = (await client.call_tool("dk_categories", {"query": "هدفون"})).structured_content
-    assert {c["code"] for c in found["categories"]} == {"headphone", "monitor-headphones"}
-    # Arabic yeh/kaf in the query still match Persian titles
-    phones = (await client.call_tool("dk_categories", {"query": "گوشي موبايل"})).structured_content
-    assert {c["code"] for c in phones["categories"]} == {"mobile-phone", "mobile-accessories"}
-    children = (await client.call_tool("dk_categories", {"parent_id": 1})).structured_content["categories"]
-    assert [c["code"] for c in children] == ["mobile-phone"]
-    roots = (await client.call_tool("dk_categories", {})).structured_content["categories"]
-    assert [c["code"] for c in roots] == ["donation", "vehicles", "home-and-kitchen", "mobile", "electronic-devices"]
-    mobile = next(
-        c
-        for c in (await client.call_tool("dk_categories", {"query": "mobile"})).structured_content["categories"]
-        if c["id"] == 1
-    )
-    assert mobile["subcategories"] == 1
-    assert len(api.calls) == 1  # the 1.7 MB tree is fetched once
+    # No arguments lists the main categories, from /v1/best-selling/ (alive).
+    api["/v1/best-selling/"] = fixture("best_selling.json")
+    roots = (await client.call_tool("dk_categories", {})).structured_content
+    assert [c["code"] for c in roots["categories"]] == ["mobile", "toys", "electronic-devices"]
+    assert roots["found"] == 3 and "retired" in roots["note"]
+    # Listing a parent's sub-categories died with /v1/category-tree/.
+    children = (await client.call_tool("dk_categories", {"parent_id": 1})).structured_content
+    assert children["categories"] == [] and "retired" in children["note"]
+    # A query resolves to a verified leaf via dk_suggest + the v2 search facet.
+    api["/discovery/api/v2/autocomplete"] = fixture("autocomplete.json")
+
+    def search(request):
+        if "categories[0]" in request.url.params:
+            return httpx.Response(200, json=v2(fixture("category_products.json")))
+        return httpx.Response(200, json=v2(fixture("seller.json")))  # facet lists mobile-phone id 11
+
+    api[SEARCH] = search
+    found = (await client.call_tool("dk_categories", {"query": "موبایل سامسونگ"})).structured_content
+    assert {c["code"] for c in found["categories"]} == {"mobile-phone"}
+    assert found["categories"][0]["id"] == 11 and found["categories"][0]["verified_total"] == 4026
 
 
 async def test_dk_category_products_unsellable_cards(client, api):
-    api["/v1/categories/mobile-phone/search/"] = fixture("category_products.json")
+    # /v1/categories/<code>/search/ is retired: the category is resolved via the
+    # v2 facet, then browsed with a categories[0]=<id> v2 search.
+    def search(request):
+        if "categories[0]" in request.url.params:
+            return httpx.Response(200, json=v2(fixture("category_products.json")))
+        return httpx.Response(200, json=v2(fixture("seller.json")))  # facet lists mobile-phone id 11
+
+    api[SEARCH] = search
     data = (
         await client.call_tool("dk_category_products", {"category_code": "mobile-phone", "in_stock_only": False})
     ).structured_content
@@ -173,11 +183,17 @@ async def test_dk_category_products_unsellable_cards(client, api):
         "in_stock": False,
     }
     assert p["url"].endswith("dkp-22667973/") and p["image"].startswith("https://") and "brands" not in data
-    assert api.calls[0].url.params["sort"] == "22"
+    sent = [c for c in api.calls if "categories[0]" in c.url.params][0].url.params
+    assert sent["categories[0]"] == "11" and sent["sort"] == "22"
 
 
 async def test_dk_category_products_feature_filters(client, api):
-    api["/v1/categories/mobile-phone/search/"] = fixture("category_products.json")
+    def search(request):
+        if "categories[0]" in request.url.params:
+            return httpx.Response(200, json=v2(fixture("category_products.json")))
+        return httpx.Response(200, json=v2(fixture("seller.json")))
+
+    api[SEARCH] = search
     args = {
         "category_code": "mobile-phone",
         "attributes": {"2226": [19239], "2251": [19515, 19516]},  # Android; two storage sizes
@@ -187,7 +203,7 @@ async def test_dk_category_products_feature_filters(client, api):
         "ready_to_ship": True,
     }
     assert not (await client.call_tool("dk_category_products", args)).is_error
-    sent = api.calls[0].url.params
+    sent = [c for c in api.calls if "categories[0]" in c.url.params][0].url.params
     assert sent["attributes[2226][0]"] == "19239"
     assert (sent["attributes[2251][0]"], sent["attributes[2251][1]"]) == ("19515", "19516")
     assert sent["color_palettes[0]"] == "1" and sent["seller_types[0]"] == "digikala"
@@ -195,7 +211,14 @@ async def test_dk_category_products_feature_filters(client, api):
 
 
 async def test_dk_filters_for_a_category(client, api):
-    api["/v1/categories/mobile-phone/search/"] = fixture("category_filters.json")
+    # The category id is resolved from the v2 facet; the filters come from a
+    # categories[0]=<id> v2 search, not the retired /v1/categories/.../search/.
+    def search(request):
+        if "categories[0]" in request.url.params:
+            return httpx.Response(200, json=v2(fixture("category_filters.json")))
+        return httpx.Response(200, json=v2(fixture("seller.json")))
+
+    api[SEARCH] = search
     data = (await client.call_tool("dk_filters", {"category_code": "mobile-phone"})).structured_content
     assert data["total"] == 4031
     assert data["price_range"] == {"min": 1635000, "max": 579999000}  # Rial / 10
@@ -208,7 +231,12 @@ async def test_dk_filters_for_a_category(client, api):
 
 
 async def test_dk_filters_one_attribute_and_cap(client, api, monkeypatch):
-    api["/v1/categories/mobile-phone/search/"] = fixture("category_filters.json")
+    def search(request):
+        if "categories[0]" in request.url.params:
+            return httpx.Response(200, json=v2(fixture("category_filters.json")))
+        return httpx.Response(200, json=v2(fixture("seller.json")))
+
+    api[SEARCH] = search
     monkeypatch.setattr(catalog, "FILTER_VALUES", 2)
     data = (await client.call_tool("dk_filters", {"category_code": "mobile-phone"})).structured_content
     # an alphabetical list cut short would hide common values, so a long one only gives its count
@@ -268,11 +296,24 @@ async def test_dk_best_for_budget_min_ratings_and_empty(client, api):
 
 
 async def test_dk_best_for_budget_by_category(client, api):
-    api["/v1/categories/headphone/search/"] = fixture("budget_search.json")
+    def facet_body():
+        body = v2(fixture("seller.json"))
+        body["data"]["widgets"][0]["data"]["filters"]["categories"] = {
+            "options": [{"id": 211, "code": "headphone", "title_fa": "هدفون"}]
+        }
+        return body
+
+    def search(request):
+        if "categories[0]" in request.url.params:
+            return httpx.Response(200, json=v2(fixture("budget_search.json")))
+        return httpx.Response(200, json=facet_body())
+
+    api[SEARCH] = search
     args = {"category_code": "headphone", "max_price": 5000000, "pages": 1}
     data = (await client.call_tool("dk_best_for_budget", args)).structured_content
     assert data["candidates"] == 12  # no title check when browsing a category
-    assert len(api.calls) == 1 and api.calls[0].url.params["price[max]"] == "50000000"
+    sent = [c for c in api.calls if "categories[0]" in c.url.params][0].url.params
+    assert sent["price[max]"] == "50000000"
 
 
 async def test_fetch_reuses_a_recent_answer(client, api):
@@ -283,15 +324,32 @@ async def test_fetch_reuses_a_recent_answer(client, api):
 
 
 async def test_dk_category_products_one_brand(client, api):
-    api["/v1/categories/mobile-phone/brands/xiaomi/search/"] = fixture("category_products.json")
+    def search(request):
+        params = request.url.params
+        if params.get("q") == "xiaomi":
+            body = v2(fixture("seller.json"))
+            body["data"]["widgets"][0]["data"]["filters"]["brands"] = {
+                "options": [{"id": 12345, "code": "xiaomi", "title_fa": "شیائومی"}]
+            }
+            return httpx.Response(200, json=body)
+        if "categories[0]" in params:
+            return httpx.Response(200, json=v2(fixture("category_products.json")))
+        return httpx.Response(200, json=v2(fixture("seller.json")))
+
+    api[SEARCH] = search
     result = await client.call_tool("dk_category_products", {"category_code": "mobile-phone", "brand_code": "xiaomi"})
-    assert not result.is_error and len(api.calls) == 1
+    assert not result.is_error
+    sent = [c for c in api.calls if "brands[0]" in c.url.params][0].url.params
+    assert sent["brands[0]"] == "12345" and sent["categories[0]"] == "11"
 
 
-async def test_dk_category_products_accepts_real_odd_codes(client, api):
-    api["/v1/categories/finger_food/search/"] = fixture("category_products.json")
-    result = await client.call_tool("dk_category_products", {"category_code": "finger_food"})
-    assert not result.is_error and api.calls[0].url.path == "/v1/categories/finger_food/search/"
+async def test_dk_category_products_unknown_code_errors(client, api):
+    # The retired tree means an unknown code can no longer be checked against
+    # /v1/categories/.../search/: it fails fast with a helpful message instead.
+    api[SEARCH] = v2(fixture("seller.json"))
+    result = await client.call_tool("dk_category_products", {"category_code": "nonexistent-cat-zz"})
+    assert result.is_error and "could not be resolved" in result.content[0].text
+    assert not any("categories[0]" in c.url.params for c in api.calls)
 
 
 async def test_dk_brand_products(client, api):
@@ -308,32 +366,38 @@ async def test_dk_brand_products(client, api):
 
 
 async def test_dk_seller(client, api):
-    api["/v1/sellers/CGDG9/"] = fixture("seller.json")
-    data = (await client.call_tool("dk_seller", {"seller_code": "CGDG9"})).structured_content
-    assert data["seller"] == {
+    # /v1/sellers/ is retired: the tool fails fast and points at the replacement.
+    result = await client.call_tool("dk_seller", {"seller_code": "CGDG9"})
+    assert result.is_error and "retired" in result.content[0].text
+    assert "dk_seller_on_product" in result.content[0].text and not api.calls
+    # The replacement reads the sellers off one product's offers (dk_product).
+    api["/product/v1/products/20109389/"] = fixture("product.json")
+    data = (await client.call_tool("dk_seller_on_product", {"product_id": 20109389})).structured_content
+    assert data["product"] == {
+        "id": 20109389,
+        "title": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت",
+        "price": 42503600,
+        "url": "https://www.digikala.com/product/dkp-20109389/",
+    }
+    assert {
         "code": "CGDG9",
         "title": "اسمارت تکنولوژی قشم",
-        "rating": 4.4,  # 87 / 20 = 4.35, rounded half-up like the site
-        "rating_count": 82197,
-        "grade": "عالی",
-        "on_time_shipping_pct": 99.9,
-        "no_cancellation_pct": 99.9,
-        "no_return_pct": 99.9,
-        "member_for": "6 سال و 2 ماه",
-        "is_trusted": True,
-        "is_official": False,
+        "rating": 4.4,
         "url": "https://www.digikala.com/seller/CGDG9/",
-    }
-    assert data["total"] == 135 and data["products"][0]["price"] == 3820000
+    } in data["sellers"]
+    assert "dead" in data["note"]
 
 
 async def test_dk_deals(client, api):
-    api["/v1/incredible-offers/products/"] = fixture("deals.json")
+    # The main-store Incredible Offers endpoint is retired: deals now come from
+    # the v2 search (sort=26, biggest discount first) instead, so there are no
+    # timed deal_ends any more. Supermarket (Fresh) deals are unchanged.
+    api[SEARCH] = v2(fixture("deals.json"))
     api["/fresh/v1/incredible-offers/products/"] = fixture("fresh_deals.json")
     deals = (await client.call_tool("dk_deals", {"query": "هدفون"})).structured_content
     first = deals["products"][0]
     assert first["discount_pct"] == 90 and first["price"] == 999990 and first["price_before_discount"] == 10000000
-    assert first["deal_ends"] == "2026-10-03 12:00:00"
+    assert "NOT the timed" in deals["note"]
     sent = api.calls[0].url.params
     assert sent["sort"] == "26" and sent["q"] == "هدفون" and sent["has_selling_stock"] == "1"
 
@@ -400,21 +464,19 @@ async def test_bad_input_rejected_before_any_call(client, api, name, args):
     assert result.is_error and not api.calls
 
 
-async def test_dk_categories_cut_by_the_budget_still_loads_the_tree(client, monkeypatch):
-    import asyncio
+async def test_dk_categories_main_list_is_cached(client, api):
+    api["/v1/best-selling/"] = fixture("best_selling.json")
+    first = (await client.call_tool("dk_categories", {})).structured_content
+    second = (await client.call_tool("dk_categories", {})).structured_content
+    assert first == second and len(api.calls) == 1  # fetched once, then the in-process list
 
-    from digikala_mcp import http
 
-    calls = []
-
-    async def slow_tree(request):
-        calls.append(request)
-        await asyncio.sleep(0.3)
-        return httpx.Response(200, json=fixture("category_tree.json"))
-
-    monkeypatch.setattr(http, "CALL_BUDGET", 0.1)
-    http.set_transport(httpx.MockTransport(slow_tree))
-    assert (await client.call_tool("dk_categories", {"query": "هدفون"})).is_error
-    await asyncio.sleep(0.4)  # the shielded download finishes in the background
-    found = (await client.call_tool("dk_categories", {"query": "هدفون"})).structured_content
-    assert {c["code"] for c in found["categories"]} == {"headphone", "monitor-headphones"} and len(calls) == 1
+async def test_dk_find_cheapest_translates_persian_brand_words(client, api):
+    # Real titles say "iPhone", never "آیفون": the Persian query must be searched
+    # in Latin, or only mockups (whose titles literally contain آیفون) match.
+    assert catalog.translate_query("گوشی آیفون") == "گوشی iPhone"
+    assert catalog.translate_query("گوشی سامسونگ") == "گوشی Samsung"
+    assert catalog.translate_query("هدفون بی سیم") == "هدفون بی سیم"  # generic words stay Persian
+    api[SEARCH] = v2(fixture("search.json"))
+    await client.call_tool("dk_find_cheapest", {"query": "گوشی آیفون", "pages": 1})
+    assert api.calls[0].url.params["q"] == "گوشی iPhone"

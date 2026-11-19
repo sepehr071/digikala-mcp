@@ -21,7 +21,7 @@ Workflow:
    dk_categories -> dk_category_products, dk_brand_products, dk_best_sellers, dk_deals. For features
    (storage, color, Digikala-sold, fast delivery) get ids from dk_filters first.
 2. One product: dk_product (all offers, specs), then dk_price_history, dk_reviews, dk_questions,
-   dk_similar, dk_compare, dk_installments, dk_seller. Re-price several: dk_shortlist.
+   dk_similar, dk_compare, dk_installments, dk_seller_on_product (dk_seller is retired). Re-price several: dk_shortlist.
 3. Groceries: dk_fresh_search, dk_deals(store='supermarket'). Other: dk_plus_plans, dk_gold_prices, dk_location.
 
 Prices are Toman. Ratings 0-5 (null = not rated), review stars 1-5. Shipping cost is known only at checkout.
