@@ -16,7 +16,7 @@ pytestmark = pytest.mark.anyio
 
 async def test_all_tools_are_read_only(client):
     tools = (await client.list_tools()).tools
-    assert len(tools) == 23
+    assert len(tools) == 24  # 23 + dk_seller_on_product (dk_seller itself is retired, see catalog.py)
     for t in tools:
         assert t.name.startswith("dk_"), t.name
         assert t.annotations.read_only_hint is True, t.name
